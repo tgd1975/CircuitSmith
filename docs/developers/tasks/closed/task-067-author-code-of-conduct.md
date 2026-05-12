@@ -1,9 +1,11 @@
 ---
 id: TASK-067
-title: Adopt and commit docs/developers/CODE_OF_CONDUCT.md (Contributor Covenant 2.1)
-status: open
+title: Adopt and commit docs/developers/CODE_OF_CONDUCT.md (short custom CoC mirroring AwesomeStudioPedal)
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -26,10 +28,10 @@ maintenance burden no one wants.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/CODE_OF_CONDUCT.md` exists with Contributor Covenant 2.1 verbatim text, attribution preserved.
-- [ ] Enforcement contact is set: project owner email (`t.deutsch.75@gmail.com` per the user's recorded identity, unless the user prefers a project-specific alias).
-- [ ] `README.md` and `CONTRIBUTING.md` each link to the CoC in their respective footer / contributing sections.
-- [ ] GitHub's "community profile" page (Insights → Community Standards) reflects the CoC after merge.
+- [x] `docs/developers/CODE_OF_CONDUCT.md` exists. *Superseded by user direction: short custom CoC mirroring AwesomeStudioPedal's pattern, not verbatim Contributor Covenant 2.1.*
+- [x] Enforcement contact is GitHub-routed ("contact the owner of the repository via GitHub"). *Superseded by user direction: no personal email in committed files.*
+- [x] `README.md` and `CONTRIBUTING.md` each link to the CoC.
+- [x] GitHub's "community profile" page reflects the CoC after merge. *(Pending merge to `main`.)*
 
 ## Test Plan
 
@@ -52,3 +54,20 @@ email.
 
 The Phase 7 standalone-repo extraction (EPIC-006) inherits this CoC
 verbatim — no per-repo customisation.
+
+## Closure notes
+
+User overrode two of the task body's directives at activation:
+
+1. **Custom short CoC, not verbatim Contributor Covenant 2.1.** Mirrors
+   AwesomeStudioPedal's CoC structure (27 lines, in-short / expected /
+   not-acceptable / enforcement / scope). Maintenance burden is the same
+   either way; consistency with the sister project wins. Memory rule
+   recorded: `feedback-mirror-awesomestudiopedal.md`.
+2. **No personal email anywhere in committed files.** Enforcement
+   clause uses "contact the owner of the repository via GitHub";
+   `pyproject.toml` authors field drops the email field, keeping just
+   the name. Memory rule recorded:
+   `feedback-no-personal-contact-in-docs.md`. Follow-up scaffolded as
+   TASK-074 (a pre-commit lint to mechanically enforce the no-email
+   rule).
