@@ -147,13 +147,16 @@ def acquire_lock(wait_seconds: float | None = None):
                     print(msg, file=sys.stderr)
                     raise SystemExit(2)
                 time.sleep(LOCK_POLL_SECONDS)
-        # Record our PID in the lockfile so other waiters can name us
-        # in their timeout message. Best-effort; a failure here does
-        # not invalidate the lock.
+        # Record our PID in a SIDECAR file (not the locked lockfile)
+        # so other waiters can name us in their timeout message. The
+        # sidecar is written outside the lock byte-range because on
+        # Windows `msvcrt.locking(fd, LK_NBLCK, 1)` blocks reads of
+        # the locked byte, defeating the readback. Best-effort write;
+        # a failure here does not invalidate the lock.
         try:
-            os.lseek(fd, 0, os.SEEK_SET)
-            os.ftruncate(fd, 0)
-            os.write(fd, f"{os.getpid()}\n".encode("ascii"))
+            _holder_pid_path(lock_path).write_text(
+                f"{os.getpid()}\n", encoding="ascii"
+            )
         except OSError:
             pass
         try:
@@ -161,6 +164,10 @@ def acquire_lock(wait_seconds: float | None = None):
         finally:
             if acquired:
                 _platform_unlock(fd)
+                try:
+                    _holder_pid_path(lock_path).unlink()
+                except OSError:
+                    pass
     finally:
         try:
             os.close(fd)
@@ -168,9 +175,13 @@ def acquire_lock(wait_seconds: float | None = None):
             pass
 
 
+def _holder_pid_path(lock_path: Path) -> Path:
+    return lock_path.with_suffix(lock_path.suffix + ".pid")
+
+
 def _read_holder_pid(lock_path: Path) -> str | None:
     try:
-        text = lock_path.read_text(encoding="ascii").strip()
+        text = _holder_pid_path(lock_path).read_text(encoding="ascii").strip()
         return text or None
     except OSError:
         return None
@@ -218,7 +229,7 @@ class Move:
     reason: str
 
     def describe(self) -> str:
-        return f"MOVE {self.src} -> {self.dst}  ({self.reason})"
+        return f"MOVE {self.src.as_posix()} -> {self.dst.as_posix()}  ({self.reason})"
 
     def apply(self) -> None:
         self.dst.parent.mkdir(parents=True, exist_ok=True)

@@ -15,9 +15,11 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import yaml
+    from ruamel.yaml import YAML
+
+    _yaml = YAML(typ="safe")
 except ImportError:
-    yaml = None
+    _yaml = None
 
 DEFAULT_CONFIG_PATH = "docs/developers/task-system.yaml"
 ENV_VAR = "TASK_SYSTEM_CONFIG"
@@ -131,16 +133,16 @@ def load(path: str | Path | None = None, *, warn=True) -> dict:
                 file=sys.stderr,
             )
         return deepcopy(DEFAULTS)
-    if yaml is None:
+    if _yaml is None:
         if warn:
             print(
-                "task_system_config: PyYAML not installed —"
-                " using defaults (pip install pyyaml to enable config).",
+                "task_system_config: ruamel.yaml not installed —"
+                " using defaults (pip install ruamel.yaml to enable config).",
                 file=sys.stderr,
             )
         return deepcopy(DEFAULTS)
     with p.open(encoding="utf-8") as f:
-        loaded = yaml.safe_load(f) or {}
+        loaded = _yaml.load(f) or {}
     if warn:
         validate(loaded, path=str(p))
     return _deep_merge(DEFAULTS, loaded)
