@@ -1,9 +1,11 @@
 ---
 id: TASK-066
 title: Author docs/developers/TASK_SYSTEM.md describing the IDEA/EPIC/TASK workflow and /ts-* skills
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -30,13 +32,13 @@ installation`) plus the project's local conventions.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/TASK_SYSTEM.md` exists and is linked from CONTRIBUTING.md.
-- [ ] The three artefact types (IDEA, EPIC, TASK) are defined with one-paragraph descriptions and one example each.
-- [ ] The lifecycle states (`open`, `active`, `closed`, `paused`) are documented with transition triggers and the skill that effects each transition.
-- [ ] Every `/ts-*` skill is listed with a one-line description and a "use when" trigger.
-- [ ] `/housekeep`'s role is documented: the four index files (`OVERVIEW.md`, `EPICS.md`, `KANBAN.md`, `ideas/OVERVIEW.md`) are entirely generated; manual edits to them are lost.
-- [ ] The `human-in-loop` field's four values are explained at high level with a pointer at AUTONOMY.md for the agent-semantics depth.
-- [ ] Prerequisite semantics are explained: a task with unmet prerequisites cannot be activated.
+- [x] `docs/developers/TASK_SYSTEM.md` exists and is linked from CONTRIBUTING.md.
+- [x] The three artefact types (IDEA, EPIC, TASK) are defined with one-paragraph descriptions and one example each.
+- [x] The lifecycle states (`open`, `active`, `closed`, `paused`) are documented with transition triggers and the skill that effects each transition.
+- [x] Every `/ts-*` skill is listed with a one-line description and a "use when" trigger.
+- [x] `/housekeep`'s role is documented: the four index files (`OVERVIEW.md`, `EPICS.md`, `KANBAN.md`, `ideas/OVERVIEW.md`) are entirely generated; manual edits to them are lost.
+- [x] The `human-in-loop` field's four values are explained at high level with a pointer at AUTONOMY.md for the agent-semantics depth.
+- [x] Prerequisite semantics are explained: a task with unmet prerequisites cannot be activated.
 
 ## Test Plan
 
