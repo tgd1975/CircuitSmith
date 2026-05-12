@@ -1,9 +1,11 @@
 ---
 id: TASK-063
 title: Author docs/developers/TESTING.md describing test layers, conventions, and fixture layout
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: developer-docs-governance
@@ -45,12 +47,12 @@ CircuitSmith's analogous layers:
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/TESTING.md` exists and documents the three test layers above with one canonical example per layer.
-- [ ] Test-layout decision is recorded: where do product-code tests live (`tests/` at repo root, `.claude/skills/circuit/tests/`, or both?), and where do fixtures live.
-- [ ] `pyproject.toml` `testpaths` is updated to match the documented layout.
-- [ ] Pytest-vs-unittest decision is recorded in the doc; if pytest is chosen, the migration path for existing `unittest.TestCase`-style files in `scripts/tests/` is named (rewrite, or coexist, or leave-as-is).
-- [ ] "How to write a new test" section covers: a pure-unit example, a fixture-driven pipeline example, and how to update a golden hash (links to TASK-053 procedure).
-- [ ] Coverage-tracking decision is recorded (whether `pytest-cov` is adopted now or deferred), with rationale.
+- [x] `docs/developers/TESTING.md` exists and documents the three test layers above with one canonical example per layer.
+- [x] Test-layout decision is recorded: where do product-code tests live (`tests/` at repo root, `.claude/skills/circuit/tests/`, or both?), and where do fixtures live.
+- [x] `pyproject.toml` `testpaths` is updated to match the documented layout.
+- [x] Pytest-vs-unittest decision is recorded in the doc; if pytest is chosen, the migration path for existing `unittest.TestCase`-style files in `scripts/tests/` is named (rewrite, or coexist, or leave-as-is).
+- [x] "How to write a new test" section covers: a pure-unit example, a fixture-driven pipeline example, and how to update a golden hash (links to TASK-053 procedure).
+- [x] Coverage-tracking decision is recorded (whether `pytest-cov` is adopted now or deferred), with rationale.
 
 ## Test Plan
 
