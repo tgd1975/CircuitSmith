@@ -1,9 +1,11 @@
 ---
 id: TASK-070
 title: Author docs/developers/SECURITY_REVIEW.md (script usage + reviewer checklist)
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: developer-docs-governance
@@ -41,12 +43,12 @@ Model: AwesomeStudioPedal's
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/SECURITY_REVIEW.md` exists and is linked from CONTRIBUTING.md.
-- [ ] Script-usage section documents: what the three hooks check, when each fires, what `.claude/security-review-latest.md` contains, how to re-run on demand.
-- [ ] Reviewer-checklist section names at minimum: secrets in commits (.env, keys), `eval` / `exec` / `subprocess(shell=True)` patterns, path-traversal risks, dependency upgrades to unfamiliar packages, broad permissions in `.claude/settings.json`, new `Bash(...)` allowlist entries, gh-CLI calls with `--method PUT/DELETE`.
-- [ ] Bypass policy is recorded: `CS_SKIP_SECURITY_REVIEW=1` is logged; bypasses are reviewed in batch by the user, not normalised.
-- [ ] Escalation path: when the script or a reviewer finds something real, the doc names the action sequence (do not commit, file the finding as an open task tagged `security`, surface in the review packet).
-- [ ] The doc explicitly states it is **not** a substitute for OWASP / language-specific security training; it is the project-local convention layer above that.
+- [x] `docs/developers/SECURITY_REVIEW.md` exists and is linked from CONTRIBUTING.md.
+- [x] Script-usage section documents: what the three hooks check, when each fires, what `.claude/security-review-latest.md` contains, how to re-run on demand.
+- [x] Reviewer-checklist section names at minimum: secrets in commits (.env, keys), `eval` / `exec` / `subprocess(shell=True)` patterns, path-traversal risks, dependency upgrades to unfamiliar packages, broad permissions in `.claude/settings.json`, new `Bash(...)` allowlist entries, gh-CLI calls with `--method PUT/DELETE`.
+- [x] Bypass policy is recorded: `CS_SKIP_SECURITY_REVIEW=1` is logged; bypasses are reviewed in batch by the user, not normalised.
+- [x] Escalation path: when the script or a reviewer finds something real, the doc names the action sequence (do not commit, file the finding as an open task tagged `security`, surface in the review packet).
+- [x] The doc explicitly states it is **not** a substitute for OWASP / language-specific security training; it is the project-local convention layer above that.
 
 ## Test Plan
 
