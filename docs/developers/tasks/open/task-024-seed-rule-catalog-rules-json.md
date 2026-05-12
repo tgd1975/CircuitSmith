@@ -5,11 +5,19 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Medium
-human-in-loop: Main
+human-in-loop: Support
 epic: circuit-erc
 order: 3
 prerequisites: [TASK-022]
 ---
+
+## Autonomy
+
+`Main` → `Support` per TASK-060 sweep. Rule-catalog prose is
+content-heavy and benefits from a maintainer-eyes pass — auto-prepare
+the seed rules, pause for review at the commit stop-line. The
+catalog is the ERC engine's authoritative source (ADR-0006) so
+content quality is load-bearing.
 
 ## Description
 

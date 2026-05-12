@@ -1,0 +1,40 @@
+# Code-owner skill registry — surfaces invariants at edit time.
+#
+# Each entry binds a file pattern to a co-* skill. When a file matching
+# the pattern is about to be edited or written by Claude, the
+# PreToolUse hook (`scripts/codeowner_hook.py`, registered in
+# `.claude/settings.json`) reads the bound skill's `SKILL.md` body and
+# prints it as a reminder. The hook is informational — it never blocks
+# the edit; it only surfaces context. Blocking guardrails live in the
+# contract tests (TASK-050) and the lints.
+#
+# Schema:
+#   entries: list of mappings, each with two required fields:
+#     pattern: <fnmatch-style glob> — matched against the target file's
+#              repo-relative POSIX path. Examples:
+#                .claude/skills/circuit/netgraph.py
+#                .claude/skills/circuit/schema/*.json
+#                .claude/skills/circuit/*.py
+#     skill:   <directory name under .claude/skills/> — typically
+#              `co-<module-name>`. The hook reads
+#              `.claude/skills/<skill>/SKILL.md` and prints its body
+#              (the part after the frontmatter).
+#
+# Comments start with `#` at the line head or after whitespace.
+# String values may be unquoted or single-/double-quoted.
+
+entries:
+  # Initial three high-blast-radius modules (TASK-056). New entries
+  # land alongside the file they bind — when `bom_exporter.py` /
+  # `netlist_exporter.py` / `knowledge/rules.json` /
+  # `layout_engine/kernel.py` arrive, their co-* skills and entries
+  # land in the same commit.
+
+  - pattern: .claude/skills/circuit/netgraph.py
+    skill: co-netgraph
+
+  - pattern: .claude/skills/circuit/schema/*.json
+    skill: co-schema
+
+  - pattern: .claude/skills/circuit/erc_engine.py
+    skill: co-erc-engine

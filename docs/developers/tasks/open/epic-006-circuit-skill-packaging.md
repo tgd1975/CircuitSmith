@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-12
 closed:
 assigned:
-branch: feature/circuit-skill-packaging
+branch: release/epic-006-circuit-skill-packaging
 ---
 
 Seeded by IDEA-001 (Circuit-Skill — AI-Assisted Schematic Generation with ERC, BOM, and Netlist Export).

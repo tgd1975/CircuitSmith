@@ -11,6 +11,9 @@
 #   3. Python lint (ruff — mandatory; missing tool fails the hook).
 #      Mirrors the markdown block. Configuration lives in pyproject.toml
 #      `[tool.ruff]`. Adopted in TASK-061.
+#   4. Portability lint (scripts/portability_lint.py — only fires when
+#      staged changes touch `.claude/skills/circuit/`; enforces the
+#      portability contract from ADR-0007). Adopted in TASK-051.
 #
 # Add C++ / Flutter gates here when the project gains them.
 
@@ -138,6 +141,23 @@ if [ -n "$STAGED_PY" ]; then
         exit 1
     fi
     echo -e "${GREEN}Ruff lint OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
+# Portability lint (only fires when staged changes touch
+# `.claude/skills/circuit/`). Enforces the portability contract per
+# ADR-0007 / TASK-051: no host-project paths, no project-module imports,
+# no host-project name references in the skill directory.
+# ---------------------------------------------------------------------------
+STAGED_SKILL=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^\.claude/skills/circuit/' || true)
+if [ -n "$STAGED_SKILL" ]; then
+    echo -e "${YELLOW}Checking skill-directory portability...${NC}"
+    if ! python3 "${REPO_ROOT}/scripts/portability_lint.py" \
+            "${REPO_ROOT}/.claude/skills/circuit"; then
+        echo -e "${RED}Portability lint failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}Portability OK.${NC}"
 fi
 
 exit 0

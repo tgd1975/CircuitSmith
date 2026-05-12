@@ -153,3 +153,26 @@ a problem. There is no in-repo sync mechanism.
 
 When adding a new skill (creating `.claude/skills/<name>/SKILL.md`), always
 also add `<name>` to `enabled_skills` in [.vibe/config.toml](.vibe/config.toml).
+
+## Autonomy
+
+Autonomous epic runs follow the protocol in
+[`docs/developers/AUTONOMY.md`](docs/developers/AUTONOMY.md). The
+`human-in-loop:` field on every open task is the **operational
+contract** for that protocol — not a decorative label. The four
+values (`No`, `Clarification`, `Support`, `Main`) each map to a
+defined agent behaviour, documented there.
+
+Mid-task ambiguities resolve via the ADR-on-ambiguity rule: pick the
+most defensible default, file an ADR under
+[`docs/developers/adr/`](docs/developers/adr/) using
+[`0000-template.md`](docs/developers/adr/0000-template.md), continue.
+ADRs are reviewed in batch at the next stop-line.
+
+Remote-effect actions (`git push`, `gh pr create`, `gh pr merge`,
+`--no-verify`, `CS_COMMIT_BYPASS`) **always** require explicit
+per-invocation user approval. Some are hard-denied in
+`.claude/settings.json` (`git push`); others go through the
+harness's prompt-by-default path (`gh pr create`, `gh pr merge`)
+because the user sometimes wants the agent to run them. See
+[`AUTONOMY.md` § No-published-effect-without-approval](docs/developers/AUTONOMY.md#no-published-effect-without-approval).

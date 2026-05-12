@@ -11,6 +11,13 @@ order: 6
 prerequisites: [TASK-043]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. Cross-repo git plumbing
+(`git subtree split` / `git filter-repo`) plus a remote push —
+agent prepares the exact commands and verifies them against a local
+clone; user runs the final push.
+
 ## Description
 
 Use `git subtree split` (or equivalent) to preserve the commit history

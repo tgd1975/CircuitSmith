@@ -87,6 +87,77 @@ first tag is cut; until then the `[Unreleased]` section is the only entry.
   of CircuitSmith windows (`titleBar.activeBackground` etc. in
   `.vscode/settings.json`).
 
+### Governance (EPIC-008 unblocked slice)
+
+- TASK-054 closed: `docs/developers/adr/` seeded with eight foundational
+  ADRs (slots-not-coordinates, AI-at-authoring-time-only, NetGraph as
+  shared contract, exporter decoupling, ERC pre-layout, rule catalog
+  authoritative, skill directory is the library, Phase 2b on evidence)
+  plus a README documenting the format, the add/supersede procedure,
+  and the index.
+- TASK-051 closed: `scripts/portability_lint.py` enforces the
+  portability contract for `.claude/skills/circuit/` — no host-project
+  paths, no project-module imports, no host-project name references.
+  `.portability-allow.txt` carries auditable exceptions. Wired into
+  the pre-commit hook (only fires on staged changes inside the skill
+  dir) and the GitHub Actions workflow (unconditional). 18
+  fixture-based tests cover each forbidden pattern, the `docs/`
+  exception for sibling-project names, the allow-list resolver, and
+  the empty/missing-dir no-op.
+- TASK-055 closed: code-owner skills mechanism. `.claude/codeowners.yaml`
+  registry binds file globs to `co-<name>` skills;
+  `scripts/codeowner_hook.py` (registered under `hooks.PreToolUse` in
+  `.claude/settings.json` with `matcher: "Edit|Write"`) prints the
+  matched skill's body as an informational reminder. Glob syntax is
+  gitignore-flavoured (`**`/`*`/`?` segment-aware); stdlib-only YAML
+  parser keeps the per-edit overhead minimal. 26 tests cover the
+  parser, matcher, body extractor, and the full `run()` flow.
+  Documentation in `docs/developers/CODE_OWNERS.md`.
+- TASK-056 closed: first three code-owner skills authored —
+  `co-netgraph`, `co-schema`, `co-erc-engine` — each binding to its
+  high-blast-radius module via the registry and declaring invariants
+  as a checklist (hash determinism, schema-version bump on break,
+  stable check IDs, etc.). Registered in `.vibe/config.toml`.
+  Subsequent code-owner skills (`bom_exporter`, `netlist_exporter`,
+  `knowledge/rules.json`, `layout_engine/kernel.py`) land alongside
+  the modules they bind, not upfront.
+
+EPIC-008 is partially closed: the four unblocked tasks above are done;
+TASK-050 / TASK-052 / TASK-053 remain open until their respective
+feature-epic deliverables land.
+
+### Autonomy
+
+- TASK-060 closed: autonomous-implementation mode wired up.
+  - `docs/developers/AUTONOMY.md` codifies the four HIL values
+    (`No` / `Clarification` / `Support` / `Main`) with defined agent
+    behaviours, the epic-driver loop, the definition-of-done
+    checklist, the review-packet format, the ADR-on-ambiguity rule,
+    and the deny-vs-prompt split for published-effect actions.
+  - `docs/developers/adr/0000-template.md` seeds a maintained blank
+    ADR for future records.
+  - `docs/developers/adr/0009-autonomous-implementation-mode.md`
+    records the protocol's own decision.
+  - `CLAUDE.md` gains a `## Autonomy` section pointing at
+    AUTONOMY.md and stating that `human-in-loop:` is the
+    operational contract.
+  - `.claude/skills/epic-run/SKILL.md` is the protocol-scaffold
+    driver skill the agent follows (composer over `/ts-task-active`,
+    `/commit`, `/housekeep`, `/ts-task-done`, `/check-branch`).
+  - `.claude/settings.json` `permissions.deny` extended with
+    `Bash(sed:*)`, `Bash(awk:*)`, `Bash(head:*)`, `Bash(tail:*)`,
+    `Bash(git push:*)`. `gh pr create` / `gh pr merge` are
+    deliberately **not** in deny — they go through the
+    prompt-by-default path so the user can approve per-invocation.
+  - HIL sweep applied across 15 open tasks: 7 `Clarification` → `No`
+    (TASK-001/009/012/014/019/022/036), 2 `Main` → `Support`
+    (TASK-024 rule catalog, TASK-039 SKILL.md prompt), 6 `Main`
+    kept (TASK-015/034/041/043/044/045). Each task gains a one-line
+    `## Autonomy` rationale.
+  - Open epic files (EPIC-001..006, EPIC-008) carry a
+    `release/epic-NNN-<slug>` `branch:` field — `/ts-task-active`
+    nags on mismatch with the `[c]ontinue` rewrite path.
+
 Nothing under `.claude/skills/circuit/` exists yet — see
 [EPIC-001..006](docs/developers/tasks/EPICS.md), `Phase 0` (EPIC-007),
 and the governance gates in [EPIC-008](docs/developers/tasks/EPICS.md).

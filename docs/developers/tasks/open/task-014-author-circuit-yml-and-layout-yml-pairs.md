@@ -5,11 +5,18 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Medium
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-renderer-layout
 order: 7
 prerequisites: [TASK-005, TASK-012, TASK-013]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Example pairs are
+illustrative, not load-bearing — pick the most representative and
+file an ADR if a pair seems contentious. The golden-hash contract
+test (TASK-053) will catch any drift that affects determinism.
 
 ## Description
 

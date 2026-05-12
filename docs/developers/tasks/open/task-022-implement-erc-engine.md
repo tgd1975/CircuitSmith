@@ -5,11 +5,18 @@ status: open
 opened: 2026-05-12
 effort: Large (8-24h)
 complexity: Senior
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-erc
 order: 1
 prerequisites: [TASK-008]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. ERC engine internals
+are bounded by the rule catalog (ADR-0006) and the public S/E IDs
+(`co-erc-engine` invariants); file an ADR for predicate-organisation
+choices rather than pausing.
 
 ## Description
 

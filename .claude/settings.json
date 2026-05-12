@@ -37,7 +37,27 @@
       "Bash(gh api repos/:*)"
     ],
     "deny": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+
+      "Bash(git push:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PROJECT_DIR}/scripts/codeowner_hook.py"
+          }
+        ]
+      }
     ]
   }
 }

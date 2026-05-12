@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-12
 closed:
 assigned:
-branch: main
+branch: release/epic-008-governance-slice
 ---
 
 Promote the architecture's load-bearing invariants from prose into

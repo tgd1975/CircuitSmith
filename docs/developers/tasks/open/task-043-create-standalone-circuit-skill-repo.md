@@ -11,6 +11,13 @@ order: 5
 prerequisites: [TASK-041, TASK-042]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. Standalone-repo creation is a
+cross-system action with remote-push effects — auto-prepare the
+directory contents; user creates the GitHub repo and runs the
+initial push.
+
 ## Description
 
 Create a new GitHub repository for the standalone circuit skill.

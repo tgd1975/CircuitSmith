@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Senior
-human-in-loop: Main
+human-in-loop: Support
 epic: circuit-skill-packaging
 order: 1
 prerequisites: [TASK-022, TASK-031, TASK-033, TASK-016]
 ---
+
+## Autonomy
+
+`Main` → `Support` per TASK-060 sweep. SKILL.md system-prompt content
+is the skill's user-facing contract — auto-prepare a draft, pause for
+review at the commit stop-line before it lands.
 
 ## Description
 

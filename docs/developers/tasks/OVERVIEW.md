@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 57** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 4** | **Total: 61** | █░░░░░░░░░ 7%
+⚪ **Open: 52** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 9** | **Total: 61** | ██░░░░░░░░ 15%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -77,16 +77,11 @@ _No paused tasks._
 | [TASK-045](open/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-049](open/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-051](open/task-051-portability-lint.md) | Portability lint for .claude/skills/circuit/ | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-052](open/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-053](open/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-054](open/task-054-seed-adr-folder.md) | Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-055](open/task-055-code-owner-skills-hook.md) | Code-owner skills registry and PreToolUse hook | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-056](open/task-056-author-initial-code-owner-skills.md) | Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine) | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-057](open/task-057-emit-v01-escalations-to-meta-yml.md) | Emit v0.1 kernel fail-loud events to meta.yml.provenance.escalations | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-058](open/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-059](open/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-060](open/task-060-autonomous-implementation-mode.md) | Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene) | Large (8-24h) | Senior | ⚪ open |
 
 ## Closed Tasks
 
@@ -95,5 +90,10 @@ _No paused tasks._
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
+| [TASK-051](closed/task-051-portability-lint.md) | Portability lint for .claude/skills/circuit/ | Small (&lt;2h) |
+| [TASK-054](closed/task-054-seed-adr-folder.md) | Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier | Medium (2-8h) |
+| [TASK-055](closed/task-055-code-owner-skills-hook.md) | Code-owner skills registry and PreToolUse hook | Medium (2-8h) |
+| [TASK-056](closed/task-056-author-initial-code-owner-skills.md) | Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine) | Medium (2-8h) |
+| [TASK-060](closed/task-060-autonomous-implementation-mode.md) | Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene) | Large (8-24h) |
 | [TASK-061](closed/task-061-adopt-python-linter-formatter.md) | Adopt a Python linter/formatter and wire it into /commit + pre-commit hook | Medium (2-8h) |
 <!-- END GENERATED -->

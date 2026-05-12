@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Senior
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-markdown-integration
 order: 1
 prerequisites: [TASK-012]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Markdown block syntax
+has a defensible default (mkdocs superfences-style); file an ADR
+for any edge-case parsing decision rather than pausing.
 
 ## Description
 

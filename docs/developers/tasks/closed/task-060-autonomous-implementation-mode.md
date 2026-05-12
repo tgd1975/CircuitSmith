@@ -1,9 +1,11 @@
 ---
 id: TASK-060
 title: Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene)
-status: open
+status: closed
+closed: 2026-05-12
 opened: 2026-05-12
 effort: Large (8-24h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 ---
@@ -64,29 +66,35 @@ A read of all 58 open tasks plus the active epic surfaced these gaps:
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/AUTONOMY.md` exists and codifies, in
+- [x] `docs/developers/AUTONOMY.md` exists and codifies, in
       operational terms: HIL semantics (No / Clarification / Support /
       Main with the user-chosen rules), the epic-driver loop, the
       per-task definition of done, the stop-line review-packet
       format, the ADR-on-ambiguity rule, the no-push-without-approval
       rule.
-- [ ] `docs/developers/adr/` is seeded with `0000-template.md` (MADR-lite:
+- [x] `docs/developers/adr/` is seeded with `0000-template.md` (MADR-lite:
       Status / Context / Decision / Consequences) and
-      `0001-autonomous-implementation-mode.md` recording this task's
-      own decisions. Folder is referenced from `AUTONOMY.md` and
-      `CLAUDE.md`.
-- [ ] `CLAUDE.md` has a new "## Autonomy" section pointing at
+      `0009-autonomous-implementation-mode.md` recording this task's
+      own decisions. (Note: this AC said `0001-autonomous-implementation-mode.md`
+      but ADRs 0001–0008 were already allocated by TASK-054 for the
+      foundational dossier decisions; the autonomous-implementation
+      record lands as `ADR-0009` instead.) Folder is referenced from
+      `AUTONOMY.md` and `CLAUDE.md`.
+- [x] `CLAUDE.md` has a new "## Autonomy" section pointing at
       `docs/developers/AUTONOMY.md` and stating that `human-in-loop`
       is the operational contract, not a label.
-- [ ] An `/epic-run` skill exists (registered in `.vibe/config.toml`
+- [x] An `/epic-run` skill exists (registered in `.vibe/config.toml`
       `enabled_skills`) that reads an epic file, walks tasks in
       `prerequisites + order` topological order, and for each task:
       activates → implements → runs tests → commits via `/commit` →
       marks done. It pauses at the next Main-HIL stop-line with a
-      review packet and exits.
-- [ ] Every open task with `human-in-loop: Main` or `Clarification`
+      review packet and exits. (Implemented as a protocol-scaffold
+      SKILL.md the agent follows — a future iteration may extract
+      the loop into a Python driver; see the skill's "Status" section.)
+- [x] Every open task with `human-in-loop: Main` or `Clarification`
       is swept; each one's HIL value is either kept (with a one-line
-      `## Autonomy` rationale in the body) or downgraded. **Concrete
+      `## Autonomy` rationale in the body) or downgraded. **Applied
+      sweep (confirmed by user 2026-05-12):** **Concrete
       proposed sweep — to be confirmed in one batched user decision
       before the rewrite lands:**
   - **Keep Main** (irreversible / physical / remote-push):
@@ -99,10 +107,12 @@ A read of all 58 open tasks plus the active epic surfaced these gaps:
   - **Downgrade Clarification → No** (ADR-on-ambiguity rule applies):
     TASK-001, TASK-009, TASK-012, TASK-014, TASK-019, TASK-022,
     TASK-036, TASK-048.
-- [ ] Each open epic file has a `branch:` field that is **not** `main`
-      (scheme: `epic-NNN-<slug>`). EPIC-007 gets renamed first and the
-      rest follow.
-- [ ] `.claude/settings.json` is created with: an `allow` list for the
+- [x] Each open epic file has a `branch:` field that is **not** `main`
+      (scheme: `release/epic-NNN-<slug>`). EPIC-007 closed under the
+      old convention with `epic-007-project-bootstrap`; the
+      `release/` prefix was introduced for EPIC-008 onward and the
+      remaining open epics (001..006) follow the new scheme.
+- [x] `.claude/settings.json` is created with: an `allow` list for the
       routine commands the loop runs (pytest, `python scripts/housekeep.py`,
       `git status` / `diff` / `log`, `ls`, `grep`, `cat` of generated
       indexes); a `deny` list for `git push`, `gh pr merge`, and any
@@ -114,13 +124,55 @@ A read of all 58 open tasks plus the active epic surfaced these gaps:
       Read/Edit tools per the CLAUDE.md "use dedicated tool" rule.
       Leave `cat` out of the deny list — `cat <<'EOF' ... EOF`
       heredocs are load-bearing in the `/commit` wrapper invocation.
-- [ ] Each epic file gains a documented `## Implementation log`
+
+      **Outcome:** allow list already populated; deny list extended
+      with `Bash(sed:*)`, `Bash(awk:*)`, `Bash(head:*)`, `Bash(tail:*)`,
+      `Bash(git push:*)`. `gh pr create` / `gh pr merge` left **out**
+      of the deny list per user direction — they go through the
+      harness's prompt-by-default path so the user can approve
+      per-invocation when they do want the agent to run them. The
+      AUTONOMY.md "No-published-effect-without-approval" section
+      documents the deny-vs-prompt split.
+- [x] Each epic file gains a documented `## Implementation log`
       convention (one append-only line per closed task: date, task ID,
       ADRs filed, anything notable). Documented in `AUTONOMY.md`;
-      `housekeep.py` does not need to maintain it.
-- [ ] A definition-of-done checklist is written into `AUTONOMY.md`
+      `housekeep.py` does not need to maintain it. (Convention
+      documented in AUTONOMY.md `## Implementation log`. Existing
+      epic files do not retroactively gain the section; the agent
+      adds it on first task closure under the new protocol.)
+- [x] A definition-of-done checklist is written into `AUTONOMY.md`
       and the `/epic-run` skill enforces it before invoking
       `/ts-task-done`.
+
+## Implementation notes (closure)
+
+- **HIL sweep applied verbatim** to the proposed table (user
+  confirmed 2026-05-12 via batched AskUserQuestion). 15 tasks
+  touched: 7 `Clarification` → `No`, 2 `Main` → `Support`, 6 `Main`
+  kept. TASK-048 fell off the list (already closed during EPIC-007).
+- **`/epic-run` is a protocol-scaffold skill**, not an executable
+  driver — the agent follows the SKILL.md's contract directly.
+  A Python driver that orchestrates the underlying skills
+  explicitly is a possible follow-up; deferred per the task body's
+  "composer over existing skills, not re-implementation" rule.
+- **ADR numbering correction:** the AC mentioned
+  `0001-autonomous-implementation-mode.md`. TASK-054 had already
+  allocated ADR-0001..0008 for the foundational dossier decisions,
+  so the autonomous-implementation record lands as **ADR-0009**.
+  The AC's intent (an ADR exists for this protocol) is satisfied.
+- **`gh pr` not denied** per user direction during the implementation
+  ("sometimes I want you to do it"). Updated AUTONOMY.md and
+  CLAUDE.md to describe the deny-vs-prompt split: hard-deny for
+  things that are never OK, prompt-by-default for things that are
+  sometimes OK with explicit approval.
+- **Implementation log convention** is documented but not
+  retroactively applied to existing epic files (EPIC-007 already
+  closed; EPIC-008 will gain the section on its next task closure
+  under the new protocol).
+- **EPIC-007 branch convention exception:** EPIC-007 closed under
+  `epic-007-project-bootstrap` (no `release/` prefix) before this
+  protocol existed. The `release/epic-NNN-<slug>` scheme starts
+  with EPIC-008 going forward.
 
 ## Test Plan
 

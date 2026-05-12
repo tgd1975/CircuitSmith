@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Large (8-24h)
 complexity: Senior
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-renderer-layout
 order: 5
 prerequisites: [TASK-011, TASK-008]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Renderer style choices
+are visually checkable in the SVG output; file an ADR for any
+non-default that affects the public output contract.
 
 ## Description
 

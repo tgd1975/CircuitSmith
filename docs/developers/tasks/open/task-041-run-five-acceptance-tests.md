@@ -11,6 +11,12 @@ order: 3
 prerequisites: [TASK-040]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. Interactive five-test acceptance
+session requires the user driving the skill end-to-end — agent
+stops here, user runs the session.
+
 ## Description
 
 Run the five acceptance tests defined in

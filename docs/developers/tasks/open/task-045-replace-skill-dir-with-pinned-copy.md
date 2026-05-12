@@ -11,6 +11,13 @@ order: 7
 prerequisites: [TASK-044]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. Replaces the in-repo skill with a
+pinned copy from the standalone repo — touches the dependency-pin
+policy and changes the project's relationship with the published
+skill. User reviews the swap before commit.
+
 ## Description
 
 Close out EPIC-006 with the four standalone-extraction tail items:

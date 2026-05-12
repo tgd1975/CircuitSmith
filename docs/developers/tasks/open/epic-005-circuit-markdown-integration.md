@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-12
 closed:
 assigned:
-branch: feature/circuit-markdown-integration
+branch: release/epic-005-circuit-markdown-integration
 ---
 
 Seeded by IDEA-001 (Circuit-Skill — AI-Assisted Schematic Generation with ERC, BOM, and Netlist Export).

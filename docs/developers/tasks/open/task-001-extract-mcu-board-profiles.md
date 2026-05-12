@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Medium
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-components
 order: 1
 prerequisites: [TASK-046, TASK-047, TASK-048]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Board-profile decisions
+have defensible defaults in the dossier; file an ADR for any
+non-obvious profile choice rather than pausing.
 
 ## Description
 

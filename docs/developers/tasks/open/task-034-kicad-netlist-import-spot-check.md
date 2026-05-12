@@ -11,6 +11,12 @@ order: 4
 prerequisites: [TASK-033]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. KiCad GUI import is a physical-world
+step the agent cannot perform — auto-prepare the netlist artifact;
+stop for user to run KiCad and confirm.
+
 ## Description
 
 Manual spot check: open both `main-circuit.net` files in KiCad

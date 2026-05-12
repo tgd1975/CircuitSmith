@@ -1,9 +1,11 @@
 ---
 id: TASK-056
 title: Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine)
-status: open
+status: closed
+closed: 2026-05-12
 opened: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: architecture-fitness-functions
@@ -54,12 +56,12 @@ Each skill is registered in `.vibe/config.toml` per
 
 ## Acceptance Criteria
 
-- [ ] Three `SKILL.md` files exist under `.claude/skills/co-netgraph/`, `.claude/skills/co-schema/`, `.claude/skills/co-erc-engine/`.
-- [ ] Each declares its invariants as a checklist of bullet points, not paragraphs of prose.
-- [ ] Each names the authoritative dossier section and links to it relatively.
-- [ ] Each names the downstream consumers a breaking change would affect.
-- [ ] Each is registered in `.vibe/config.toml` under `enabled_skills`.
-- [ ] Each is referenced in `.claude/codeowners.yaml` from TASK-055 under the correct file pattern.
+- [x] Three `SKILL.md` files exist under `.claude/skills/co-netgraph/`, `.claude/skills/co-schema/`, `.claude/skills/co-erc-engine/`.
+- [x] Each declares its invariants as a checklist of bullet points, not paragraphs of prose.
+- [x] Each names the authoritative dossier section and links to it relatively.
+- [x] Each names the downstream consumers a breaking change would affect.
+- [x] Each is registered in `.vibe/config.toml` under `enabled_skills`.
+- [x] Each is referenced in `.claude/codeowners.yaml` from TASK-055 under the correct file pattern.
 
 ## Test Plan
 
@@ -84,3 +86,32 @@ is established by these three; the others are pattern instances.
 
 Item 7 of the architecture-review recommendations
 ([EPIC-008](epic-008-architecture-fitness-functions.md) summary).
+
+### Implementation notes (closure)
+
+- **Invariant content sourced from the task body + ADRs**, not by
+  re-reading the eight dossier files. The decisions are already
+  recorded — TASK-054's ADRs (ADR-0003/0005/0006/0007) are the
+  primary references in each skill's "Authority" section.
+- **Cross-skill links.** Each skill links to its sibling code-owner
+  skills where they share concerns (e.g. `co-netgraph` references
+  `co-erc-engine` as a downstream consumer). Keeps the surface area
+  navigable when one of these reminders fires.
+- **Skill registration ordering.** `.vibe/config.toml`'s
+  `enabled_skills` list is alphabetical; the three new entries sort
+  as `co-erc-engine` < `co-netgraph` < `co-schema` (then `commit`)
+  per byte-wise comparison (`-` (0x2D) < `m` (0x6D)).
+- **Pattern bindings** in `.claude/codeowners.yaml` mirror the
+  target file paths exactly — no wildcards beyond `*.json` for the
+  `schema/` directory. `bom_exporter.py` /
+  `netlist_exporter.py` / `knowledge/rules.json` /
+  `layout_engine/kernel.py` will get their own entries when the
+  corresponding modules land (per the task body's "subsequent
+  skills are pattern instances" note).
+- **Manual verification deferred.** The AC's manual test plan
+  ("edit `netgraph.py`, `schema/circuit.schema.json`, and
+  `erc_engine.py` in one Claude session each") is not reproducible
+  from inside the agent doing the work. The TASK-055 integration
+  tests (`TestRun` class, 9 cases) exercise the same `run()` flow
+  with synthetic Edit payloads against the real registry; that is
+  the automated equivalent.

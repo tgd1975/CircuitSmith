@@ -1,9 +1,11 @@
 ---
 id: TASK-054
 title: Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier
-status: open
+status: closed
+closed: 2026-05-12
 opened: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: architecture-fitness-functions
@@ -42,11 +44,11 @@ entry point and the dossier remains the depth.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/adr/README.md` explains: what an ADR is in this project; how to add one; how to supersede (never edit destructively).
-- [ ] Eight seed ADRs exist (ADR-0001 through ADR-0008) with all four canonical sections.
-- [ ] Each ADR links back to the specific dossier section it summarises.
-- [ ] An index — either a `docs/developers/adr/INDEX.md` or a section inside `README.md` — lists every ADR with title and status.
-- [ ] Each ADR's status is `Accepted` (these are recording decisions already made in the dossier, not proposing new ones).
+- [x] `docs/developers/adr/README.md` explains: what an ADR is in this project; how to add one; how to supersede (never edit destructively).
+- [x] Eight seed ADRs exist (ADR-0001 through ADR-0008) with all four canonical sections.
+- [x] Each ADR links back to the specific dossier section it summarises.
+- [x] An index — either a `docs/developers/adr/INDEX.md` or a section inside `README.md` — lists every ADR with title and status.
+- [x] Each ADR's status is `Accepted` (these are recording decisions already made in the dossier, not proposing new ones).
 
 ## Test Plan
 
@@ -69,3 +71,21 @@ matches what most repos do.
 
 Item 5 of the architecture-review recommendations
 ([EPIC-008](epic-008-architecture-fitness-functions.md) summary).
+
+### Implementation notes (closure)
+
+- Index lives in `README.md` (under `## Index`), split into Accepted /
+  Superseded / Deprecated sections. The Superseded and Deprecated
+  sections are placeholders ("(none yet)") so the format is visible
+  to future authors.
+- Each ADR carries frontmatter (`id`, `title`, `status`, `date`,
+  `dossier-section`) followed by the four canonical sections plus a
+  trailing `## See also`. Frontmatter was added to make later
+  automated index regeneration cheap.
+- Each "See also" links back to the specific dossier file (and
+  section anchor where one exists) using a relative path.
+- ADR bodies were written from the task's own decision table (lines
+  27–36) rather than reading all eight dossier files in full —
+  TASK-054's intent is to *summarise decisions already made*, so the
+  dossier sections are referenced for depth but not re-derived here.
+- Markdownlint clean across all 9 files (README + 8 ADRs).

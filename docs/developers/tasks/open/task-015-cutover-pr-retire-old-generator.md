@@ -11,6 +11,12 @@ order: 8
 prerequisites: [TASK-014]
 ---
 
+## Autonomy
+
+`Main` kept per TASK-060 sweep. Cutover PR retires the old
+generator — irreversible without a manual revert. Auto-prepare up
+to PR creation; require explicit user approval to merge.
+
 ## Description
 
 The single discrete deliverable that flips the project from the

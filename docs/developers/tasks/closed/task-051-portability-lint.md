@@ -1,9 +1,11 @@
 ---
 id: TASK-051
 title: Portability lint for .claude/skills/circuit/
-status: open
+status: closed
+closed: 2026-05-12
 opened: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: architecture-fitness-functions
@@ -43,11 +45,11 @@ exceptions, each line a `<file>:<pattern>:<reason>` triple.
 
 ## Acceptance Criteria
 
-- [ ] `scripts/portability_lint.py` exists, takes the skill directory as its argument, exits 0 if clean and non-zero with a list of findings if not.
-- [ ] Runs as part of the pre-commit hook framework on staged changes inside the skill directory.
-- [ ] Runs in CI (the GitHub Actions workflow from TASK-048) as an unconditional check.
-- [ ] Allow-list mechanism (`.portability-allow.txt`) works and requires a per-entry reason.
-- [ ] `tests/test_portability_lint.py` feeds a fixture directory with seeded violations and asserts the lint catches each.
+- [x] `scripts/portability_lint.py` exists, takes the skill directory as its argument, exits 0 if clean and non-zero with a list of findings if not.
+- [x] Runs as part of the pre-commit hook framework on staged changes inside the skill directory.
+- [x] Runs in CI (the GitHub Actions workflow from TASK-048) as an unconditional check.
+- [x] Allow-list mechanism (`.portability-allow.txt`) works and requires a per-entry reason.
+- [x] `tests/test_portability_lint.py` feeds a fixture directory with seeded violations and asserts the lint catches each.
 
 ## Test Plan
 
@@ -70,3 +72,31 @@ dossier's promise that extraction is "mechanical" holds.
 
 Mechanical extraction is the test of whether the architecture's
 "self-contained skill IS the library" pattern actually worked.
+
+### Implementation notes (closure)
+
+- **Fixture approach.** The AC mentions checked-in
+  `tests/fixtures/portability-bad/` etc. Implementation uses synthetic
+  fixture trees built in `tempfile.TemporaryDirectory()` per test
+  instead — checked-in fixture dirs would themselves trigger the
+  lint when scanned wholesale, and excluding them would muddy the
+  contract. The test suite (`scripts/tests/test_portability_lint.py`)
+  has 18 cases covering each forbidden pattern, the docs/ exception,
+  the allow-list resolver, and the empty/missing-directory no-op.
+- **Pattern table** is in `scripts/portability_lint.py` (`PATTERNS`
+  list); each row is `(regex, message, docs_exception)`. The
+  docs-exception applies to sibling-project names (`AwesomeStudioPedal`,
+  `PartsLedger`) per the task's "outside docs/ files" wording. The
+  host-project name `CircuitSmith` has no docs-exception — skills
+  should not reference their host project at all, even in narrative.
+- **Allow-list format**: `<relative-path>:<pattern-substring>:<reason>`
+  per the task. Reason is free text. Match logic: an exception
+  applies when the relative-path equals the finding's path AND the
+  pattern-substring appears in the finding's message.
+- **Pre-commit hook gate.** Only fires when staged files include
+  paths matching `^\.claude/skills/circuit/` — the broader project
+  tree is never scanned. Empty/missing skill dir is a no-op so the
+  hook is safe to install before any skill code lands.
+- **CI step.** Runs unconditionally on every push and pull_request
+  (added after the markdown-lint step in `.github/workflows/ci.yml`).
+  On the current empty skill dir, the step exits 0 in ~50 ms.

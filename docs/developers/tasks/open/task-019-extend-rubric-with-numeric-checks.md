@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Medium (2-8h)
 complexity: Medium
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-renderer-layout
 order: 12
 prerequisites: [TASK-017]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Threshold values are
+derivable from the dossier's documented escalation policy; file an
+ADR for any value not stated there rather than pausing.
 
 ## Description
 

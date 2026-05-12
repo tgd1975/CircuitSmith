@@ -5,11 +5,17 @@ status: open
 opened: 2026-05-12
 effort: Large (8-24h)
 complexity: Senior
-human-in-loop: Clarification
+human-in-loop: No
 epic: circuit-renderer-layout
 order: 2
 prerequisites: [TASK-008]
 ---
+
+## Autonomy
+
+`Clarification` → `No` per TASK-060 sweep. Slot vocabulary is
+bounded by ADR-0001 (the canonical slot set); file an ADR for any
+new slot that doesn't map to that set rather than pausing.
 
 ## Description
 

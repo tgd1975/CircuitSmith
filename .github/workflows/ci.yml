@@ -37,7 +37,13 @@ jobs:
         # Mirror of scripts/pre-commit. Keep the glob and ignore-arg
         # in sync with that file's `markdownlint-cli2 …` invocation.
         shell: bash
-        run: markdownlint-cli2 "**/*.md" "#node_modules"
+        run: markdownlint-cli2 "**/*.md" "#node_modules" "#.claude/security-review-latest.md"
+
+      - name: Portability lint (.claude/skills/circuit/)
+        # Unconditional per TASK-051 AC. No-op on empty / missing dir,
+        # so safe to run before any skill code lands.
+        shell: bash
+        run: python scripts/portability_lint.py .claude/skills/circuit
 
       - name: Pytest
         run: pytest
