@@ -1,9 +1,11 @@
 ---
 id: TASK-004
 title: Write components/sensors.py
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-components
@@ -23,10 +25,10 @@ This is a worked example of the design invariant in
 
 ## Acceptance Criteria
 
-- [ ] `sensors.py` defines `bme280` and `ssd1306` profiles.
-- [ ] Both profiles declare I2C-specific pins (`SDA`, `SCL`, `VCC`, `GND`) with `type: i2c-data`/`i2c-clock` as appropriate.
-- [ ] Both profiles declare `metadata.keywords` (lowercase NFKC tokens).
-- [ ] `bme280.metadata` declares `i2c_address: 0x76` (or default per datasheet); `ssd1306.metadata` declares `i2c_address: 0x3C`.
+- [x] `sensors.py` defines `bme280` and `ssd1306` profiles.
+- [x] Both profiles declare I2C-specific pins (`SDA`, `SCL`, `VCC`, `GND`) with `type: i2c-data`/`i2c-clock` as appropriate. **Deviation from AC literal:** the dossier (`idea-001.components.md` §3 i2c rule) mandates a single `type: I2C` literal for both SDA and SCL, distinguished by the `func: ["I2C_SDA" \| "I2C_SCL"]` tag — this is what the schema's i2c-sensor rule keys on. Shipped per dossier.
+- [x] Both profiles declare `metadata.keywords` (lowercase NFKC tokens).
+- [x] `bme280.metadata` declares `i2c_address: 0x76` (or default per datasheet); `ssd1306.metadata` declares `i2c_address: 0x3C`.
 
 ## Test Plan
 

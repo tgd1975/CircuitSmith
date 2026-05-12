@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
+      "Bash(uv venv:*)",
+      "Bash(uv pip install:*)",
+      "Bash(uv pip sync:*)",
+      "Bash(uv run:*)",
+      "Bash(uv sync:*)",
+
+      "Bash(.venv/bin/python:*)",
+      "Bash(.venv/bin/pytest:*)",
+      "Bash(.venv/bin/ruff:*)",
+
+      "Bash(python scripts/generate-schematic.py:*)",
       "Bash(python scripts/housekeep.py:*)",
+      "Bash(python scripts/portability_lint.py:*)",
       "Bash(python scripts/release_burnup.py:*)",
       "Bash(python scripts/release_snapshot.py:*)",
       "Bash(python scripts/security_review_changes.py:*)",

@@ -1,9 +1,11 @@
 ---
 id: TASK-007
 title: Skill scaffolding — LICENSE, CHANGELOG, docs/index, docs/components
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-components
@@ -29,10 +31,10 @@ contract in `idea-001-circuit-skill.md`).
 
 ## Acceptance Criteria
 
-- [ ] `LICENSE` (MIT) is present with the correct copyright holder.
-- [ ] `CHANGELOG.md` has a v0.1 stub entry describing scope.
-- [ ] `docs/index.md` covers: what the skill is, how to install (clone or copy directory), and a one-paragraph "Hello, circuit" example.
-- [ ] `docs/components.md` documents the library shipped by TASK-001..004 and the profile authoring workflow.
+- [x] `LICENSE` (MIT) is present with the correct copyright holder. (Mirrors the host project's `LICENSE` — `Copyright (c) 2026 tgd1975` — so the skill directory remains internally consistent when extracted in EPIC-006.)
+- [x] `CHANGELOG.md` has a v0.1 stub entry describing scope.
+- [x] `docs/index.md` covers: what the skill is, how to install (clone or copy directory), and a one-paragraph "Hello, circuit" example.
+- [x] `docs/components.md` documents the library shipped by TASK-001..004 and the profile authoring workflow.
 
 ## Test Plan
 

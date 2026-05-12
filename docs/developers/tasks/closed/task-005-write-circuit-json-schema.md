@@ -1,9 +1,11 @@
 ---
 id: TASK-005
 title: Write schema/circuit.schema.json
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 epic: circuit-components
@@ -25,10 +27,10 @@ for rejecting structural errors `S4` (unknown component reference) and
 
 ## Acceptance Criteria
 
-- [ ] `circuit.schema.json` validates the three top-level sections (`meta`, `components`, `connections`) with required keys.
-- [ ] `type` values are loaded dynamically from `components/*.py` at validation time (e.g. via a generator script run pre-validation).
-- [ ] Validation produces structured findings with check codes `S4`/`S5` for unknown component / unknown pin references.
-- [ ] Three connection forms (`pins`, `path`, `bus`) are each validated against their distinct sub-schemas.
+- [x] `circuit.schema.json` validates the three top-level sections (`meta`, `components`, `connections`) with required keys.
+- [x] `type` values are loaded dynamically from `components/*.py` at validation time (via `schema/registry.py`'s walker — re-derived on every `validate()` call rather than baked into the JSON Schema file, so adding a profile needs no schema regen step).
+- [x] Validation produces structured findings with check codes `S4`/`S5` for unknown component / unknown pin references. (Findings are `Finding` dataclass instances; `check`, `severity`, `message`, `location`.)
+- [x] Three connection forms (`pins`, `path`, `bus`) are each validated against their distinct sub-schemas. (`oneOf` rejects mixed forms — covered by `test_oneof_rejects_mixed_connection_forms`.)
 
 ## Test Plan
 

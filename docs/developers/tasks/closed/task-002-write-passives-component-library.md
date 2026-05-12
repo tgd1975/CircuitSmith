@@ -1,9 +1,11 @@
 ---
 id: TASK-002
 title: Write components/passives.py
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-components
@@ -23,10 +25,10 @@ correct (one LED row per `(type, color)` pair) and the schema simple.
 
 ## Acceptance Criteria
 
-- [ ] `passives.py` defines `resistor`, `capacitor`, `LED`, `pushbutton`, `piezo` profiles.
-- [ ] `LED.metadata` declares `v_forward_by_color` covering at least red, green, blue, yellow, white.
-- [ ] Every profile declares `metadata.keywords` (lowercase NFKC tokens).
-- [ ] Every pin declares `type` and `direction` (the fields ERC keys on).
+- [x] `passives.py` defines `resistor`, `capacitor`, `LED`, `pushbutton`, `piezo` profiles.
+- [x] `LED.metadata` declares `v_forward_by_color` covering at least red, green, blue, yellow, white. (Also amber.)
+- [x] Every profile declares `metadata.keywords` (lowercase NFKC tokens).
+- [x] Every pin declares `type` and `direction` (the fields ERC keys on).
 
 ## Test Plan
 

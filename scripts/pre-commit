@@ -107,10 +107,17 @@ if [ -n "$STAGED_MD" ]; then
         exit 1
     fi
     echo -e "${YELLOW}Checking Markdown formatting...${NC}"
-    # Exclude `.claude/security-review-latest.md` — a gitignored runtime
-    # report written by the security-review hook on every merge. The glob
-    # picks it up otherwise; markdownlint-cli2 doesn't read .gitignore.
-    "$MARKDOWNLINT" "**/*.md" "#node_modules" "#.claude/security-review-latest.md" 2>&1
+    # Exclude:
+    # - `node_modules` — vendored JS deps.
+    # - `.claude/security-review-latest.md` — a gitignored runtime
+    #   report written by the security-review hook on every merge.
+    # - `.venv` — Python virtual env directory. Once uv is the standard
+    #   bootstrap (EPIC-001 onward), third-party `LICENSE.md` and other
+    #   package markdown inside `.venv/lib/.../site-packages/` are
+    #   reachable by the `**/*.md` glob and would always fail.
+    # markdownlint-cli2 does not read `.gitignore`, hence the explicit `#`
+    # exclude patterns.
+    "$MARKDOWNLINT" "**/*.md" "#node_modules" "#.venv" "#.claude/security-review-latest.md" 2>&1
     if [ $? -ne 0 ]; then
         echo -e "${RED}Markdown lint failed. Commit aborted.${NC}" >&2
         exit 1

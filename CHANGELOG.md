@@ -40,6 +40,16 @@ first tag is cut; until then the `[Unreleased]` section is the only entry.
   auto-fixed unused imports + 1 multi-import line; 6 `E741` ambiguous
   `l` in `test_housekeep.py` renamed to `ln`).
 - **EPIC-007 (Project Bootstrap) closed** — all attributed tasks done.
+- `uv` adopted for the Python venv lifecycle (`uv venv .venv`,
+  `uv pip install -e ".[dev]"`). Mirrors AwesomeStudioPedal's `.venv`
+  pattern and bypasses PEP 668's externally-managed system Python
+  cleanly. `.claude/settings.json` allow-list extended with
+  `Bash(uv venv|pip install|pip sync|sync|run:*)`,
+  `.venv/bin/python|pytest|ruff`, and
+  `scripts/generate-schematic.py` + `scripts/portability_lint.py`.
+- `scripts/pre-commit` markdown lint exclude list extended with
+  `.venv` so third-party `LICENSE.md` files inside the uv-managed
+  venv don't fail the hook.
 - Pre-commit hook: exclude `.claude/security-review-latest.md` from the
   markdownlint glob. The file is gitignored runtime state written by
   the security-review hook on every merge; markdownlint-cli2 doesn't
@@ -232,6 +242,69 @@ feature-epic deliverables land.
   documentation set + server-side branch protection are in place
   before EPIC-001 implementation work begins.
 
-Nothing under `.claude/skills/circuit/` exists yet — see
-[EPIC-001..006](docs/developers/tasks/EPICS.md), `Phase 0` (EPIC-007),
-and the governance gates in [EPIC-008](docs/developers/tasks/EPICS.md).
+### Circuit skill (EPIC-001 — Component Library and Schema)
+
+- TASK-001 closed: `.claude/skills/circuit/components/mcus.py` —
+  `esp32` (Joy-IT NodeMCU-32S, 30-pin) and `nrf52840` (Adafruit
+  Feather, 28-pin) dev-board profiles with chip-level electrical
+  metadata (Vcc range, per-GPIO and total current budgets,
+  strapping flags, default I²C `func` tags). Predecessor fixtures
+  `data/config.json` and the two reference SVGs under
+  `docs/builders/wiring/<target>/` brought in from
+  AwesomeStudioPedal.
+- TASK-002 closed: `.claude/skills/circuit/components/passives.py`
+  — resistor, capacitor, unified `LED` profile with colour-indexed
+  `v_forward_by_color` (red / green / amber / yellow / blue /
+  white) and `v_forward_default`, pushbutton, piezo (rides on
+  `category: resistor` per the layout-keys-not-semantics
+  invariant).
+- TASK-003 closed: `.claude/skills/circuit/components/connectors.py`
+  — `usb_c`, `dc_jack_2_1mm`, mono / stereo 6.35 mm audio jacks.
+  `make_header(n)` and `make_screw_terminal(n)` factories
+  materialise sizes 2 / 3 / 4 / 6 / 8 at module import.
+- TASK-004 closed: `.claude/skills/circuit/components/sensors.py`
+  — `bme280` (default I²C address 0x76) and `ssd1306` (0x3C).
+  Data-line pins use `type: I2C` plus
+  `func: ["I2C_SDA" | "I2C_SCL"]` per the dossier's i2c-sensor
+  rule.
+- TASK-005 closed: `.claude/skills/circuit/schema/circuit.schema.json`
+  plus the two-phase post-schema validator
+  (`schema/validator.py`, `schema/registry.py`). JSON Schema
+  enforces the three top-level sections (`meta`, `components`,
+  `connections`) and the three connection forms (`pins`, `path`,
+  `bus`) via `oneOf`. Dynamic `type:` validation walks
+  `components/*.py` at validation time — adding a profile needs
+  no schema regen. Findings carry `S4` (unknown component type)
+  or `S5` (unknown pin reference) check codes.
+  `tests/test_schema_validation.py` covers the four required
+  fixtures plus mixed-form rejection and parametric
+  three-top-level-section requirement.
+- TASK-006 closed: `scripts/generate-schematic.py` refactored to
+  import board pin tables from `components/mcus.py` via
+  `importlib`; circuit-role assignment (which silicon pin drives
+  which LED / button) stays in the script as firmware/config
+  concern. `tests/test_generator_byte_identity.py` runs the
+  refactored generator and compares to the on-disk references
+  with matplotlib non-determinism normalised (`<dc:date>`, random
+  clip-path IDs, mpl version in `<dc:title>`) — both ESP32 and
+  nRF52840 targets pass.
+- TASK-007 closed: skill scaffolding ships from day one —
+  `.claude/skills/circuit/LICENSE` (MIT mirroring the host
+  copyright), `.claude/skills/circuit/CHANGELOG.md` with the
+  v0.1 stub, `docs/index.md` (install + "Hello, circuit"
+  walk-through), `docs/components.md` (Phase 1 library reference
+  and profile-authoring guide).
+- ADR-0010 filed: MCU profiles describe the dev-board pinout
+  with silicon metadata at the chip level — the dossier example
+  used silicon pin names, but the dev-board shape is what the
+  byte-identity gate needed.
+- ADR-0011 filed: SVG regression test uses content-identity with
+  matplotlib non-determinism normalised, not literal
+  byte-identity — three mpl-injected fields prevent byte-equality
+  even across two consecutive runs of the unchanged script.
+- **EPIC-001 closed** — all 7 tasks done. Component library +
+  schema delivered; Phase 1 of the dossier roadmap complete.
+
+Nothing else under `.claude/skills/circuit/` exists yet — see
+[EPIC-002..006](docs/developers/tasks/EPICS.md) and the
+governance gates in [EPIC-008](docs/developers/tasks/EPICS.md).

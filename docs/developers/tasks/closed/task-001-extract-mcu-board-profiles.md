@@ -1,9 +1,11 @@
 ---
 id: TASK-001
 title: Extract ESP32 and nRF52840 board profiles into components/mcus.py
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 epic: circuit-components
@@ -32,10 +34,10 @@ the values they need: `vcc_min`, `vcc_max`, `max_gpio_current_ma`,
 
 ## Acceptance Criteria
 
-- [ ] `.claude/skills/circuit/components/mcus.py` defines `esp32` and `nrf52840` profiles with `category`, `metadata`, and `pins` sections.
-- [ ] Every pin entry declares `name`, `side`, `type`, `direction`, and (where applicable) `is_strapping` and `func`.
-- [ ] Each profile declares `metadata.keywords` as lowercase NFKC tokens.
-- [ ] Electrical metadata is sourced from manufacturer datasheets and cited inline in profile comments.
+- [x] `.claude/skills/circuit/components/mcus.py` defines `esp32` and `nrf52840` profiles with `category`, `metadata`, and `pins` sections.
+- [x] Every pin entry declares `name`, `side`, `type`, `direction`, and (where applicable) `is_strapping` and `func`. (Pin name is the dict key.)
+- [x] Each profile declares `metadata.keywords` as lowercase NFKC tokens.
+- [x] Electrical metadata is sourced from manufacturer datasheets and cited inline in profile comments. ESP32: ESP32-WROOM-32 datasheet + Joy-IT NodeMCU manual. nRF52840: Nordic PS v1.7 + Adafruit Feather pinout. ADR-0010 documents the dev-board-shape choice for the profile.
 
 ## Test Plan
 

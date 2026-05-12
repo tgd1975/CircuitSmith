@@ -1,0 +1,19 @@
+{
+  "_doc": "Hardware pin configuration for ESP32 (NodeMCU-32S). hardware field must match the compiled firmware target. ledPower drives the firmware-controlled status indicator (boot mismatch, delayed-action countdown, load-error fallback); on most NodeMCU-style boards GPIO 2 is wired to an onboard blue LED — see HARDWARE_CONFIG.md (TASK-231). debounceMs is the project-wide button-debounce window in milliseconds, applied to every configured button; omit the field to fall back to 100 ms (EPIC-028). pinNames maps physical GPIO numbers to role-based standard names so profiles can reference roles symbolically — see pin-names.schema.json for the v1 vocabulary (EPIC-029).",
+  "hardware":       "esp32",
+  "numProfiles":    7,
+  "numSelectLeds":  3,
+  "numButtons":     4,
+  "ledBluetooth":   26,
+  "ledPower":       2,
+  "ledSelect":      [5, 18, 19],
+  "buttonSelect":   21,
+  "buttonPins":     [13, 12, 27, 14],
+  "debounceMs":     100,
+  "pinNames": {
+    "13": "button_a",
+    "12": "button_b",
+    "21": "button_select",
+    "26": "led_bluetooth"
+  }
+}

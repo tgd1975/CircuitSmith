@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 53** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 21** | **Total: 74** | ███░░░░░░░ 28%
+⚪ **Open: 46** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 28** | **Total: 74** | ████░░░░░░ 38%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,13 +30,6 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-001](open/task-001-extract-mcu-board-profiles.md) | Extract ESP32 and nRF52840 board profiles into components/mcus.py | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-002](open/task-002-write-passives-component-library.md) | Write components/passives.py | Medium (2-8h) | Junior | ⚪ open |
-| [TASK-003](open/task-003-write-connectors-component-library.md) | Write components/connectors.py | Medium (2-8h) | Junior | ⚪ open |
-| [TASK-004](open/task-004-write-sensors-component-library.md) | Write components/sensors.py | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-005](open/task-005-write-circuit-json-schema.md) | Write schema/circuit.schema.json | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-006](open/task-006-refactor-generate-schematic-to-use-library.md) | Refactor scripts/generate-schematic.py to import from components/ | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-007](open/task-007-skill-scaffold-license-changelog-docs.md) | Skill scaffolding — LICENSE, CHANGELOG, docs/index, docs/components | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-008](open/task-008-implement-netgraph-data-model.md) | Implement netgraph.py — shared NetGraph data model | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-009](open/task-009-implement-layout-kernel-canonical-slots.md) | Implement layout_engine/kernel.py — deterministic placer | Large (8-24h) | Senior | ⚪ open |
 | [TASK-010](open/task-010-implement-manhattan-router.md) | Implement layout_engine/router.py — Manhattan router | Medium (2-8h) | Senior | ⚪ open |
@@ -88,6 +81,13 @@ _No paused tasks._
 
 | ID | Title | Effort |
 |----|-------|--------|
+| [TASK-001](closed/task-001-extract-mcu-board-profiles.md) | Extract ESP32 and nRF52840 board profiles into components/mcus.py | Medium (2-8h) |
+| [TASK-002](closed/task-002-write-passives-component-library.md) | Write components/passives.py | Medium (2-8h) |
+| [TASK-003](closed/task-003-write-connectors-component-library.md) | Write components/connectors.py | Medium (2-8h) |
+| [TASK-004](closed/task-004-write-sensors-component-library.md) | Write components/sensors.py | Small (&lt;2h) |
+| [TASK-005](closed/task-005-write-circuit-json-schema.md) | Write schema/circuit.schema.json | Medium (2-8h) |
+| [TASK-006](closed/task-006-refactor-generate-schematic-to-use-library.md) | Refactor scripts/generate-schematic.py to import from components/ | Medium (2-8h) |
+| [TASK-007](closed/task-007-skill-scaffold-license-changelog-docs.md) | Skill scaffolding — LICENSE, CHANGELOG, docs/index, docs/components | Small (&lt;2h) |
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |

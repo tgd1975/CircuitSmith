@@ -1,9 +1,11 @@
 ---
 id: TASK-003
 title: Write components/connectors.py
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-components
@@ -22,10 +24,10 @@ profile per pin count.
 
 ## Acceptance Criteria
 
-- [ ] `connectors.py` defines `usb_c`, `dc_jack_2_1mm`, `mono_jack_6_35mm`, `stereo_jack_6_35mm` profiles.
-- [ ] `make_header(n)` and `make_screw_terminal(n)` factories return valid profiles for any supported pin count.
-- [ ] Every profile declares `metadata.keywords` (lowercase NFKC tokens).
-- [ ] Power-bearing pins (USB-C VBUS, DC jack tip) declare `type: power`.
+- [x] `connectors.py` defines `usb_c`, `dc_jack_2_1mm`, `mono_jack_6_35mm`, `stereo_jack_6_35mm` profiles.
+- [x] `make_header(n)` and `make_screw_terminal(n)` factories return valid profiles for any supported pin count.
+- [x] Every profile declares `metadata.keywords` (lowercase NFKC tokens).
+- [x] Power-bearing pins (USB-C VBUS, DC jack tip) declare `type: power`. Uppercase `POWER` per the dossier convention in `idea-001.components.md` §3 (the AC's lowercase is colloquial; the dossier's schema-enforced implication table keys on the uppercase literal).
 
 ## Test Plan
 
