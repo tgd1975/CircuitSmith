@@ -1,9 +1,11 @@
 ---
 id: TASK-071
 title: Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy)
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: developer-docs-governance
@@ -37,13 +39,13 @@ every bypass with its log location.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/COMMIT_POLICY.md` exists and is linked from CLAUDE.md (`## Commits go through /commit — always` → "Rationale: COMMIT_POLICY.md") and from CONTRIBUTING.md.
-- [ ] The pathspec rationale is explained with a worked example of the race-condition failure mode the rule prevents.
-- [ ] The one-shot-token mechanism (`.git/cs-commit-token` written by `scripts/commit-pathspec.sh`, validated by the pre-commit hook) is documented end-to-end so a contributor can read the hook source and follow.
-- [ ] The three-check hook-failure protocol from `.claude/skills/commit/SKILL.md` is transcribed (or linked + summarised) so it is discoverable from the doc.
-- [ ] Bypass policy: `CS_COMMIT_BYPASS="<reason>"` is logged to `.git/cs-commit-bypass.log`; the doc names which scenarios are legitimate (interactive rebase, recovery from broken `/commit`, manual repo surgery) and which are not (silencing a hook to land work).
-- [ ] Squash-merge + CHANGELOG-rides-along policy is transcribed from CLAUDE.md so a contributor can find it without re-reading the agent file.
-- [ ] LLM-attribution-trailer ban (`Co-Authored-By: Claude …`) is recorded with rationale.
+- [x] `docs/developers/COMMIT_POLICY.md` exists and is linked from CLAUDE.md (`## Commits go through /commit — always` → "Rationale: COMMIT_POLICY.md") and from CONTRIBUTING.md.
+- [x] The pathspec rationale is explained with a worked example of the race-condition failure mode the rule prevents.
+- [x] The one-shot-token mechanism (`.git/cs-commit-token` written by `scripts/commit-pathspec.sh`, validated by the pre-commit hook) is documented end-to-end so a contributor can read the hook source and follow.
+- [x] The three-check hook-failure protocol from `.claude/skills/commit/SKILL.md` is transcribed (or linked + summarised) so it is discoverable from the doc.
+- [x] Bypass policy: `CS_COMMIT_BYPASS="<reason>"` is logged to `.git/cs-commit-bypass.log`; the doc names which scenarios are legitimate (interactive rebase, recovery from broken `/commit`, manual repo surgery) and which are not (silencing a hook to land work).
+- [x] Squash-merge + CHANGELOG-rides-along policy is transcribed from CLAUDE.md so a contributor can find it without re-reading the agent file.
+- [x] LLM-attribution-trailer ban (`Co-Authored-By: Claude …`) is recorded with rationale.
 
 ## Test Plan
 
