@@ -1,9 +1,11 @@
 ---
 id: TASK-069
 title: Author docs/developers/MERMAID_STYLE_GUIDE.md (diagram types, palette, edge conventions)
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -29,13 +31,13 @@ sequence diagrams for hook flows.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/MERMAID_STYLE_GUIDE.md` exists.
-- [ ] Diagram-type selector: a decision table mapping "I want to show X" to "use diagram type Y" (data flow → flowchart LR, module boundaries → graph, runtime sequence → sequenceDiagram, lifecycle states → stateDiagram-v2).
-- [ ] Palette: defined color codes for: data nodes, process nodes, output nodes, forbidden edges, conditional edges, deprecated nodes. Hex codes named, with the rationale per choice.
-- [ ] Edge conventions: solid for data flow, dashed for "via", dotted for optional, red for forbidden, bold for primary path.
-- [ ] Node-label conventions: nouns for data, verbs for process, ALL-CAPS for top-level subsystems.
-- [ ] Cross-reference: the first ARCHITECTURE.md diagrams (TASK-068) are cited as the reference example for each diagram type.
-- [ ] Accessibility note: every mermaid block includes a paragraph of prose summary above or below for screen-readers (mermaid is not natively screen-reader-friendly).
+- [x] `docs/developers/MERMAID_STYLE_GUIDE.md` exists.
+- [x] Diagram-type selector: a decision table mapping "I want to show X" to "use diagram type Y" (data flow → flowchart LR, module boundaries → graph, runtime sequence → sequenceDiagram, lifecycle states → stateDiagram-v2).
+- [x] Palette: defined color codes for: data nodes, process nodes, output nodes, forbidden edges, conditional edges, deprecated nodes. Hex codes named, with the rationale per choice.
+- [x] Edge conventions: solid for data flow, dashed for "via", dotted for optional, red for forbidden, bold for primary path.
+- [x] Node-label conventions: nouns for data, verbs for process, ALL-CAPS for top-level subsystems.
+- [x] Cross-reference: the first ARCHITECTURE.md diagrams (TASK-068) are cited as the reference example for each diagram type.
+- [x] Accessibility note: every mermaid block includes a paragraph of prose summary above or below for screen-readers (mermaid is not natively screen-reader-friendly).
 
 ## Test Plan
 
