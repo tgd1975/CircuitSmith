@@ -1,9 +1,11 @@
 ---
 id: TASK-065
 title: Author docs/developers/CI_PIPELINE.md inventorying CI jobs and gate semantics
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -30,12 +32,12 @@ deploy) land as the project ramps.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/CI_PIPELINE.md` exists and is linked from CONTRIBUTING.md.
-- [ ] Each CI job is listed with: trigger, OS axis, what it does, what a red build means.
-- [ ] Pre-commit hook is documented as the local mirror of the CI gates (markdown lint, portability lint, security review on pulls).
-- [ ] The doc states explicitly which CI failures are advisory vs blocking (today: all jobs blocking; document the policy).
-- [ ] A "red build response" section names the standard sequence: read the failing step, reproduce locally, fix, re-push — and the escalation point (when the failure is in the harness, not the code).
-- [ ] Cross-references: BRANCH_PROTECTION_CONCEPT.md (TASK-072) lists the same CI contexts as required status checks.
+- [x] `docs/developers/CI_PIPELINE.md` exists and is linked from CONTRIBUTING.md.
+- [x] Each CI job is listed with: trigger, OS axis, what it does, what a red build means.
+- [x] Pre-commit hook is documented as the local mirror of the CI gates (markdown lint, portability lint, security review on pulls).
+- [x] The doc states explicitly which CI failures are advisory vs blocking (today: all jobs blocking; document the policy).
+- [x] A "red build response" section names the standard sequence: read the failing step, reproduce locally, fix, re-push — and the escalation point (when the failure is in the harness, not the code).
+- [x] Cross-references: BRANCH_PROTECTION_CONCEPT.md (TASK-072) lists the same CI contexts as required status checks.
 
 ## Test Plan
 
