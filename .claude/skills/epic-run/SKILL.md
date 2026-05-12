@@ -134,20 +134,71 @@ order they were closed):
    files.
 
 Shared files (the registries, settings file, OVERVIEW / EPICS /
-KANBAN indexes, CHANGELOG, `scripts/README.md`) ride with the
-**most relevant commit**, typically the last one in the batch.
-Do not roll back shared files to reproduce an intermediate state
-for earlier commits — forward references inside a coordinated
-branch are acceptable.
+KANBAN indexes, `scripts/README.md`) ride with the **most relevant
+commit**, typically the last one in the batch. Do not roll back
+shared files to reproduce an intermediate state for earlier commits
+— forward references inside a coordinated branch are acceptable.
 
 The final task's commit also carries the cumulative regen of the
-indexes + scripts/README + the CHANGELOG bullets covering every
-task in the batch.
+indexes + `scripts/README.md`. **CHANGELOG.md is handled separately
+in the CHANGELOG-delta phase below** — it is not bundled with any
+per-task commit.
 
 If a task naturally bundles with another (e.g. TASK-055's hook
 mechanism + TASK-056's first three skills using that mechanism),
 a single combined commit is fine — but the default is one commit
 per task closure.
+
+## CHANGELOG-delta phase
+
+Runs **once**, after the per-task commits land and before Exit. The
+job is to make `CHANGELOG.md`'s `[Unreleased]` section reflect the
+work this epic-run produced, in one final commit.
+
+The rule is **delta-only**: read what is already in `[Unreleased]`,
+identify which closed tasks (and other landed changes) are **not yet
+represented**, and append only the missing entries. Do not edit,
+reorder, reword, or remove existing entries — they may have been
+written by hand or by a prior run, and a destructive rewrite would
+clobber that work.
+
+Steps:
+
+1. Read [`CHANGELOG.md`](../../../CHANGELOG.md). Focus on the
+   `## [Unreleased]` section. Note which `TASK-NNN` IDs and which
+   policy / tooling deltas are already named.
+2. For each task closed in this epic-run (from the work-phase
+   batch and, if applicable, the hand-off-phase stop-line task),
+   check whether it is already represented. If not, draft one
+   bullet under the appropriate Keep-a-Changelog subheading
+   (`### Added`, `### Tooling`, `### Policy`, `### Governance`,
+   `### Developer experience`, `### Autonomy`, …). One bullet per
+   task; the bullet references `TASK-NNN` and names the artefact
+   the task produced.
+3. For the ride-along changes from the final commit (skill
+   updates, config tweaks, anything that does not have a TASK ID
+   but was an intentional part of the run), check whether they are
+   already represented. If not, draft one bullet each under the
+   appropriate subheading.
+4. If the epic itself closed in this run, add a one-line
+   **`EPIC-NNN closed`** bullet naming the deliverable and linking
+   to the EPIC file. Place it at the bottom of the most relevant
+   subheading or as its own line.
+5. Choose subheadings that already exist in `[Unreleased]` over
+   inventing new ones. Add a new subheading only when no existing
+   one fits.
+6. `/commit "chore(EPIC-NNN): update CHANGELOG with EPIC-NNN delta"
+   CHANGELOG.md`.
+
+This is the **only** way the agent touches `CHANGELOG.md` in an
+epic-run. The per-task commits never edit it; the final ride-along
+commit never edits it; only this phase does, and only by appending
+the delta.
+
+The squash-to-`main` merge (owned by the user) still preserves the
+`[Unreleased]` content. The agent's job is to make sure the
+branch's `[Unreleased]` is **already correct** by the time the
+user hits "squash and merge."
 
 ## Exit
 
