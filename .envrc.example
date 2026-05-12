@@ -1,0 +1,27 @@
+# direnv config for CircuitSmith — per-developer paths and credentials.
+#
+# Setup:
+#   1. Install direnv: `sudo apt install direnv` (Ubuntu) or `brew install direnv` (macOS).
+#   2. Hook your shell — see https://direnv.net/docs/hook.html. For bash:
+#        eval "$(direnv hook bash)"   # add to ~/.bashrc
+#   3. Copy this file: `cp .envrc.example .envrc`
+#   4. Fill in the values below.
+#   5. `direnv allow` from the repo root — direnv will then load these
+#      whenever your shell is inside the repo.
+#
+# All variables are namespaced CS_* so they don't collide.
+
+# Anthropic API key — for any Claude API calls CircuitSmith makes.
+export ANTHROPIC_API_KEY=""
+
+# Path to a sibling PartsLedger checkout. CircuitSmith reads
+# `${CS_PARTSLEDGER_PATH}/inventory/parts/*.md` in --prefer-inventory mode.
+# Leave empty to disable inventory integration.
+export CS_PARTSLEDGER_PATH=""
+
+# Override the default Python interpreter (e.g. point at a project venv).
+export CS_PYTHON="${CS_PYTHON:-python3}"
+
+# Bypass reason for the /commit pre-commit hook. Leave empty under normal use;
+# set only for interactive rebase / recovery. Logged to .git/cs-commit-bypass.log.
+# export CS_COMMIT_BYPASS=""

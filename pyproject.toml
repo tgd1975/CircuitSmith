@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "circuitsmith"
+version = "0.1.0.dev0"
+description = "Generate KiCad-compatible schematics from declarative YAML, validate against electrical rules, export BOM and netlist — driven by a Claude Code skill."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "tgd1975", email = "t.deutsch.75@gmail.com" },
+]
+keywords = [
+    "schematic",
+    "kicad",
+    "schemdraw",
+    "erc",
+    "circuit",
+    "bom",
+    "netlist",
+    "claude-code-skill",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Software Development :: Code Generators",
+]
+
+dependencies = [
+    "schemdraw>=0.20",
+    "matplotlib>=3.7",
+    "jsonschema>=4.0",
+    "ruamel.yaml>=0.17",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/tgd1975/CircuitSmith"
+Issues = "https://github.com/tgd1975/CircuitSmith/issues"
+Changelog = "https://github.com/tgd1975/CircuitSmith/blob/main/CHANGELOG.md"
+
+# No importable Python package yet — the skill lives in
+# .claude/skills/circuit/ (created in Phase 1) and scripts/ holds
+# task-system utilities, not a library. Tell setuptools to install
+# metadata only so `pip install -e .` succeeds without auto-discovery
+# guessing wrong.
+[tool.setuptools]
+py-modules = []

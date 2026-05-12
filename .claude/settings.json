@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/housekeep.py:*)",
+      "Bash(python scripts/release_burnup.py:*)",
+      "Bash(python scripts/release_snapshot.py:*)",
+      "Bash(python scripts/security_review_changes.py:*)",
+      "Bash(python scripts/update_idea_overview.py:*)",
+      "Bash(python scripts/update_task_overview.py:*)",
+      "Bash(python scripts/update_scripts_readme.py:*)",
+
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git blame:*)",
+
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(wc:*)",
+
+      "Bash(markdownlint-cli2:*)",
+
+      "Bash(pytest:*)",
+      "Bash(python -m pytest:*)",
+
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh api repos/:*)"
+    ],
+    "deny": [
+      "Bash(git add:*)"
+    ]
+  }
+}
