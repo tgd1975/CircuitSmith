@@ -1,9 +1,11 @@
 ---
 id: TASK-062
 title: Author docs/developers/DEVELOPMENT_SETUP.md as the canonical first-time-setup entry point
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -31,12 +33,12 @@ install, smoke-test, and a "common setup problems" appendix.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/DEVELOPMENT_SETUP.md` exists and is reachable from `CONTRIBUTING.md` as the canonical setup pointer.
-- [ ] Tool prerequisites section names every binary the dev needs: Python 3.11+, node 20+, npm, `markdownlint-cli2`, git, and (optional) direnv.
-- [ ] Setup procedure is reproducible on both Ubuntu and Windows 11 — explicit per-OS commands where they diverge (shell syntax, `pip` vs `py -m pip`, etc.).
-- [ ] CONTRIBUTING.md keeps its PR-workflow content but redirects "first-time setup" to this doc rather than duplicating it.
-- [ ] A "common setup problems" appendix covers at minimum: missing markdownlint-cli2, wrong Python version, git hooks not installed, missing `$CS_*` env vars.
-- [ ] Doc closes with a smoke-test sequence (clone → install → `pytest` green) that a contributor can copy-paste.
+- [x] `docs/developers/DEVELOPMENT_SETUP.md` exists and is reachable from `CONTRIBUTING.md` as the canonical setup pointer.
+- [x] Tool prerequisites section names every binary the dev needs: Python 3.11+, node 20+, npm, `markdownlint-cli2`, git, and (optional) direnv.
+- [x] Setup procedure is reproducible on both Ubuntu and Windows 11 — explicit per-OS commands where they diverge (shell syntax, `pip` vs `py -m pip`, etc.).
+- [x] CONTRIBUTING.md keeps its PR-workflow content but redirects "first-time setup" to this doc rather than duplicating it.
+- [x] A "common setup problems" appendix covers at minimum: missing markdownlint-cli2, wrong Python version, git hooks not installed, missing `$CS_*` env vars.
+- [x] Doc closes with a smoke-test sequence (clone → install → `pytest` green) that a contributor can copy-paste.
 
 ## Test Plan
 
