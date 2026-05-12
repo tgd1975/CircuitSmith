@@ -1,9 +1,11 @@
 ---
 id: TASK-068
 title: Author docs/developers/ARCHITECTURE.md as the explicit top-down architecture page
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: developer-docs-governance
@@ -38,13 +40,13 @@ ADR.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/ARCHITECTURE.md` exists and is linked from `README.md`'s architecture section (which is repointed to be a summary that defers to this doc for the depth).
-- [ ] A mermaid flowchart shows the pipeline (YAML → schema → NetGraph → ERC → layout → render → exporters) with one-line annotations per stage.
-- [ ] A mermaid graph shows the module-boundary structure: `renderer`, `netgraph`, `erc_engine`, `bom_exporter`, `netlist_exporter`, `layout_engine/{kernel,router,ai_placer}`, `schema/`, `components/`, `knowledge/` — with the three forbidden edges (TASK-050) marked as red dashed lines.
-- [ ] A component table names each module, its file path under `.claude/skills/circuit/`, the ADR(s) that govern it, the code-owner skill (if any), and one-line responsibility.
-- [ ] Decoupling section names the four load-bearing seams: NetGraph contract (ADR-0003), exporter decoupling (ADR-0004), ERC pre-layout (ADR-0005), skill-directory portability (ADR-0007). Each links to its ADR.
-- [ ] AI-containment property is documented: where AI runs (authoring time only, layout placer), where it does *not* run (runtime hardware rules — see ADR-0006).
-- [ ] The doc closes with a "where to go next" map: ADR index for decisions, dossier index for depth, code-owner skills for the per-file invariants.
+- [x] `docs/developers/ARCHITECTURE.md` exists and is linked from `README.md`'s architecture section (which is repointed to be a summary that defers to this doc for the depth).
+- [x] A mermaid flowchart shows the pipeline (YAML → schema → NetGraph → ERC → layout → render → exporters) with one-line annotations per stage.
+- [x] A mermaid graph shows the module-boundary structure: `renderer`, `netgraph`, `erc_engine`, `bom_exporter`, `netlist_exporter`, `layout_engine/{kernel,router,ai_placer}`, `schema/`, `components/`, `knowledge/` — with the three forbidden edges (TASK-050) marked as red dashed lines.
+- [x] A component table names each module, its file path under `.claude/skills/circuit/`, the ADR(s) that govern it, the code-owner skill (if any), and one-line responsibility.
+- [x] Decoupling section names the four load-bearing seams: NetGraph contract (ADR-0003), exporter decoupling (ADR-0004), ERC pre-layout (ADR-0005), skill-directory portability (ADR-0007). Each links to its ADR.
+- [x] AI-containment property is documented: where AI runs (authoring time only, layout placer), where it does *not* run (runtime hardware rules — see ADR-0006).
+- [x] The doc closes with a "where to go next" map: ADR index for decisions, dossier index for depth, code-owner skills for the per-file invariants.
 
 ## Test Plan
 
