@@ -25,6 +25,7 @@
       "Bash(wc:*)",
 
       "Bash(markdownlint-cli2:*)",
+      "Bash(ruff:*)",
 
       "Bash(pytest:*)",
       "Bash(python -m pytest:*)",

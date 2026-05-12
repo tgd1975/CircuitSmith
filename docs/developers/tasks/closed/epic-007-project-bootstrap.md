@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-12
 closed:
 assigned:
-branch: main
+branch: epic-007-project-bootstrap
 ---
 
 Phase 0 of the project: machine-readable Python project configuration and CI

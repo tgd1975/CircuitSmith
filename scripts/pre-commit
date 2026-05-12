@@ -8,8 +8,11 @@
 #   2. Markdown lint (markdownlint-cli2 — mandatory; missing tool fails
 #      the hook so the contributor installs it rather than silently
 #      shipping unlinted Markdown).
+#   3. Python lint (ruff — mandatory; missing tool fails the hook).
+#      Mirrors the markdown block. Configuration lives in pyproject.toml
+#      `[tool.ruff]`. Adopted in TASK-061.
 #
-# Add C++ / Python-test / Flutter gates here when the project gains them.
+# Add C++ / Flutter gates here when the project gains them.
 
 set -euo pipefail
 
@@ -101,12 +104,40 @@ if [ -n "$STAGED_MD" ]; then
         exit 1
     fi
     echo -e "${YELLOW}Checking Markdown formatting...${NC}"
-    "$MARKDOWNLINT" "**/*.md" "#node_modules" 2>&1
+    # Exclude `.claude/security-review-latest.md` — a gitignored runtime
+    # report written by the security-review hook on every merge. The glob
+    # picks it up otherwise; markdownlint-cli2 doesn't read .gitignore.
+    "$MARKDOWNLINT" "**/*.md" "#node_modules" "#.claude/security-review-latest.md" 2>&1
     if [ $? -ne 0 ]; then
         echo -e "${RED}Markdown lint failed. Commit aborted.${NC}" >&2
         exit 1
     fi
     echo -e "${GREEN}Markdown OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
+# Python lint (mandatory — missing ruff fails the hook so the contributor
+# installs it rather than silently shipping unlinted Python). Mirrors the
+# markdown block; configuration in pyproject.toml `[tool.ruff]`.
+# ---------------------------------------------------------------------------
+STAGED_PY=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.py$' || true)
+if [ -n "$STAGED_PY" ]; then
+    RUFF=$(command -v ruff 2>/dev/null || true)
+    if [ -z "$RUFF" ]; then
+        echo -e "${RED}ERROR: ruff is required but not installed.${NC}" >&2
+        echo "  Install: pip install -r requirements-dev.txt" >&2
+        echo "  (or directly: pip install 'ruff>=0.7')" >&2
+        exit 1
+    fi
+    echo -e "${YELLOW}Checking Python lint (ruff check)...${NC}"
+    # Lint only the staged files — the /commit auto-fixer already ran
+    # against the same pathspec, so a residual error is a real one.
+    # shellcheck disable=SC2086
+    if ! echo "$STAGED_PY" | xargs "$RUFF" check; then
+        echo -e "${RED}Ruff lint failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}Ruff lint OK.${NC}"
 fi
 
 exit 0

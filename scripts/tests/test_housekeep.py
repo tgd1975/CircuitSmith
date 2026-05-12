@@ -367,14 +367,14 @@ class TestGenerateKanbanMd(unittest.TestCase):
             self._make_task(t, "closed", "003", "closed")
             content = self._run(t)
             lines = content.splitlines()
-            open_idx = next(i for i, l in enumerate(lines) if "  Open" in l)
-            active_idx = next(i for i, l in enumerate(lines) if "  Active" in l)
-            closed_idx = next(i for i, l in enumerate(lines) if "  Closed" in l)
+            open_idx = next(i for i, ln in enumerate(lines) if "  Open" in ln)
+            active_idx = next(i for i, ln in enumerate(lines) if "  Active" in ln)
+            closed_idx = next(i for i, ln in enumerate(lines) if "  Closed" in ln)
             # Kanban renders task IDs as mermaid node IDs (underscore, not
             # dash) because mermaid kanban syntax rejects the dash form.
-            task001_idx = next(i for i, l in enumerate(lines) if "TASK_001" in l)
-            task002_idx = next(i for i, l in enumerate(lines) if "TASK_002" in l)
-            task003_idx = next(i for i, l in enumerate(lines) if "TASK_003" in l)
+            task001_idx = next(i for i, ln in enumerate(lines) if "TASK_001" in ln)
+            task002_idx = next(i for i, ln in enumerate(lines) if "TASK_002" in ln)
+            task003_idx = next(i for i, ln in enumerate(lines) if "TASK_003" in ln)
             self.assertLess(open_idx, task001_idx)
             self.assertLess(task001_idx, active_idx)
             self.assertLess(active_idx, task002_idx)
@@ -485,7 +485,8 @@ class TestInitEndToEnd(unittest.TestCase):
                              tasks_dir / "closed" / "task-001-hello.md")
 
     def test_version_flag(self):
-        import subprocess, sys
+        import subprocess
+        import sys
         result = subprocess.run(
             [sys.executable, str(pathlib.Path(hk.__file__)), "--version"],
             capture_output=True, text=True,

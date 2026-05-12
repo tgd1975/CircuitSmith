@@ -1,9 +1,11 @@
 ---
 id: TASK-047
 title: Configure pytest (testpaths, discovery, coverage thresholds)
-status: open
+status: closed
+closed: 2026-05-12
 opened: 2026-05-12
 effort: XS (<30m)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: project-bootstrap
@@ -31,9 +33,9 @@ or as a follow-up.
 
 ## Acceptance Criteria
 
-- [ ] `pytest` invoked from repo root with no arguments discovers and runs every test under `scripts/tests/`.
-- [ ] `pyproject.toml` (or `pytest.ini`) declares `testpaths`, `python_files`, and `addopts` as above.
-- [ ] Running pytest with a misspelled marker (`@pytest.mark.slowww`) errors out due to `--strict-markers`.
+- [x] `pytest` invoked from repo root with no arguments discovers and runs every test under `scripts/tests/`.
+- [x] `pyproject.toml` (or `pytest.ini`) declares `testpaths`, `python_files`, and `addopts` as above.
+- [x] Running pytest with a misspelled marker (`@pytest.mark.slowww`) errors out due to `--strict-markers`.
 
 ## Test Plan
 
@@ -43,3 +45,17 @@ count matches `find scripts/tests -name 'test_*.py' | xargs grep -c '^    def te
 ## Notes
 
 If the team later wants coverage gates, add `pytest-cov` to `requirements-dev.txt` and a `--cov=scripts --cov-fail-under=N` to `addopts` — but not yet. A coverage gate without test stability is theatre.
+
+### Implementation note (deviation from description)
+
+Pytest 9.0.2 does not honour `--strict-markers` when supplied via
+`addopts = "-ra --strict-markers"` in `[tool.pytest.ini_options]`; the
+flag silently degrades to a `PytestUnknownMarkWarning`. The fix is to
+set the ini option directly: `strict_markers = true`, with `addopts`
+keeping only `-ra`. Verified by collecting a probe file containing
+`@pytest.mark.slowww` — pytest now exits non-zero with
+`'slowww' not found in 'markers' configuration option`.
+
+Also: the description's mention of pre-existing failures in
+`test_housekeep.py` is no longer accurate — at the time of this task
+all 114 tests pass.

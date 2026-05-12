@@ -29,10 +29,43 @@ When a CLI tool is not found (e.g. `markdownlint`, `jq`):
 2. If it still fails, **stop and ask the user** to install it — do not spiral
    through fallback strategies or reimplement the tool's logic.
 
+## Bash commands — no diagnostic suffix
+
+Do not append `; echo "EXIT=$?"`, `&& echo OK`, or similar diagnostic chains
+to Bash tool invocations. The Bash tool already reports exit codes in its
+result, so the suffix is redundant. It also defeats the project's permission
+allowlist: the matcher checks the whole command string, and a compound like
+`cmd ; echo …` requires *both* halves to satisfy an allow rule. Since
+`Bash(echo:*)` is deliberately **not** allow-listed (adding it would just
+train the wrong chaining habit), the suffix forces a permission prompt even
+when the primary command is allowed.
+
+Just run the command; trust the tool result for success/failure signal.
+
 ## Human interaction — batch questions, don't loop
 
 If N questions can be asked simultaneously, ask all N at once. Only use a
 sequential loop when each answer genuinely depends on the previous one.
+
+## No end-of-turn "continue?" checkpoints
+
+Do **not** ask "want me to continue with the next task, stop here, or do
+something else?" at the end of a successful turn. Suspending work is the
+user's job, not yours — they close the laptop and the OS hibernates. The
+session resumes whenever they reopen it.
+
+The right pattern: keep going until you finish the work the user asked for,
+or until you hit a *genuine* stop-line. Genuine stop-lines are:
+
+- An irreversible / remote-effect action (push, merge, PR comment posted,
+  destructive op).
+- A real ambiguity where you cannot pick a defensible default and an ADR
+  would be premature.
+- The work the user named is actually done.
+
+Sequencing through tasks under an active epic the user said to "continue
+execute" is **not** a stop-line — keep going. The end-of-turn summary
+should be a one or two sentence status, no question attached.
 
 ## Auto-activate tasks when work begins
 

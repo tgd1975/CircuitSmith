@@ -108,6 +108,12 @@ A read of all 58 open tasks plus the active epic surfaced these gaps:
       indexes); a `deny` list for `git push`, `gh pr merge`, and any
       `--no-verify` / `CS_COMMIT_BYPASS` invocation so a remote push
       or hook bypass cannot happen without explicit user approval.
+      Additionally — observed during the EPIC-007 pilot (2026-05-12) —
+      add `Bash(sed:*)`, `Bash(awk:*)`, `Bash(head:*)`, `Bash(tail:*)`
+      to the deny list so file slicing/editing routes through the
+      Read/Edit tools per the CLAUDE.md "use dedicated tool" rule.
+      Leave `cat` out of the deny list — `cat <<'EOF' ... EOF`
+      heredocs are load-bearing in the `/commit` wrapper invocation.
 - [ ] Each epic file gains a documented `## Implementation log`
       convention (one append-only line per closed task: date, task ID,
       ADRs filed, anything notable). Documented in `AUTONOMY.md`;

@@ -73,13 +73,14 @@ keeps blast radius scoped to the single commit attempt.
    | File class | Fixer (run only on pathspec entries in this class) |
    | ---------- | --------------------------------------------------- |
    | `*.md`     | `markdownlint-cli2 --fix <files>`                   |
+   | `*.py`     | `ruff check --fix <files>`                          |
 
-   Classes not in the table (`*.py`, `*.sh`, `*.yml`, `*.json`, …)
-   are passed through untouched until a follow-up task adopts tooling
-   for them. Python in particular is deliberately absent — the choice
-   of linter/formatter (ruff vs black vs autopep8) is its own
-   decision, to be made in a dedicated task that also wires the tool
-   into `scripts/pre-commit` and `requirements-dev.txt`.
+   Classes not in the table (`*.sh`, `*.yml`, `*.json`, …) are passed
+   through untouched until a follow-up task adopts tooling for them.
+   The Python row was added in TASK-061; ruff was chosen over black /
+   black+isort+flake8 / autopep8 because it subsumes lint + import
+   sort + most of black's formatting in a single fast binary (see
+   commit message + task body for rationale).
 
    **Missing-tool behaviour.** If the pathspec contains files in a
    class that *is* in the registry, but the fixer binary is not on

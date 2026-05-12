@@ -46,6 +46,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
+    "ruff>=0.7",
 ]
 
 [project.urls]
@@ -60,3 +61,16 @@ Changelog = "https://github.com/tgd1975/CircuitSmith/blob/main/CHANGELOG.md"
 # guessing wrong.
 [tool.setuptools]
 py-modules = []
+
+[tool.pytest.ini_options]
+testpaths = ["scripts/tests"]
+python_files = "test_*.py"
+addopts = "-ra"
+strict_markers = true
+
+[tool.ruff.lint]
+# Deliberately minimal initial ruleset: pyflakes (F) and the essential
+# pycodestyle subset (E4 imports / E7 statements / E9 runtime errors).
+# Opt into more (I imports-sort, UP pyupgrade, B bugbear, C90 complexity,
+# …) deliberately as the codebase grows — not all at once. TASK-061.
+select = ["E4", "E7", "E9", "F"]

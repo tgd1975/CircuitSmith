@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 60** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 1** | **Total: 61** | ░░░░░░░░░░ 2%
+⚪ **Open: 57** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 4** | **Total: 61** | █░░░░░░░░░ 7%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -75,8 +75,6 @@ _No paused tasks._
 | [TASK-043](open/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-044](open/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-045](open/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-047](open/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) | Junior | ⚪ open |
-| [TASK-048](open/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-049](open/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-051](open/task-051-portability-lint.md) | Portability lint for .claude/skills/circuit/ | Small (&lt;2h) | Junior | ⚪ open |
@@ -89,11 +87,13 @@ _No paused tasks._
 | [TASK-058](open/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-059](open/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-060](open/task-060-autonomous-implementation-mode.md) | Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene) | Large (8-24h) | Senior | ⚪ open |
-| [TASK-061](open/task-061-adopt-python-linter-formatter.md) | Adopt a Python linter/formatter and wire it into /commit + pre-commit hook | Medium (2-8h) | Medium | ⚪ open |
 
 ## Closed Tasks
 
 | ID | Title | Effort |
 |----|-------|--------|
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
+| [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
+| [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
+| [TASK-061](closed/task-061-adopt-python-linter-formatter.md) | Adopt a Python linter/formatter and wire it into /commit + pre-commit hook | Medium (2-8h) |
 <!-- END GENERATED -->
