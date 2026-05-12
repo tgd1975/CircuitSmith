@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 54** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 20** | **Total: 74** | ███░░░░░░░ 27%
+⚪ **Open: 53** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 21** | **Total: 74** | ███░░░░░░░ 28%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -82,7 +82,6 @@ _No paused tasks._
 | [TASK-057](open/task-057-emit-v01-escalations-to-meta-yml.md) | Emit v0.1 kernel fail-loud events to meta.yml.provenance.escalations | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-058](open/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-059](open/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-073](open/task-073-apply-branch-protection.md) | Apply GitHub branch protection on main per BRANCH_PROTECTION_CONCEPT.md | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-074](open/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) | Junior | ⚪ open |
 
 ## Closed Tasks
@@ -109,4 +108,5 @@ _No paused tasks._
 | [TASK-070](closed/task-070-author-security-review-doc.md) | Author docs/developers/SECURITY_REVIEW.md (script usage + reviewer checklist) | Medium (2-8h) |
 | [TASK-071](closed/task-071-author-commit-policy-doc.md) | Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy) | Medium (2-8h) |
 | [TASK-072](closed/task-072-author-branch-protection-doc.md) | Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset | Small (&lt;2h) |
+| [TASK-073](closed/task-073-apply-branch-protection.md) | Apply GitHub branch protection on main per BRANCH_PROTECTION_CONCEPT.md | Small (&lt;2h) |
 <!-- END GENERATED -->
