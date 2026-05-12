@@ -1,9 +1,11 @@
 ---
 id: TASK-072
 title: Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -43,12 +45,12 @@ Model: AwesomeStudioPedal's
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/BRANCH_PROTECTION_CONCEPT.md` exists and is linked from CONTRIBUTING.md and COMMIT_POLICY.md (TASK-071).
-- [ ] The ruleset table is reproduced with the rationale per row as above.
-- [ ] The "trigger to revisit" condition is documented explicitly: when contributor #2 joins the repo, flip the PR-review-required rule on (with admin-enforcement still off).
-- [ ] The doc names the implementation path: `gh api -X PUT /repos/{owner}/{repo}/branches/main/protection` with the JSON body the rules translate to. Exact command lands in TASK-073's body.
-- [ ] Branch-naming conventions are recorded with examples (per CLAUDE.md `## Branch merges — squash, not fast-forward`): `release/epic-NNN-<slug>`, `chore/<scope>`, `fix/<scope>`.
-- [ ] The doc states explicitly that client-side enforcement (`/check-branch`, `/commit`) and server-side enforcement (GitHub branch protection) are **complementary**, not redundant — different threat models.
+- [x] `docs/developers/BRANCH_PROTECTION_CONCEPT.md` exists and is linked from CONTRIBUTING.md and COMMIT_POLICY.md (TASK-071).
+- [x] The ruleset table is reproduced with the rationale per row as above.
+- [x] The "trigger to revisit" condition is documented explicitly: when contributor #2 joins the repo, flip the PR-review-required rule on (with admin-enforcement still off).
+- [x] The doc names the implementation path: `gh api -X PUT /repos/{owner}/{repo}/branches/main/protection` with the JSON body the rules translate to. Exact command lands in TASK-073's body.
+- [x] Branch-naming conventions are recorded with examples (per CLAUDE.md `## Branch merges — squash, not fast-forward`): `release/epic-NNN-<slug>`, `chore/<scope>`, `fix/<scope>`.
+- [x] The doc states explicitly that client-side enforcement (`/check-branch`, `/commit`) and server-side enforcement (GitHub branch protection) are **complementary**, not redundant — different threat models.
 
 ## Test Plan
 

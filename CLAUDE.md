@@ -85,6 +85,10 @@ validates it and rejects raw `git commit` invocations.
 `.git/cs-commit-bypass.log`. Reserved for interactive rebase, recovery from a
 broken `/commit` skill, and rare manual repo surgery.
 
+**Rationale:** [`docs/developers/COMMIT_POLICY.md`](docs/developers/COMMIT_POLICY.md)
+— the race-condition story, the provenance-token mechanics, the
+three-check hook-failure protocol, and the bypass-review policy.
+
 Stage and commit only the files **you** changed. If `git status` shows files
 you did not touch, leave them alone unless the user explicitly says
 "commit everything".

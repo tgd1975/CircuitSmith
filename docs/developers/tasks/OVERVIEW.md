@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 64** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 9** | **Total: 73** | █░░░░░░░░░ 12%
+⚪ **Open: 54** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 20** | **Total: 74** | ███░░░░░░░ 27%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -82,18 +82,8 @@ _No paused tasks._
 | [TASK-057](open/task-057-emit-v01-escalations-to-meta-yml.md) | Emit v0.1 kernel fail-loud events to meta.yml.provenance.escalations | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-058](open/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-059](open/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-062](open/task-062-author-development-setup-doc.md) | Author docs/developers/DEVELOPMENT_SETUP.md as the canonical first-time-setup entry point | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-063](open/task-063-author-testing-doc.md) | Author docs/developers/TESTING.md describing test layers, conventions, and fixture layout | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-064](open/task-064-author-coding-standards-doc.md) | Author docs/developers/CODING_STANDARDS.md (naming, formatting, comment policy, type hints) | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-065](open/task-065-author-ci-pipeline-doc.md) | Author docs/developers/CI_PIPELINE.md inventorying CI jobs and gate semantics | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-066](open/task-066-author-task-system-doc.md) | Author docs/developers/TASK_SYSTEM.md describing the IDEA/EPIC/TASK workflow and /ts-* skills | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-067](open/task-067-author-code-of-conduct.md) | Adopt and commit docs/developers/CODE_OF_CONDUCT.md (Contributor Covenant 2.1) | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-068](open/task-068-author-architecture-doc.md) | Author docs/developers/ARCHITECTURE.md as the explicit top-down architecture page | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-069](open/task-069-author-mermaid-style-guide.md) | Author docs/developers/MERMAID_STYLE_GUIDE.md (diagram types, palette, edge conventions) | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-070](open/task-070-author-security-review-doc.md) | Author docs/developers/SECURITY_REVIEW.md (script usage + reviewer checklist) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-071](open/task-071-author-commit-policy-doc.md) | Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-072](open/task-072-author-branch-protection-doc.md) | Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-073](open/task-073-apply-branch-protection.md) | Apply GitHub branch protection on main per BRANCH_PROTECTION_CONCEPT.md | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-074](open/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) | Junior | ⚪ open |
 
 ## Closed Tasks
 
@@ -108,4 +98,15 @@ _No paused tasks._
 | [TASK-056](closed/task-056-author-initial-code-owner-skills.md) | Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine) | Medium (2-8h) |
 | [TASK-060](closed/task-060-autonomous-implementation-mode.md) | Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene) | Large (8-24h) |
 | [TASK-061](closed/task-061-adopt-python-linter-formatter.md) | Adopt a Python linter/formatter and wire it into /commit + pre-commit hook | Medium (2-8h) |
+| [TASK-062](closed/task-062-author-development-setup-doc.md) | Author docs/developers/DEVELOPMENT_SETUP.md as the canonical first-time-setup entry point | Small (&lt;2h) |
+| [TASK-063](closed/task-063-author-testing-doc.md) | Author docs/developers/TESTING.md describing test layers, conventions, and fixture layout | Medium (2-8h) |
+| [TASK-064](closed/task-064-author-coding-standards-doc.md) | Author docs/developers/CODING_STANDARDS.md (naming, formatting, comment policy, type hints) | Small (&lt;2h) |
+| [TASK-065](closed/task-065-author-ci-pipeline-doc.md) | Author docs/developers/CI_PIPELINE.md inventorying CI jobs and gate semantics | Small (&lt;2h) |
+| [TASK-066](closed/task-066-author-task-system-doc.md) | Author docs/developers/TASK_SYSTEM.md describing the IDEA/EPIC/TASK workflow and /ts-* skills | Small (&lt;2h) |
+| [TASK-067](closed/task-067-author-code-of-conduct.md) | Adopt and commit docs/developers/CODE_OF_CONDUCT.md (short custom CoC mirroring AwesomeStudioPedal) | Small (&lt;2h) |
+| [TASK-068](closed/task-068-author-architecture-doc.md) | Author docs/developers/ARCHITECTURE.md as the explicit top-down architecture page | Medium (2-8h) |
+| [TASK-069](closed/task-069-author-mermaid-style-guide.md) | Author docs/developers/MERMAID_STYLE_GUIDE.md (diagram types, palette, edge conventions) | Small (&lt;2h) |
+| [TASK-070](closed/task-070-author-security-review-doc.md) | Author docs/developers/SECURITY_REVIEW.md (script usage + reviewer checklist) | Medium (2-8h) |
+| [TASK-071](closed/task-071-author-commit-policy-doc.md) | Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy) | Medium (2-8h) |
+| [TASK-072](closed/task-072-author-branch-protection-doc.md) | Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset | Small (&lt;2h) |
 <!-- END GENERATED -->

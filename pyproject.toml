@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
-    { name = "tgd1975", email = "t.deutsch.75@gmail.com" },
+    { name = "tgd1975" },
 ]
 keywords = [
     "schematic",
@@ -63,7 +63,10 @@ Changelog = "https://github.com/tgd1975/CircuitSmith/blob/main/CHANGELOG.md"
 py-modules = []
 
 [tool.pytest.ini_options]
-testpaths = ["scripts/tests"]
+# Two test roots: product-code tests at `tests/` (created when EPIC-001
+# work begins) and task-system tooling tests at `scripts/tests/`.
+# See docs/developers/TESTING.md for the layer convention.
+testpaths = ["tests", "scripts/tests"]
 python_files = "test_*.py"
 addopts = "-ra"
 strict_markers = true

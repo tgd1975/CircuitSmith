@@ -67,33 +67,23 @@ ERC runs **strictly pre-layout**: a malformed circuit never reaches the router.
 
 ## Architecture
 
-> **Status:** the `.claude/skills/circuit/` tree below describes the
-> *target* layout. None of it exists yet — Phase 1 (EPIC-001) scaffolds it.
-> Today the repo holds only the design dossier and the task-system infra.
+> **Status:** the architecture below describes the *target* state.
+> None of the product code exists yet — Phase 1 (EPIC-001) starts the
+> scaffolding. Today the repo holds only the design dossier and the
+> task-system infra.
 
 Everything ships inside `.claude/skills/circuit/` — a self-contained,
 path-agnostic Claude Code skill. The same directory is the library that
 the CI script imports, so there is no duplication between "the skill" and
 "the project's generator".
 
-```
-.claude/skills/circuit/
-├── SKILL.md             ← skill prompt + invocation spec
-├── renderer.py          ← YAML → Schemdraw → SVG
-├── netgraph.py          ← shared typed net graph
-├── erc_engine.py        ← hardware linter (ERC)
-├── bom_exporter.py      ← components → Markdown/CSV
-├── netlist_exporter.py  ← net graph → KiCad .net
-├── layout.py            ← CLI for /circuit layout
-├── layout_engine/       ← kernel, router (+ AI placer in v1)
-├── schema/              ← circuit + layout JSON schemas
-├── components/          ← MCUs, passives, connectors, sensors
-├── knowledge/           ← curated rule catalog (rules.json)
-└── docs/                ← skill-level user docs
-```
-
 Key decoupling: `bom_exporter.py` walks `components` directly;
 `netlist_exporter.py` walks `NetGraph`. They never reach into each other.
+
+The one-page top-down view, including the pipeline mermaid, module
+boundaries, component table, decoupling seams, AI-containment property,
+and ADR cross-references, lives at
+[`docs/developers/ARCHITECTURE.md`](docs/developers/ARCHITECTURE.md).
 
 ## Skill behaviour
 
@@ -172,6 +162,9 @@ in particular `bash scripts/install_git_hooks.sh` to install the
 pre-commit wrapper and the security-review hooks
 (`pre-merge-commit`, `post-merge`, `pre-rebase`) that scan incoming
 changes from pulls/merges/rebases.
+
+Participation is governed by the project
+[Code of Conduct](docs/developers/CODE_OF_CONDUCT.md).
 
 ## License
 
