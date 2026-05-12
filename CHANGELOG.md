@@ -69,6 +69,17 @@ first tag is cut; until then the `[Unreleased]` section is the only entry.
 - `CLAUDE.md`: forbid end-of-turn "continue?" checkpoints. The agent
   keeps going until the requested scope is done or a real stop-line is
   hit; the user suspends via laptop lid, not via question.
+- `CLAUDE.md`: branch merges to `main` are **squash-merged** (one
+  commit per branch, named for the branch's primary purpose) — never
+  plain fast-forward.
+- `CLAUDE.md`: `CHANGELOG.md` `[Unreleased]` is updated **as part of
+  the same squash commit** that lands the work, not in a follow-up.
+- `scripts/security_review_changes.py`: `ruff` added to the
+  CRITICAL → HIGH demotion list for `permissions-allow-added` findings
+  (alongside `git/grep/ls/python3/jq/...`). The demotion list is now
+  annotated with a paragraph explaining the single-developer
+  assumption and an explicit re-audit trigger for whenever an
+  additional developer joins the project.
 
 ### Developer experience
 

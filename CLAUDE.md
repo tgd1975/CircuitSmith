@@ -89,6 +89,40 @@ Stage and commit only the files **you** changed. If `git status` shows files
 you did not touch, leave them alone unless the user explicitly says
 "commit everything".
 
+## Branch merges — squash, not fast-forward
+
+Topic branches (epic, chore, fix, refactor) land on `main` as **one
+squashed commit per branch** — never plain fast-forward, never a merge
+commit. The commit subject names the branch's primary purpose
+(`close EPIC-NNN: ...` for an epic, `chore(scope): ...` for a chore,
+`fix(scope): ...` for a bug fix). Commits that rode along on the same
+branch but aren't strictly the named work get rolled into the same
+squash; the commit body enumerates them so the rollup is traceable.
+
+Mechanic (local): from `main`, `git merge --squash <topic-tip>` stages
+the change; then add the CHANGELOG bullets (see next section), and
+`/commit` records it as one commit. GitHub's "Squash and merge" PR
+button is the remote equivalent.
+
+This mirrors the policy documented in
+[AwesomeStudioPedal's RELEASE_CHECKLIST.md](../AwesomeStudioPedal/docs/developers/RELEASE_CHECKLIST.md)
+("Squash all commits on the feature branch into a single logical
+commit per feature/fix/refactor") — except the rule applies to **every**
+merge to main here, not just release boundaries.
+
+## CHANGELOG updates ride with the merge
+
+`CHANGELOG.md`'s `[Unreleased]` section must be updated **as part of
+the same squash commit** that lands the work, not in a follow-up.
+One bullet per closed task (with `TASK-NNN` reference) or per logical
+non-task change, filed under the appropriate Keep-a-Changelog heading
+(`### Added`, `### Tooling`, `### Policy`, etc.).
+
+If you finish a branch and realise the CHANGELOG wasn't updated,
+amend before merging — do not merge first and "circle back". A
+CHANGELOG diff that lags behind `git log` defeats the purpose of
+having a changelog.
+
 ## Project env vars — use `$CS_*`, never hard-code paths
 
 Per-developer paths and credentials live in `.envrc` and are exposed as

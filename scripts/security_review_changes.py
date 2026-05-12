@@ -265,8 +265,23 @@ def scan_settings_json(path: str, old_ref: str, new_ref: str) -> list[Finding]:
     for entry in sorted(added_allow):
         # Broad bash wildcards are the scariest
         sev = "CRITICAL" if re.search(r"^Bash\([^)]*\*[^)]*\)", entry) and ("/" not in entry or entry.endswith("*)")) else "HIGH"
-        # Tighten: very narrow Bash() entries with explicit binaries are HIGH not CRITICAL
-        if sev == "CRITICAL" and re.search(r"^Bash\((git|adb|python3|flutter|grep|ls|stat|wc|head|tail|jq)\b", entry):
+        # Tighten: very narrow Bash() entries with explicit binaries are HIGH not CRITICAL.
+        #
+        # The demotion list below encodes "well-known, broadly audited,
+        # low-blast-radius even with wildcard args" — a judgment call made
+        # under the project's current single-developer assumption. Each
+        # entry is one human's "I trust this tool enough to let the agent
+        # run it with any arguments."
+        #
+        # **Re-audit trigger:** whenever the project gains an additional
+        # developer (or any other principal who can land commits without
+        # the original maintainer's review), revisit this list. What is
+        # "fine on my laptop" is not automatically "fine for someone
+        # else's autonomous agent or someone else's threat model."
+        # Consider tightening to per-subcommand allow entries
+        # (`Bash(ruff check:*)`) or trusted-script wrappers
+        # (`Bash(scripts/<tool>-safe:*)`) before broadening further.
+        if sev == "CRITICAL" and re.search(r"^Bash\((git|adb|python3|flutter|grep|ls|stat|wc|head|tail|jq|ruff)\b", entry):
             sev = "HIGH"
         findings.append(
             Finding(severity=sev, file=path, rule="permissions-allow-added", detail=f"new allow entry: {entry}")
