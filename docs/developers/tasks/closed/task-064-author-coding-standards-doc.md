@@ -1,9 +1,11 @@
 ---
 id: TASK-064
 title: Author docs/developers/CODING_STANDARDS.md (naming, formatting, comment policy, type hints)
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: developer-docs-governance
@@ -31,12 +33,12 @@ guidance for human readers.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/CODING_STANDARDS.md` exists and is linked from CONTRIBUTING.md and DEVELOPMENT_SETUP.md.
-- [ ] Naming conventions table covers: modules, classes, functions, constants, fixture files, test files.
-- [ ] Ruff is named as the authoritative formatter/linter; the doc references `pyproject.toml`'s `[tool.ruff.lint] select` for the active ruleset.
-- [ ] Comment policy mirrors CLAUDE.md's "WHY not WHAT" stance, with two concrete examples (good comment vs bad comment).
-- [ ] Type-hint policy is recorded: when required, when optional, when forbidden (TBD — pick a defensible default; ADR if load-bearing).
-- [ ] Branch-naming and commit-subject conventions are stated with examples (deeper rationale lives in TASK-071's COMMIT_POLICY.md).
+- [x] `docs/developers/CODING_STANDARDS.md` exists and is linked from CONTRIBUTING.md and DEVELOPMENT_SETUP.md.
+- [x] Naming conventions table covers: modules, classes, functions, constants, fixture files, test files.
+- [x] Ruff is named as the authoritative formatter/linter; the doc references `pyproject.toml`'s `[tool.ruff.lint] select` for the active ruleset.
+- [x] Comment policy mirrors CLAUDE.md's "WHY not WHAT" stance, with two concrete examples (good comment vs bad comment).
+- [x] Type-hint policy is recorded: when required, when optional, when forbidden (TBD — pick a defensible default; ADR if load-bearing).
+- [x] Branch-naming and commit-subject conventions are stated with examples (deeper rationale lives in TASK-071's COMMIT_POLICY.md).
 
 ## Test Plan
 
