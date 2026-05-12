@@ -91,11 +91,14 @@ class TestLockGuard(unittest.TestCase):
         fd = os.open(str(lock_path), os.O_RDWR | os.O_CREAT, 0o644)
         try:
             hk._platform_lock(fd)
-            # Identify ourselves in the lockfile so the timeout message
-            # has something concrete to report.
-            os.lseek(fd, 0, os.SEEK_SET)
-            os.ftruncate(fd, 0)
-            os.write(fd, f"{os.getpid()}\n".encode("ascii"))
+            # Identify ourselves in the sidecar PID file so the
+            # timeout message has something concrete to report.
+            # (Production code writes here too — see
+            # `_holder_pid_path` in housekeep.py. The lock byte
+            # itself is unreadable on Windows while held.)
+            hk._holder_pid_path(lock_path).write_text(
+                f"{os.getpid()}\n", encoding="ascii"
+            )
 
             wrapper = textwrap.dedent(f"""
                 import sys

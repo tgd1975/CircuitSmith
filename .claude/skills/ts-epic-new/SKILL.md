@@ -26,11 +26,11 @@ status: open            # derived by housekeep.py — do not edit manually
 opened: YYYY-MM-DD
 closed:                 # set by housekeep.py when all tasks close
 assigned:               # optional — username of the owner
-branch: feature/<slug>  # optional — suggested git branch for tasks in this epic.
-                        # Auto-filled with feature/<slug> (the same slug used in
-                        # the filename). The user may edit or delete this line
-                        # before committing. /ts-task-active soft-warns when the
-                        # current branch differs from this value.
+branch: release/epic-NNN-<slug>  # the git branch this epic's tasks land on.
+                        # CircuitSmith convention per CLAUDE.md § Branch merges:
+                        # `release/epic-NNN-<slug>` (NOT the upstream task-system
+                        # `feature/<slug>` default). /ts-task-active soft-warns
+                        # when the current branch differs from this value.
 ---
 
 <body — short motivation and scope. If the epic was seeded by one or more
@@ -79,17 +79,26 @@ accurate indefinitely.
 4. Write the file to `docs/developers/tasks/open/` using the template
    above. Fill `id`, `name`, `title`, `opened` (today in YYYY-MM-DD),
    and leave `status: open`, `closed:` empty, `assigned:` empty. Set
-   `branch: feature/<slug>` using the **exact slug from step 2** —
-   reuse the value verbatim, do not re-derive it from the title. If
-   the user provided idea IDs, include the plain-text seeding sentence
-   in the body (see **Idea linking** above). The user can add
-   `assigned:` manually later — not prompted by default.
+   `branch: release/epic-NNN-<slug>` using the **exact ID from step 1
+   and slug from step 2** — reuse them verbatim, do not re-derive
+   from the title. If the user provided idea IDs, include the
+   plain-text seeding sentence in the body (see **Idea linking**
+   above). The user can add `assigned:` manually later — not
+   prompted by default.
 5. Run `python scripts/housekeep.py --apply` to regenerate OVERVIEW.md.
 6. Report the new epic ID and file path.
+7. **Surface the branch-publish step.** The git branch is not created
+   here — `/ts-task-active` does that on first-task activation via the
+   `[s]witch` path. But the user should know it will need to be
+   pushed at some point so the eventual PR can be opened. Tell them:
+   "When `/ts-task-active` creates `release/epic-NNN-<slug>` locally,
+   publish it with `git push -u origin release/epic-NNN-<slug>`. This
+   step is currently manual because `Bash(git push:*)` is deny-listed
+   in `.claude/settings.json`."
 
 The filename slug is already lowercase + hyphens + digits, which is
 always a valid git ref — no extra sanitization is needed before
-writing it as `feature/<slug>`. Do not invent one.
+writing it as `release/epic-NNN-<slug>`. Do not invent one.
 
 Do not commit — epics are usually introduced together with their first
 tasks, and the user will commit the bundle.

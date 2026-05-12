@@ -1,6 +1,6 @@
 ---
 name: status
-description: Run the routine git reconnaissance bundle in a single Bash call — current branch, last 3 commits, staged short, working short. Use this instead of separate `git branch --show-current` / `git log` / `git status --short` calls.
+description: Run the routine git reconnaissance bundle as four parallel Bash calls — current branch, last 3 commits, staged short, working short. Use this instead of separate ad-hoc invocations or compound shell commands.
 ---
 
 # status
@@ -12,28 +12,42 @@ Invoked as `/status` whenever you would otherwise reach for any of:
 - `git rev-parse --abbrev-ref HEAD` / `git branch --show-current`
 - Composites like `git log --oneline -3 && git status --short`
 
-The skill prints a four-section report from one Bash invocation, which
-collapses dozens of permission prompts per session into one.
+The skill emits **four independent Bash calls in a single tool-use
+turn** (parallel). Each call is a plain `git` invocation that matches
+a dedicated allowlist entry, so the bundle does not force a
+permission prompt the way a compound `{ printf …; git …; … }` does.
 
 ## Steps
 
-Run the command below as a single Bash call:
+Issue these four calls in parallel — one message, four Bash tool
+blocks:
 
-```bash
-{
-  printf '== branch ==\n'
-  git rev-parse --abbrev-ref HEAD
-  printf '\n== last 3 commits ==\n'
-  git log --oneline -3
-  printf '\n== staged ==\n'
-  git diff --cached --name-status
-  printf '\n== working tree ==\n'
-  git status --short
-}
-```
+| # | Command | Purpose |
+|---|---|---|
+| 1 | `git rev-parse --abbrev-ref HEAD` | Current branch. |
+| 2 | `git log --oneline -3` | Last three commits. |
+| 3 | `git diff --cached --name-status` | Staged-file summary. |
+| 4 | `git status --short` | Working-tree summary. |
 
-Print the captured output verbatim. If any of the inner commands fails
-(e.g. not in a git repo), let the error surface — do not swallow it.
+After the four results return, format them as a short prose report
+in your reply — headed sections (`Branch:`, `Last commits:`,
+`Staged:`, `Working tree:`) keep it scan-friendly. Do **not** add a
+shell `printf`/`echo` to label the output: that's what your prose is
+for, and pulling text-emitting commands into the bundle defeats the
+allowlist.
+
+If any of the four fails (e.g. not in a git repo), let the error
+surface — do not swallow it.
+
+## Why not one compound call
+
+A compound like `{ printf '...'; git rev-parse ...; git status ...; }`
+requires the project's permission allowlist to grant **every**
+segment, including `printf`. The project deliberately does not
+allow-list `printf:*` / `echo:*` to discourage the broader
+shell-chaining habit (see CLAUDE.md § Bash commands — no diagnostic
+suffix). Four parallel `git` calls each match a `git:*` rule cleanly
+and produce no extra prompts.
 
 ## When to use
 

@@ -1,20 +1,20 @@
 {
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#332821",
-    "titleBar.activeForeground": "#E8E8E8",
-    "titleBar.inactiveBackground": "#2A211B",
+    "titleBar.activeBackground": "#4A2810",
+    "titleBar.activeForeground": "#FFFFFF",
+    "titleBar.inactiveBackground": "#3A1F0A",
     "titleBar.inactiveForeground": "#9C9C9C",
-    "titleBar.border": "#1F1A16",
+    "titleBar.border": "#2A1505",
 
-    "activityBar.background": "#332821",
-    "activityBar.foreground": "#E8E8E8",
+    "activityBar.background": "#4A2810",
+    "activityBar.foreground": "#FFFFFF",
     "activityBar.inactiveForeground": "#9C9C9C",
-    "activityBar.border": "#1F1A16",
+    "activityBar.border": "#2A1505",
 
-    "statusBar.background": "#2A211B",
-    "statusBar.foreground": "#E8E8E8",
-    "statusBar.border": "#1F1A16",
-    "statusBar.debuggingBackground": "#3D2E1B",
-    "statusBar.noFolderBackground": "#1F1A16"
+    "statusBar.background": "#3A1F0A",
+    "statusBar.foreground": "#FFFFFF",
+    "statusBar.border": "#2A1505",
+    "statusBar.debuggingBackground": "#5E3214",
+    "statusBar.noFolderBackground": "#2A1505"
   }
 }

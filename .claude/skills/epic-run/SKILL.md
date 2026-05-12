@@ -38,7 +38,8 @@ For each iteration in the work phase:
    `docs/developers/tasks/{open,active}/` with the matching
    `epic:` field), filter to those whose `prerequisites:` are all
    closed, sort by `order:` ascending. The first remaining task is
-   "next". If none, the epic is done — go to **Commit phase**.
+   "next". If none, the epic is done — go straight to **Commit
+   phase** (no hand-off needed; nothing for the user to do).
 
 2. **Check HIL stop-lines.** Inspect the picked task's
    `human-in-loop:` field:
@@ -47,10 +48,11 @@ For each iteration in the work phase:
    - `Clarification` → proceed; pause for one batched
      `AskUserQuestion` call **only** if the task body explicitly
      names a decision the user must own. Otherwise, treat as `No`.
-   - `Support` → proceed up to the task body's stop-line, then go
-     to **Commit phase** with what's accumulated so far and exit.
-   - `Main` → do not enter the task body. Go to **Commit phase**
-     with what's accumulated so far and exit.
+   - `Support` → proceed up to the task body's stop-line, then
+     enter the **Hand-off phase** (below) with what's accumulated
+     so far.
+   - `Main` → do not enter the task body. Enter the **Hand-off
+     phase** (below) with what's accumulated so far.
 
 3. **Activate.** Run `/ts-task-active TASK-NNN`. This handles the
    epic/branch nag, the open→active transition, and the index
@@ -79,6 +81,44 @@ For each iteration in the work phase:
 
 7. **Loop.** Back to step 1.
 
+## Hand-off phase (HIL stop-lines only)
+
+When the work phase exits because a `Support` or `Main` stop-line
+was hit, the **next thing the user has to do is the stop-line task**
+— and that task itself needs the user. The commit phase that
+follows also needs the user (per-task commits, `/no-verify`
+approvals if any, the final review packet).
+
+Bundling those two user-interaction blocks into one is the more
+humane shape: the user sits down once, finishes the stop-line task
+collaboratively, and the commit phase rolls up everything in the
+same session — including any artefacts the stop-line task produced.
+
+Sequence:
+
+1. **Surface a pre-commit review packet.** Summarise: which tasks
+   are closed in-tree (counted, named with their TASK-NNN), what
+   files are accumulated and not yet committed, which task triggered
+   the stop-line, and what the user needs to do for that task.
+   Quote the relevant section of the task body so the user does not
+   have to chase the file.
+2. **Collaborate on the stop-line task.** For `Main`: hand off
+   entirely; the user drives the action, you stay available to
+   answer questions, file ADRs, etc. For `Support`: continue past
+   the in-body stop-line under the user's direction. Any artefacts
+   produced (a new file, a config-applied receipt, an ADR) join the
+   working tree and get committed alongside the accumulated work in
+   the next phase.
+3. **Close the stop-line task in-tree** if the work is done — same
+   close-in-tree dance as work-phase step 6 (status, closed,
+   effort_actual, ticks, housekeep). The user may decide to leave
+   it open (e.g. they want to revisit later); honour that.
+4. **Enter the Commit phase** below, treating the stop-line task as
+   "just another task in the batch" if it closed, or omitted if it
+   did not. Per-task commits in dependency order, ride-alongs at
+   the end, as usual.
+5. **Surface the final review packet** after the commits land.
+
 ## Commit phase
 
 When the work phase finishes, the working tree contains the
@@ -94,31 +134,83 @@ order they were closed):
    files.
 
 Shared files (the registries, settings file, OVERVIEW / EPICS /
-KANBAN indexes, CHANGELOG, `scripts/README.md`) ride with the
-**most relevant commit**, typically the last one in the batch.
-Do not roll back shared files to reproduce an intermediate state
-for earlier commits — forward references inside a coordinated
-branch are acceptable.
+KANBAN indexes, `scripts/README.md`) ride with the **most relevant
+commit**, typically the last one in the batch. Do not roll back
+shared files to reproduce an intermediate state for earlier commits
+— forward references inside a coordinated branch are acceptable.
 
 The final task's commit also carries the cumulative regen of the
-indexes + scripts/README + the CHANGELOG bullets covering every
-task in the batch.
+indexes + `scripts/README.md`. **CHANGELOG.md is handled separately
+in the CHANGELOG-delta phase below** — it is not bundled with any
+per-task commit.
 
 If a task naturally bundles with another (e.g. TASK-055's hook
 mechanism + TASK-056's first three skills using that mechanism),
 a single combined commit is fine — but the default is one commit
 per task closure.
 
+## CHANGELOG-delta phase
+
+Runs **once**, after the per-task commits land and before Exit. The
+job is to make `CHANGELOG.md`'s `[Unreleased]` section reflect the
+work this epic-run produced, in one final commit.
+
+The rule is **delta-only**: read what is already in `[Unreleased]`,
+identify which closed tasks (and other landed changes) are **not yet
+represented**, and append only the missing entries. Do not edit,
+reorder, reword, or remove existing entries — they may have been
+written by hand or by a prior run, and a destructive rewrite would
+clobber that work.
+
+Steps:
+
+1. Read [`CHANGELOG.md`](../../../CHANGELOG.md). Focus on the
+   `## [Unreleased]` section. Note which `TASK-NNN` IDs and which
+   policy / tooling deltas are already named.
+2. For each task closed in this epic-run (from the work-phase
+   batch and, if applicable, the hand-off-phase stop-line task),
+   check whether it is already represented. If not, draft one
+   bullet under the appropriate Keep-a-Changelog subheading
+   (`### Added`, `### Tooling`, `### Policy`, `### Governance`,
+   `### Developer experience`, `### Autonomy`, …). One bullet per
+   task; the bullet references `TASK-NNN` and names the artefact
+   the task produced.
+3. For the ride-along changes from the final commit (skill
+   updates, config tweaks, anything that does not have a TASK ID
+   but was an intentional part of the run), check whether they are
+   already represented. If not, draft one bullet each under the
+   appropriate subheading.
+4. If the epic itself closed in this run, add a one-line
+   **`EPIC-NNN closed`** bullet naming the deliverable and linking
+   to the EPIC file. Place it at the bottom of the most relevant
+   subheading or as its own line.
+5. Choose subheadings that already exist in `[Unreleased]` over
+   inventing new ones. Add a new subheading only when no existing
+   one fits.
+6. `/commit "chore(EPIC-NNN): update CHANGELOG with EPIC-NNN delta"
+   CHANGELOG.md`.
+
+This is the **only** way the agent touches `CHANGELOG.md` in an
+epic-run. The per-task commits never edit it; the final ride-along
+commit never edits it; only this phase does, and only by appending
+the delta.
+
+The squash-to-`main` merge (owned by the user) still preserves the
+`[Unreleased]` content. The agent's job is to make sure the
+branch's `[Unreleased]` is **already correct** by the time the
+user hits "squash and merge."
+
 ## Exit
 
-On exit (epic done OR Main/Support stop-line OR
+On exit (epic done OR Main/Support stop-line resolved OR
 definition-of-done failure):
 
 1. Verify the working tree is clean (every accumulated change is
    committed).
 2. Surface the
    [review packet](../../../docs/developers/AUTONOMY.md#review-packet)
-   to the user.
+   to the user — this is the *final* one; the pre-commit packet
+   from the Hand-off phase was the first.
 3. Stop. Do not start the next iteration. Wait for the user.
 
 ## Anti-patterns

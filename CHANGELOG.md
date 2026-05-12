@@ -158,6 +158,80 @@ feature-epic deliverables land.
     `release/epic-NNN-<slug>` `branch:` field — `/ts-task-active`
     nags on mismatch with the `[c]ontinue` rewrite path.
 
+### Documentation (EPIC-009 — Developer Docs and Governance Scaffolding)
+
+- TASK-062 closed: `docs/developers/DEVELOPMENT_SETUP.md` — canonical
+  first-time-setup walk-through. Tool prerequisites, Ubuntu / Windows 11
+  install procedure, smoke-test, common-setup-problems appendix.
+  `CONTRIBUTING.md` redirects to this doc.
+- TASK-063 closed: `docs/developers/TESTING.md` — three conceptual test
+  layers (unit / integration / contract / golden), pytest convention,
+  `pyproject.toml` `testpaths` updated to `["tests", "scripts/tests"]`.
+  Coverage tooling deferred until product code lands.
+- TASK-064 closed: `docs/developers/CODING_STANDARDS.md` — naming,
+  formatting (ruff), comment-WHY policy, public-function type-hint
+  requirement.
+- TASK-065 closed: `docs/developers/CI_PIPELINE.md` — inventory of the
+  `ci.yml` workflow, gate semantics (all jobs blocking), local pre-commit
+  hook mirror, red-build response sequence, known gap (ruff not yet in CI).
+- TASK-066 closed: `docs/developers/TASK_SYSTEM.md` — human-facing
+  counterpart to `AUTONOMY.md`. IDEA/EPIC/TASK artefacts, lifecycle
+  states, every `/ts-*` skill catalogued, `/housekeep` role.
+- TASK-067 closed: `docs/developers/CODE_OF_CONDUCT.md` — short custom
+  CoC mirroring AwesomeStudioPedal's shape (not verbatim Contributor
+  Covenant 2.1 — user override at activation). Enforcement contact is
+  GitHub-routed ("contact the owner of the repository via GitHub"), no
+  personal email anywhere in committed files. `pyproject.toml`
+  `authors` field stripped of email.
+- TASK-068 closed: `docs/developers/ARCHITECTURE.md` — top-down view.
+  Mermaid pipeline (`flowchart LR`) and module-boundary graph
+  (`graph TD`) with the three forbidden edges marked red dashed. Module
+  table linking each module to its ADR(s) and code-owner skill.
+  README's architecture section summarised down with link.
+- TASK-069 closed: `docs/developers/MERMAID_STYLE_GUIDE.md` —
+  diagram-type selector, palette, edge conventions, node-label rules,
+  mandatory prose summary alongside every mermaid block for
+  accessibility.
+- TASK-070 closed: `docs/developers/SECURITY_REVIEW.md` — usage of
+  `scripts/security_review_changes.py` and the three security-review
+  hooks, reviewer checklist (secrets / shell-exec / path-traversal /
+  dependency / permissions-allow / gh-PUT / skills / CI), bypass
+  policy, escalation path.
+- TASK-071 closed: `docs/developers/COMMIT_POLICY.md` — pathspec
+  rationale with the concrete two-session race story, provenance-token
+  mechanics, three-check hook-failure protocol, `CS_COMMIT_BYPASS`
+  policy, squash-merge + CHANGELOG-rides-along rule, LLM-attribution
+  trailer ban.
+- TASK-072 closed: `docs/developers/BRANCH_PROTECTION_CONCEPT.md` —
+  ruleset and rationale for GitHub server-side branch protection on
+  `main` (status checks required, linear history, no force-push, no
+  deletion; PR review off for solo posture with contributor-#2 flip
+  trigger documented; admin enforcement off).
+- TASK-073 closed: GitHub branch protection applied on
+  `tgd1975/CircuitSmith/main` via `gh api --method PUT
+  /repos/.../branches/main/protection --input <body>`. As-applied
+  configuration matches `BRANCH_PROTECTION_CONCEPT.md` 1:1.
+- TASK-074 scaffolded under EPIC-008 (architecture fitness functions):
+  extend the security-review hook to mechanically detect personal-
+  contact-info leaks (email / phone / real name beyond the GitHub
+  handle). Surfaced from the TASK-067 user override; `feedback-no-
+  personal-contact-in-docs` memory rule recorded.
+- **Skill updates:** `/status` rewritten to four parallel Bash calls
+  (printf-chained compound defeated the allowlist); `/housekeep` no
+  longer runs `git add` (staging rides with the next `/commit`
+  pathspec); `/epic-run` protocol gains a **Hand-off phase**
+  (bundles the HIL stop-line task with the commit phase into one
+  user-interaction block) and a **CHANGELOG-delta phase** (appends
+  the run's missing entries to `[Unreleased]`, never edits or
+  removes).
+- **VS Code workspace palette refreshed** to dark orange
+  (`titleBar.activeBackground: #4A2810`) — replaces the prior
+  copper-toned palette while keeping the per-project visual
+  identification pattern.
+- **EPIC-009 closed** — all 12 tasks done. The first-day-junior
+  documentation set + server-side branch protection are in place
+  before EPIC-001 implementation work begins.
+
 Nothing under `.claude/skills/circuit/` exists yet — see
 [EPIC-001..006](docs/developers/tasks/EPICS.md), `Phase 0` (EPIC-007),
 and the governance gates in [EPIC-008](docs/developers/tasks/EPICS.md).

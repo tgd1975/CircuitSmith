@@ -56,6 +56,17 @@ Steps:
        `git checkout -b <epic-branch>`; on yes, create and switch; on
        no, abort the activation. After a successful switch, continue
        with step 3 on the new branch.
+
+       **If the branch was just created** (you went through the
+       `git checkout -b` path), surface the publish step in your
+       reply: *"Branch `<epic-branch>` is new locally and not on
+       `origin`. When you next have a moment, publish it with
+       `git push -u origin <epic-branch>` so the eventual PR has a
+       remote to open against. This step is currently manual because
+       `Bash(git push:*)` is deny-listed in `.claude/settings.json`."*
+       Do not attempt the push yourself; the deny is intentional.
+       Continue with step 3 — branch publication is independent of
+       the task-activation flow and shouldn't block work.
      - **[c]ontinue** — use `Edit` to rewrite the epic file's
        `branch:` line to the current branch. Leave the change
        unstaged — housekeep in step 3 picks up the new value, and the
