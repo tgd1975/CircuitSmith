@@ -1,0 +1,152 @@
+[
+  {
+    "id": "S1",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "Every required pin on an instantiated component must connect to at least one net.",
+    "explanation": "Components carry a per-pin contract that flags pins as required when leaving them open would create a deterministic failure: a USB-C jack with no GND, an MCU whose reset pin is unwired, a sensor whose I2C lines float. Schema validation alone cannot catch this — the validator does not know which pins matter for which component. The structural check S1 inspects the net graph and reports each required pin that has no membership in any net.",
+    "heuristic": "If you intentionally left a required pin unconnected (for example, an EN/RESET pin that you wire up later from a header), set the component's `required: false` override on that pin in the local profile copy. This is a starting point — for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
+    "enforced_by": "S1"
+  },
+  {
+    "id": "S2",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "A net with only one endpoint is incomplete — every wire needs a sender and a receiver.",
+    "explanation": "A net listing exactly one pin is almost always a typo: the second endpoint was forgotten, or the cleanup of a refactor left a stub. A one-endpoint net has no defined electrical behaviour — the would-be signal goes nowhere — so the renderer and exporters cannot meaningfully include it. S2 flags it as a wiring error.",
+    "heuristic": "If you truly want an unconnected test point, declare it on the relevant component pin rather than as a free-standing net. As a starting point, consider whether the topology you describe matches the topology you intend. For precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-1/electric-circuits/",
+    "enforced_by": "S2"
+  },
+  {
+    "id": "S3",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "Two `net:` entries with the same name are a name collision unless an explicit merge is intended.",
+    "explanation": "YAML accepts duplicate `net:` keys silently — both entries land in the parsed graph and the merge resolution depends on declaration order. That is rarely what the author meant. The duplicate is usually a copy-paste artefact or a rename that did not finish. S3 surfaces it as a warning so the author can choose to rename one side or fold the two definitions into one.",
+    "heuristic": "Pick distinct names per logical net. If you genuinely want two halves of one net (e.g. a split rail joined later), declare them under one name with a `pins:` form listing every endpoint. This is a starting point — for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
+    "enforced_by": "S3"
+  },
+  {
+    "id": "S4",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "Component references in connections must point at a component declared in the components map.",
+    "explanation": "When a `connections` entry references `U1.D13` but no `U1` appears under `components`, the parser cannot resolve the pin. This is almost always a rename gap — the component was renamed and a stale reference remained. Schema validation catches it before the ERC engine runs; the catalog entry exists so the report writer can present every S/E finding through the same teaching path.",
+    "heuristic": "Use your editor's project-wide rename when refactoring component refs so every reference moves together. As a starting point, check that every `REF.PIN` token in `connections` matches a key in `components`. For precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
+    "enforced_by": "schema"
+  },
+  {
+    "id": "S5",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "Pin references in connections must name a pin that exists on the component's profile.",
+    "explanation": "Pin names follow the silkscreen of the dev board (`D13`, `VBUS`, `GNDL`) and the profile in `circuitsmith.components` is the canonical list. A token like `U1.IO13` may match the silicon-level identifier but not the dev-board pin name; the schema validator flags it so the author can correct the reference. The catalog row exists so the report writer treats S5 findings the same way as predicate findings.",
+    "heuristic": "Read the component's profile dictionary to confirm pin names — that is the source of truth, not the chip datasheet. The `alt:` field on each pin holds the silicon identifier when it differs. This is a starting point — for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
+    "enforced_by": "schema"
+  },
+  {
+    "id": "E1",
+    "category": "Digital Inputs",
+    "keywords": ["gpio", "pull-up", "pull-down", "button", "switch"],
+    "rule": "A signal input must have a defined idle level — either a firmware pull or a hardware pull resistor.",
+    "explanation": "An MCU input pin that is neither driven nor pulled floats. Its measured voltage swings on capacitive coupling from neighbouring traces and the input reads as random bits. Pull-up or pull-down resistors define the idle state when no external source is driving the pin; firmware pulls (the chip's internal weak resistors enabled via `INPUT_PULLUP`) do the same job for inputs the firmware owns. A floating input is rarely the intent and almost always a bug.",
+    "heuristic": "For a typical button-to-GND wired on an MCU GPIO, enable `INPUT_PULLUP` in firmware and declare `pull: firmware` on the net — that is the cheapest defined idle state. If the boot-time level matters (strapping pins, level-set inputs), use an external 10 kΩ pull-up to VCC or pull-down to GND. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/slt/0204302.htm",
+    "enforced_by": "E1"
+  },
+  {
+    "id": "E2",
+    "category": "Digital Outputs",
+    "keywords": ["led", "resistor", "gpio", "current-limiting"],
+    "rule": "A standard LED always requires a current-limiting resistor in series.",
+    "explanation": "An LED has very little internal resistance once its forward-voltage threshold is exceeded. Connecting it directly to an MCU GPIO sources excessive current — easily 50–100 mA, well above the chip's per-pin budget. The LED and the GPIO both fail, usually permanently. A series resistor caps the current at a safe level by absorbing the voltage difference between the supply and the LED's forward voltage.",
+    "heuristic": "For a 3.3 V supply (ESP32, nRF52, Raspberry Pi), start with 220 Ω. For a 5 V supply (Arduino Uno, vintage TTL), start with 330 Ω. A higher value is always safer — the LED is dimmer but nothing breaks. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/bau/0201111.htm",
+    "enforced_by": "E2"
+  },
+  {
+    "id": "E3",
+    "category": "Digital Outputs",
+    "keywords": ["led", "resistor", "gpio", "current-limiting"],
+    "rule": "An LED current-limiting resistor should land between roughly 100 Ω and 1 kΩ on a 3.3 V or 5 V supply.",
+    "explanation": "Below ~100 Ω the resistor stops doing its job: the GPIO sources more current than the chip can sustain, the LED dies bright, and the pin's drive transistor weakens with every cycle. Above ~1 kΩ the LED becomes too dim to see in normal indoor light — the indicator stops indicating. E3 warns when a resistor value falls outside this safe window so the author can rerun the calculation or pick a different part.",
+    "heuristic": "Start with 220 Ω on 3.3 V and 330 Ω on 5 V (standard red/green/blue LEDs). For very low-current LEDs (often labelled `LE` or `low-current`), 1 kΩ to 4.7 kΩ is acceptable and the LED specifies its rated forward current. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/bau/0201111.htm",
+    "enforced_by": "E3"
+  },
+  {
+    "id": "E4",
+    "category": "Digital Inputs",
+    "keywords": ["gpio", "INPUT_ONLY", "esp32"],
+    "rule": "An input-only pin must not share a net with any output-driving pin.",
+    "explanation": "Some MCU pins are physically input-only — they have no output transistor and cannot drive the line. The ESP32 GPIO34–GPIO39 are the canonical example. Wiring such a pin to anything that drives the same net (another GPIO configured as output, a peripheral chip's output, an LED cathode) creates a contention. The input pin sees the driver's voltage instead of the intended signal, and reading the input returns whatever the driver decided. E4 catches this membership conflict.",
+    "heuristic": "Restrict input-only pins to passive sensing roles: buttons, level-detect lines, ADC inputs, edge-triggered interrupts. If you need an output on the same logical line, pick a regular bidirectional GPIO instead. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+    "enforced_by": "E4"
+  },
+  {
+    "id": "E5",
+    "category": "Hardware Specifics",
+    "keywords": ["esp32", "strapping", "boot", "gpio"],
+    "rule": "A strapping pin connected to a switch needs a defined idle level so boot is deterministic.",
+    "explanation": "ESP32-class chips sample certain GPIOs at reset to select boot mode, flash voltage, and console verbosity. Those `is_strapping` pins must read a defined level when reset releases. A switch wired between a strapping pin and GND has no defined level when the switch is open — boot becomes a coin-flip between two modes. A pull (firmware or hardware) anchors the open-switch state to a known level.",
+    "heuristic": "For ESP32 IO0/IO2/IO5/IO12/IO15 wired to a switch, declare `pull: firmware` on the net and call `pinMode(pin, INPUT_PULLUP)` in `setup()` before any other peripheral. If the switch is in line with the boot strap (e.g. IO0 driving boot mode), prefer an external 10 kΩ pull-up to VCC so the level holds even before firmware runs. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+    "enforced_by": "E5"
+  },
+  {
+    "id": "E6",
+    "category": "Power Supply",
+    "keywords": ["decoupling", "capacitor", "vcc", "topic:power-supply"],
+    "rule": "Every active IC on a VCC rail needs a decoupling capacitor near its supply pin.",
+    "explanation": "Digital ICs switch internal transistors at MHz rates. Each switch demands a brief current spike from VCC; the supply rail and the wires to it have inductance, and inductance fights sudden current changes by dropping voltage at the IC. A 100 nF ceramic capacitor across VCC and GND, placed within a few millimetres of the IC, supplies that spike locally — the rail keeps a stable voltage and the IC keeps switching cleanly. Skipping decoupling causes erratic resets, RF noise, and intermittent communication faults.",
+    "heuristic": "Place one 100 nF ceramic capacitor across VCC and GND for every active IC, as close to the chip's power pins as the layout allows. Add one bulk 10 µF capacitor near the regulator output for low-frequency support. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/slt/0205073.htm",
+    "enforced_by": "E6"
+  },
+  {
+    "id": "E7",
+    "category": "Communication",
+    "keywords": ["i2c", "pull-up", "twi"],
+    "rule": "An I2C bus needs pull-up resistors on both SDA and SCL.",
+    "explanation": "I2C is an open-drain bus: every device on the bus can pull the line low, but none of them drive it high. The lines float when no one is pulling — and a floating line reads as either 0 or 1 depending on stray capacitance, which destroys signalling. Pull-up resistors on SDA and SCL define the idle high level. Without them the bus does not communicate at all; you see ACK timeouts and bus-stuck conditions in firmware.",
+    "heuristic": "Use 4.7 kΩ pull-ups to VCC on SDA and SCL for typical 100 kHz / 400 kHz busses with a few devices. Drop to 2.2 kΩ for fast-mode-plus (1 MHz) or longer cable runs. Many breakout boards integrate their own pull-ups — check the schematic before adding externals to avoid stacking too low. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/com/0204131.htm",
+    "enforced_by": "E7"
+  },
+  {
+    "id": "E8",
+    "category": "Power Supply",
+    "keywords": ["led", "current-budget", "topic:power-supply"],
+    "rule": "The summed current of every active LED must stay within the MCU's total-current budget.",
+    "explanation": "Individual LED currents look small (5–20 mA each), but a status panel with eight indicators easily hits 100 mA across the chip. The MCU profile carries a `max_total_current_ma` figure — typically 200 mA on a 3.3 V dev board limited by the onboard regulator or the chip's combined I/O budget. Going above it browns the rail, the chip resets, and the failure is intermittent and hard to diagnose. E8 sums the indicator current at the YAML level so the budget overrun is caught before it ships.",
+    "heuristic": "Keep the total LED current below half the chip's stated budget so you have headroom for other peripherals. For high-count indicator boards, drive LEDs from a separate transistor or LED-driver IC rather than directly from GPIOs. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+    "enforced_by": "E8"
+  },
+  {
+    "id": "E9",
+    "category": "Power Supply",
+    "keywords": ["polarity", "diode", "vbus", "usb", "topic:power-supply"],
+    "rule": "A power-input connector should have a series diode or P-MOSFET so reverse polarity does not kill the board.",
+    "explanation": "A barrel jack inserted with the wrong polarity, a battery clipped on backwards, or a non-compliant USB-C cable that mis-asserts CC can deliver negative voltage to the board's supply rail. Without a protection element the MCU sees the reverse voltage on its substrate diodes and the chip dies within milliseconds. A Schottky diode in series with the input absorbs ~0.3 V at the cost of one diode drop; a P-MOSFET pulled to GND through its gate gives lower drop at higher currents. USB-C compliant cables mitigate this but not universally — protection at the board is the safer baseline.",
+    "heuristic": "For 5 V USB-C or DC barrel inputs feeding a 3.3 V regulator, a 1N5819 Schottky in series with VBUS gives bullet-proof protection at minimal cost. For battery-powered designs at higher currents, a P-MOSFET with its gate tied to GND through a 100 kΩ pull-down is the next step up. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/slt/0201113.htm",
+    "enforced_by": "E9"
+  },
+  {
+    "id": "E10",
+    "category": "Structural",
+    "keywords": ["topic:wiring"],
+    "rule": "The same physical pin cannot appear in more than one net.",
+    "explanation": "A pin has one electrical state at a time. Listing `U1.D13` under both `BTN_A` and `BTN_B` describes a contradiction — the pin would have to belong to two distinct nets, which is impossible. The author either meant to merge the two nets (use one net name with both buttons) or to use two different pins. E10 catches the conflict before it becomes a runtime debug session.",
+    "heuristic": "If multiple devices share a pin (e.g. an I2C bus), put them all in one net under a shared name. If you accidentally re-used a pin, pick a fresh GPIO from the MCU's `pins:` map. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
+    "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
+    "enforced_by": "E10"
+  }
+]

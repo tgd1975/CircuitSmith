@@ -104,6 +104,16 @@ The day-one component library is documented in
 - The component-level variant-selection pattern (used by the unified
   `LED` profile with `v_forward_by_color`).
 
+## ERC reference
+
+When ERC fires on a PR, [`docs/erc-checks.md`](erc-checks.md) is the
+contributor-facing reference for each of the 15 check codes
+(S1–S5 + E1–E10): what the trigger is, what hardware failure it
+prevents, severity defaults, and how to suppress per-net /
+per-component / per-circuit. Cross-references to the catalog entries
+in `circuitsmith.knowledge.rules.json` carry the
+Why / Senior's tip / Source content the report writer embeds.
+
 ## License
 
 [MIT](../LICENSE).

@@ -16,6 +16,7 @@ resistor = {
     "category": "resistor",
     "metadata": {
         "label": "R",
+        "kind": "resistor",
         "keywords": ["resistor", "passive"],
     },
     "pins": {
@@ -28,6 +29,7 @@ capacitor = {
     "category": "capacitor",
     "metadata": {
         "label": "C",
+        "kind": "capacitor",
         "keywords": ["capacitor", "passive", "decoupling"],
     },
     "pins": {
@@ -48,6 +50,7 @@ LED = {
     "category": "led",
     "metadata": {
         "label": "LED",
+        "kind": "led",
         "keywords": ["led", "indicator"],
         "v_forward_by_color": {
             "red":    2.0,
@@ -70,6 +73,7 @@ pushbutton = {
     "category": "button",
     "metadata": {
         "label": "BTN",
+        "kind": "switch",
         "keywords": ["button", "switch"],
     },
     "pins": {
@@ -90,6 +94,7 @@ piezo = {
     "category": "resistor",
     "metadata": {
         "label": "PIEZO",
+        "kind": "buzzer",
         "keywords": ["piezo", "buzzer", "alert"],
         "symbol": "Speaker",
     },

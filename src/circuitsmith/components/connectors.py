@@ -20,6 +20,7 @@ usb_c = {
     "category": "jack",
     "metadata": {
         "label": "USB-C",
+        "kind": "power-connector",
         "keywords": ["usb", "usb-c", "power", "5v"],
     },
     "pins": {
@@ -44,6 +45,7 @@ dc_jack_2_1mm = {
     "category": "jack",
     "metadata": {
         "label": "DC 2.1 mm",
+        "kind": "power-connector",
         "keywords": ["dc", "barrel", "power", "9v"],
     },
     "pins": {
@@ -58,6 +60,7 @@ mono_jack_6_35mm = {
     "category": "jack",
     "metadata": {
         "label": "Mono 1/4\" jack",
+        "kind": "signal-connector",
         "keywords": ["jack", "audio", "mono"],
     },
     "pins": {
@@ -74,6 +77,7 @@ stereo_jack_6_35mm = {
     "category": "jack",
     "metadata": {
         "label": "Stereo 1/4\" jack",
+        "kind": "signal-connector",
         "keywords": ["jack", "audio", "stereo", "trs"],
     },
     "pins": {
@@ -100,6 +104,7 @@ def make_header(n: int) -> dict:
         "category": "header",
         "metadata": {
             "label": f"HDR{n}",
+            "kind": "header",
             "keywords": ["header", "breakout"],
         },
         "pins": {
@@ -117,6 +122,7 @@ def make_screw_terminal(n: int) -> dict:
         "category": "header",
         "metadata": {
             "label": f"ST{n}",
+            "kind": "header",
             "keywords": ["screw-terminal", "wiring"],
         },
         "pins": {

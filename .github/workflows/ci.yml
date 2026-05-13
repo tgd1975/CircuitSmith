@@ -48,6 +48,26 @@ jobs:
       - name: Pytest
         run: pytest
 
+      - name: ERC report staleness + ERROR-level gate
+        # Re-renders each shipped target's ERC report and diffs against the
+        # committed copy; also fails on any ERROR-level ERC finding.
+        # Scoped to ubuntu — matplotlib float-geometry stability is OS-
+        # dependent (see test_renderer_staleness.py) and the report itself
+        # is text-only, but we don't double-run on Windows.
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_erc_reports.py
+
+      - name: Catalog validation (offline)
+        # Format + enforced_by + heuristic disclaimer + category-lint.
+        # Online URL reachability runs nightly via the separate
+        # catalog-nightly workflow (added when nightly cadence lands).
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        env:
+          CS_CATALOG_OFFLINE: '1'
+        run: python -m circuitsmith.knowledge.validate_catalog
+
       - name: Phase 2b trigger report
         # Aggregates `provenance.escalations` from every committed
         # meta.yml into a JSON build artifact the maintainer reviews at

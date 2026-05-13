@@ -17,6 +17,7 @@ bme280 = {
     "category": "i2c-sensor",
     "metadata": {
         "label": "BME280",
+        "kind": "ic",
         "manufacturer": "Bosch",
         "datasheet": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf",
         # Default address on the Adafruit / SparkFun breakouts (SDO tied
@@ -38,6 +39,7 @@ ssd1306 = {
     "category": "i2c-sensor",
     "metadata": {
         "label": "SSD1306 128x64 OLED",
+        "kind": "ic",
         "manufacturer": "Solomon Systech",
         "datasheet": "https://www.solomon-systech.com/wp-content/uploads/2024/03/SSD1306-Rev-1.5.pdf",
         # 0x3C is the default for the 7-bit address with D/C tied low; the

@@ -152,6 +152,48 @@ if [ -n "$STAGED_PY" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# ERC report staleness + ERROR-level gate (TASK-029). Mirrors the CI step
+# in .github/workflows/ci.yml. Fires when any of the relevant inputs are
+# staged: package code, the shipped circuit YAMLs, or the committed
+# reports themselves. The check is a no-op on commits that only touch
+# unrelated files.
+# ---------------------------------------------------------------------------
+# Prefer the project's venv interpreter when present — the circuitsmith
+# package and its YAML loader live there, not on the system python.
+CS_PYTHON="${REPO_ROOT}/.venv/bin/python"
+if [ ! -x "$CS_PYTHON" ]; then
+    CS_PYTHON="python3"
+fi
+
+STAGED_ERC_INPUTS=$(git diff --cached --name-only --diff-filter=ACM | \
+    grep -E '^(src/circuitsmith/(erc_engine|erc_report|netgraph|renderer)\.py|src/circuitsmith/components/.*\.py|src/circuitsmith/knowledge/rules\.json|data/.*\.circuit\.yml|docs/builders/wiring/.*/erc-report\.md)$' \
+    || true)
+if [ -n "$STAGED_ERC_INPUTS" ]; then
+    echo -e "${YELLOW}Checking ERC reports for staleness and errors...${NC}"
+    if ! "$CS_PYTHON" "${REPO_ROOT}/scripts/check_erc_reports.py"; then
+        echo -e "${RED}ERC report gate failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}ERC report gate OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
+# Catalog validation (TASK-029 third gate). Fires when the catalog itself
+# or any dependent source is staged. Offline-mode by default; nightly CI
+# runs the online URL check.
+# ---------------------------------------------------------------------------
+STAGED_CATALOG=$(git diff --cached --name-only --diff-filter=ACM | \
+    grep -E '^src/circuitsmith/knowledge/' || true)
+if [ -n "$STAGED_CATALOG" ]; then
+    echo -e "${YELLOW}Validating rule catalog (offline)...${NC}"
+    if ! CS_CATALOG_OFFLINE=1 "$CS_PYTHON" -m circuitsmith.knowledge.validate_catalog; then
+        echo -e "${RED}Catalog validation failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}Catalog OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
 # Portability lint (only fires when staged changes touch
 # `src/circuitsmith/`). Enforces the portability contract per ADR-0012
 # (supersedes ADR-0007) / TASK-051 / TASK-077: no host-project paths, no

@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 28** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 52** | **Total: 80** | ██████░░░░ 65%
+⚪ **Open: 19** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 61** | **Total: 80** | ████████░░ 76%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,15 +30,6 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-022](open/task-022-implement-erc-engine.md) | Implement erc_engine.py with structural S1–S3 and electrical E1–E10 | Large (8-24h) | Senior | ⚪ open |
-| [TASK-023](open/task-023-integrate-erc-into-renderer-pipeline.md) | Integrate ERC into renderer pipeline (post-schema, pre-drawing) | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-024](open/task-024-seed-rule-catalog-rules-json.md) | Seed knowledge/rules.json with 15 entries (S1–S5 + E1–E10) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-025](open/task-025-write-validate-catalog-script.md) | Write knowledge/validate_catalog.py | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-026](open/task-026-write-knowledge-backlog.md) | Write knowledge/BACKLOG.md — remaining educational rules | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-027](open/task-027-wire-catalog-into-erc-report.md) | Wire catalog into ERC report writer | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-028](open/task-028-write-erc-report-and-document-e9.md) | Write erc-report.md for each target; document E9 WARNING rationale | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-029](open/task-029-extend-ci-staleness-and-erc-gate.md) | Extend CI — staleness guard for erc-report; ERROR-level gate; catalog validation | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-030](open/task-030-write-erc-checks-reference-doc.md) | Write docs/erc-checks.md | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-031](open/task-031-implement-bom-exporter.md) | Implement bom_exporter.py — Markdown and CSV | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-032](open/task-032-embed-bom-table-in-build-guide.md) | Embed BOM table in build guide | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-033](open/task-033-implement-netlist-exporter.md) | Implement netlist_exporter.py — flatten NetGraph to KiCad .net | Medium (2-8h) | Senior | ⚪ open |
@@ -84,6 +75,15 @@ _No paused tasks._
 | [TASK-019](closed/task-019-extend-rubric-with-numeric-checks.md) | Extend rubric with numeric checks promoted from advisory | Medium (2-8h) |
 | [TASK-020](closed/task-020-extend-meta-yml-provenance.md) | Extend meta.yml.provenance with ai_invoked and escalations | Small (&lt;2h) |
 | [TASK-021](closed/task-021-update-layout-docs-for-ai-placer.md) | Update docs/layout.md with AI-placer invocation and cost notes | Small (&lt;2h) |
+| [TASK-022](closed/task-022-implement-erc-engine.md) | Implement erc_engine.py with structural S1–S3 and electrical E1–E10 | Large (8-24h) |
+| [TASK-023](closed/task-023-integrate-erc-into-renderer-pipeline.md) | Integrate ERC into renderer pipeline (post-schema, pre-drawing) | Small (&lt;2h) |
+| [TASK-024](closed/task-024-seed-rule-catalog-rules-json.md) | Seed knowledge/rules.json with 15 entries (S1–S5 + E1–E10) | Medium (2-8h) |
+| [TASK-025](closed/task-025-write-validate-catalog-script.md) | Write knowledge/validate_catalog.py | Small (&lt;2h) |
+| [TASK-026](closed/task-026-write-knowledge-backlog.md) | Write knowledge/BACKLOG.md — remaining educational rules | Small (&lt;2h) |
+| [TASK-027](closed/task-027-wire-catalog-into-erc-report.md) | Wire catalog into ERC report writer | Medium (2-8h) |
+| [TASK-028](closed/task-028-write-erc-report-and-document-e9.md) | Write erc-report.md for each target; document E9 WARNING rationale | Small (&lt;2h) |
+| [TASK-029](closed/task-029-extend-ci-staleness-and-erc-gate.md) | Extend CI — staleness guard for erc-report; ERROR-level gate; catalog validation | Small (&lt;2h) |
+| [TASK-030](closed/task-030-write-erc-checks-reference-doc.md) | Write docs/erc-checks.md | Medium (2-8h) |
 | [TASK-043](closed/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) |
 | [TASK-044](closed/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) |
 | [TASK-045](closed/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) |

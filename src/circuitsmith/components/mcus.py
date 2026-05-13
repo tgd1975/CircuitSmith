@@ -58,6 +58,7 @@ esp32 = {
     "category": "ic",
     "metadata": {
         "label": "ESP32 NodeMCU-32S",
+        "kind": "mcu",
         "manufacturer": "Espressif (Joy-IT SBC-NodeMCU-ESP32 board)",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
         "vcc_min": 3.0,
@@ -141,6 +142,7 @@ nrf52840 = {
     "category": "ic",
     "metadata": {
         "label": "nRF52840 Feather",
+        "kind": "mcu",
         "manufacturer": "Nordic (Adafruit Feather nRF52840 Express #4062)",
         "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.7.pdf",
         "vcc_min": 1.7,

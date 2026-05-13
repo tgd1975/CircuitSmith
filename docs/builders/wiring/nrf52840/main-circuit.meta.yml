@@ -1,7 +1,7 @@
 schema: circuit-meta/v1
 sources:
   circuit: data/nrf52840.circuit.yml
-  layout:  /tmp/nrf52840-wiring.layout.yml
+  layout:  docs/builders/wiring/nrf52840/main-circuit.layout.yml
 layout:
   state: complete
   placed: 17

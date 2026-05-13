@@ -34,7 +34,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -53,6 +53,9 @@ from circuitsmith.layout import (
     render_layout_yaml,
     route,
 )
+from circuitsmith.erc_engine import Finding as ERCFinding
+from circuitsmith.erc_engine import run as run_erc
+from circuitsmith.erc_report import render_report as render_erc_report
 from circuitsmith.netgraph import NetGraph
 from circuitsmith.schema import (
     validate,
@@ -71,6 +74,8 @@ class RenderResult:
     svg_path: Path
     layout_path: Path
     meta_path: Path
+    erc_findings: list[ERCFinding] = field(default_factory=list)
+    erc_report_path: Path | None = None
 
 
 class RenderError(Exception):
@@ -90,6 +95,7 @@ def render(
     out_svg: Path,
     out_layout: Path | None = None,
     out_meta: Path | None = None,
+    out_erc_report: Path | None = None,
     use_ai_placer: bool = False,
     ai_client: LLMClient | None = None,
 ) -> RenderResult:
@@ -138,6 +144,38 @@ def render(
     profiles = load_profiles()
     # The kernel accepts a flat dict; copy so we don't mutate the cached registry.
     profile_index: dict[str, Any] = dict(profiles)
+
+    # ── ERC ────────────────────────────────────────────────────────────────
+    # Pre-layout, post-schema. ERROR-level findings abort the pipeline;
+    # WARNINGs land in the result for the report writer but do not abort.
+    # The ERC stage is wholly topology-driven — it neither reads nor
+    # produces layout.yml.
+    erc_findings = run_erc(graph, circuit, profiles=profiles)
+
+    # Persist the catalog-enriched erc-report.md whenever a destination is
+    # named — regardless of whether ERC errored. CI's staleness guard
+    # (TASK-029) needs the report to exist on every commit so the
+    # generated-output check has a baseline to diff against.
+    actual_out_erc_report = out_erc_report
+    if actual_out_erc_report is not None:
+        actual_out_erc_report.parent.mkdir(parents=True, exist_ok=True)
+        report_md = render_erc_report(
+            erc_findings,
+            title=str(circuit.get("meta", {}).get("title", circuit_path.stem)),
+            target=str(circuit.get("meta", {}).get("target", "unknown")),
+        )
+        actual_out_erc_report.write_text(report_md)
+
+    erc_errors = [f for f in erc_findings if f.severity == "error"]
+    if erc_errors:
+        raise RenderError(
+            stage="erc",
+            findings=list(erc_errors),
+            summary=(
+                f"{len(erc_errors)} ERC error finding(s); first: "
+                f"[{erc_errors[0].check}] {erc_errors[0].message}"
+            ),
+        )
 
     escalations: list[dict[str, str]] = []
     actual_out_meta = out_meta or out_svg.with_suffix(".meta.yml")
@@ -301,6 +339,8 @@ def render(
         svg_path=out_svg,
         layout_path=actual_out_layout,
         meta_path=actual_out_meta,
+        erc_findings=list(erc_findings),
+        erc_report_path=actual_out_erc_report,
     )
 
 
@@ -631,6 +671,8 @@ def _main(argv: list[str]) -> int:
     parser.add_argument("--out",     type=Path, required=True, help="output .svg path")
     parser.add_argument("--out-layout", type=Path, default=None, help="output .layout.yml (default: input or <out>.layout.yml)")
     parser.add_argument("--out-meta",   type=Path, default=None, help="output .meta.yml (default: sibling of <out>)")
+    parser.add_argument("--out-erc-report", type=Path, default=None,
+                        help="output erc-report.md (omit to suppress report writing)")
     ai_group = parser.add_mutually_exclusive_group()
     ai_group.add_argument(
         "--no-ai",
@@ -653,13 +695,16 @@ def _main(argv: list[str]) -> int:
             out_svg=args.out,
             out_layout=args.out_layout,
             out_meta=args.out_meta,
+            out_erc_report=args.out_erc_report,
             use_ai_placer=args.use_ai_placer,
         )
     except RenderError as exc:
         sys.stderr.write(f"renderer aborted at {exc.stage}: {exc.summary}\n")
         for f in exc.findings:
             sys.stderr.write(f"  - {f}\n")
-        return 2
+        # ERC errors exit 1; schema/kernel/rubric errors exit 2. Documented
+        # in idea-001-circuit-skill.md §Pipeline.
+        return 1 if exc.stage == "erc" else 2
     sys.stderr.write(
         f"renderer ok: svg={result.svg_path} "
         f"layout={result.layout_path} meta={result.meta_path}\n"
