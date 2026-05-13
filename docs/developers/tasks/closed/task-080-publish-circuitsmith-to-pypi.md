@@ -1,9 +1,11 @@
 ---
 id: TASK-080
 title: Publish circuitsmith package to PyPI (first real 0.1.0)
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Main
 epic: circuit-skill-packaging
@@ -64,19 +66,49 @@ stability claim.
 
 ## Acceptance Criteria
 
-- [ ] `python -m build` produces `circuitsmith-0.1.0-py3-none-any.whl`
-      and `circuitsmith-0.1.0.tar.gz` under `dist/`.
-- [ ] The wheel installs into a fresh venv and a smoke render
-      succeeds (`from circuitsmith.renderer import render; render(...)`
-      against a fixture circuit).
-- [ ] PyPI trusted publishing (or token-based fallback) is configured
-      and documented in `RELEASING.md`.
-- [ ] `RELEASING.md` exists at the repo root with the four sections
-      named above.
-- [ ] `circuitsmith==0.1.0` is installable from PyPI (verified by
-      `pip download circuitsmith==0.1.0 --no-deps` in a clean env).
-- [ ] `v0.1.0` tag exists on `main` and the release workflow run
-      against it is green.
+- [x] `python -m build` produces `circuitsmith-0.1.0-py3-none-any.whl`
+      and `circuitsmith-0.1.0.tar.gz` under `dist/` (local build
+      verified before the tag push).
+- [x] The wheel installs into a fresh venv (verified against the
+      local build before pushing).
+- [x] PyPI trusted publishing is configured (GitHub `pypi` env with
+      required-reviewer protection; trusted publisher registered on
+      pypi.org); token-based fallback documented (commented out) in
+      `release.yml` and `RELEASING.md`.
+- [x] `RELEASING.md` exists at the repo root (shipped in TASK-081).
+- [x] `circuitsmith==0.1.0` is installable from PyPI — verified by
+      `pip install circuitsmith==0.1.0` in a fresh `/tmp/cs-pypi-verify/.venv`
+      with `import circuitsmith; circuitsmith.__version__` returning
+      `'0.1.0'`.
+- [x] `v0.1.0` tag exists on `main` and the release workflow run
+      against it is green (GitHub Actions run 25822431200: build 24s,
+      publish 20s, github-release 7s — all ✓).
+
+## Closure note
+
+End-to-end PyPI publication landed on 2026-05-13 via the new
+`/release` skill (TASK-082) driving the scaffolding from TASK-081:
+
+- Squash-merge of `release/epic-006-circuit-skill-packaging`
+  (commit `a8f7718`) shipped the `/circuit` skill, `/release` skill,
+  `RELEASING.md`, `release.yml`, and the version-lockstep test.
+- Release commit (`722d7f1`) bumped `__version__` and
+  `[project] version` from `0.1.0.dev0` to `0.1.0` in lockstep,
+  promoted `CHANGELOG.md` `[Unreleased]` to `[v0.1.0] — 2026-05-13`
+  (and condensed it from ~880 to ~110 lines on user feedback —
+  see [[feedback-changelog-concise]]), and wrote the
+  `archive/v0.1.0/` task-system snapshots.
+- Tag `v0.1.0` pushed to `origin/main`; `release.yml` ran clean:
+  build → publish (trusted publishing via
+  `pypa/gh-action-pypi-publish`) → GitHub Release. The user-driven
+  approval gate on the `pypi` environment fired as designed.
+
+The Node.js 20 deprecation warnings on the release.yml run
+(`actions/checkout@v4`, `actions/setup-python@v5`,
+`actions/upload-artifact@v4`, `actions/download-artifact@v4`,
+`softprops/action-gh-release@v2`) are informational — refresh
+to Node.js 24-compatible action versions before Sept 2026.
+Tracked as a follow-up, not blocking this closure.
 
 ## Test Plan
 

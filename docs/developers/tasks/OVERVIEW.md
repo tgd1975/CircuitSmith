@@ -4,16 +4,19 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 2** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 80** | **Total: 82** | ██████████ 98%
+⚪ **Open: 1** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 81** | **Total: 82** | ██████████ 99%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
 <!-- END HEADER -->
 
 <!-- BURNUP:START -->
+
 <a id="burn-up"></a>
 
-_No git tag found yet — burn-up chart needs a release tag to anchor on._
+## Burn-up since v0.1.0
+
+_No tasks or epics closed since v0.1.0 yet._
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -31,7 +34,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-080](open/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) | Senior | ⚪ open |
 
 ## Closed Tasks
 
@@ -115,6 +117,7 @@ _No paused tasks._
 | [TASK-077](closed/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) |
 | [TASK-078](closed/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) |
 | [TASK-079](closed/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) |
+| [TASK-080](closed/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) |
 | [TASK-081](closed/task-081-author-release-workflow-scaffolding.md) | Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep) | Medium (2-8h) |
 | [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
 
