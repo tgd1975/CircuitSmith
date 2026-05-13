@@ -5,6 +5,10 @@ description: Documentation audit and rewrite once EPIC-006 lands, to reconcile d
 category: 🛠️ tooling
 ---
 
+## Archive Reason
+
+2026-05-13 — Elevated to EPIC-013 (Post-EPIC-006 Documentation Audit and Rewrite).
+
 Once EPIC-006 is implemented, CircuitSmith will have gone through the
 full arc from concept-stage dossier to a working schematic-generation
 pipeline (CLI, layout engine, AI placer, renderer, ERC, BOM,

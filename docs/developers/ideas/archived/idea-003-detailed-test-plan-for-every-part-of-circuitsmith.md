@@ -5,6 +5,10 @@ description: Detailed test plan covering every CircuitSmith subsystem
 category: 🛠️ tooling
 ---
 
+## Archive Reason
+
+2026-05-13 — Elevated to EPIC-011 (Test Plan and Coverage Matrix).
+
 A single, structured test plan that enumerates **what** to test, **how**
 to test it, and **at what layer** for every subsystem in CircuitSmith.
 The aim is to convert today's organically grown test suite into a

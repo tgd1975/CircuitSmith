@@ -5,6 +5,10 @@ description: Tutorial and worked examples showcasing CircuitSmith capabilities
 category: 🛠️ tooling
 ---
 
+## Archive Reason
+
+2026-05-13 — Elevated to EPIC-012 (Tutorial and Example Gallery).
+
 A guided tutorial plus a curated gallery of example circuits that
 demonstrate, end-to-end, what CircuitSmith can produce today — from
 the smallest meaningful `circuit.yml` all the way up to a multi-page

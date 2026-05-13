@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 1** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 81** | **Total: 82** | ██████████ 99%
+⚪ **Open: 28** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 81** | **Total: 109** | ███████░░░ 74%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -16,7 +16,41 @@
 
 ## Burn-up since v0.1.0
 
-_No tasks or epics closed since v0.1.0 yet._
+<table><tr><td>
+
+```mermaid
+xychart-beta
+    title "Cumulative tasks closed"
+    x-axis ["05-13"]
+    line [1]
+```
+
+</td><td>
+
+```mermaid
+xychart-beta
+    title "Cumulative epics closed"
+    x-axis ["05-13"]
+    line [0]
+```
+
+</td><td>
+
+```mermaid
+xychart-beta
+    title "Cumulative effort hours — green: estimate, blue: actual"
+    x-axis ["05-13"]
+    line [5]
+    line [5]
+```
+
+</td></tr></table>
+
+_Legend: green line = estimate (midpoint hours from `effort:`); blue line = actual (midpoint hours from `effort_actual:`)._
+
+| Date | Tasks closed | Cum. tasks | Est. h | Cum. est. h | Actual h | Cum. actual h | Epics closed | Cum. epics |
+|------|-------------:|-----------:|-------:|------------:|---------:|--------------:|-------------:|-----------:|
+| 2026-05-13 | 1 | 1 | 5 | 5 | 5 | 5 | 0 | 0 |
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -34,6 +68,33 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
+| [TASK-083](open/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-084](open/task-084-inventory-existing-test-surface.md) | Inventory the existing test surface and tag every test by subsystem and layer | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-085](open/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-086](open/task-086-document-layout-and-router-test-plan.md) | Author the layout-kernel and Manhattan-router subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-087](open/task-087-document-renderer-and-erc-test-plan.md) | Author the renderer and ERC-engine subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-088](open/task-088-document-exporters-orchestration-ci-test-plan.md) | Author the exporters, skill-orchestration, and CI-gates subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-089](open/task-089-write-top-level-coverage-matrix.md) | Write the top-level coverage matrix with the PR-time/nightly/release axis | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-090](open/task-090-file-followup-tasks-for-coverage-gaps.md) | File concrete follow-up tasks for every coverage gap exposed by the plan | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-091](open/task-091-ci-staleness-check-for-test-plan.md) | Add a CI staleness check that flags tests not referenced in the plan | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-092](open/task-092-decide-docs-users-structure.md) | Decide docs/users/ structure and update README pointer | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-093](open/task-093-scaffold-tutorial-and-examples-directories.md) | Scaffold docs/users/tutorial/ and docs/users/examples/ with indexes | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-094](open/task-094-tutorial-steps-1-3-minimal-and-fan-out.md) | Tutorial — steps 1-3 (minimal circuit, fan-out, sub-blocks) | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-095](open/task-095-tutorial-steps-4-6-erc-bom-iteration.md) | Tutorial — steps 4-6 (ERC fix, BOM export, layout iteration) | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-096](open/task-096-example-voltage-divider.md) | Example gallery — voltage divider | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-097](open/task-097-example-common-emitter-amplifier.md) | Example gallery — common-emitter amplifier | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-098](open/task-098-example-555-monostable.md) | Example gallery — 555 monostable timer | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-099](open/task-099-example-opamp-non-inverting-buffer.md) | Example gallery — op-amp non-inverting buffer | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-100](open/task-100-example-multi-page-split.md) | Example gallery — multi-page split (stresses renderer page-break) | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-101](open/task-101-ci-regression-diff-for-gallery.md) | CI regression diff — regenerate the tutorial and gallery, fail on drift | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-102](open/task-102-inventory-all-markdown-docs.md) | Inventory all .md docs and bucket by audience and freshness | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-103](open/task-103-drift-sweep-stale-claims.md) | Drift sweep — identify stale claims, retired scripts, and broken refs | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-104](open/task-104-voice-unification-rewrite.md) | Voice unification — pick canonical voice and rewrite earlier docs forward | Large (8-24h) | Senior | ⚪ open |
+| [TASK-105](open/task-105-cross-reference-audit.md) | Cross-reference audit — internal links, TASK/EPIC/IDEA refs, code-path mentions | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-106](open/task-106-tutorial-alignment-with-epic-012.md) | Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-107](open/task-107-test-plan-alignment-with-epic-011.md) | Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-108](open/task-108-annotate-idea-001-dossier.md) | Annotate the archived IDEA-001 dossier with what shipped vs what didn't | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-109](open/task-109-final-pass-readme-and-entry-points.md) | Final pass on README.md and top-level entry-point docs | Medium (2-8h) | Medium | ⚪ open |
 
 ## Closed Tasks
 

@@ -9,6 +9,12 @@ first tag is cut.
 
 ## [Unreleased]
 
+### Tooling
+
+- Elevated IDEA-003, IDEA-004, IDEA-007 to EPIC-011 (test plan + coverage
+  matrix, 9 tasks), EPIC-012 (tutorial + example gallery, 10 tasks), and
+  EPIC-013 (post-EPIC-006 documentation audit, 8 tasks).
+
 ## [v0.1.0] — 2026-05-13
 
 First public release. CircuitSmith generates documentation-quality
