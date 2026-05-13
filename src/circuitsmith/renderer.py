@@ -38,7 +38,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from circuit.layout_engine import (
+from circuitsmith.layout import (
     AmbiguityEntry,
     ConvergenceResult,
     EscalationError,
@@ -53,12 +53,12 @@ from circuit.layout_engine import (
     render_layout_yaml,
     route,
 )
-from circuit.netgraph import NetGraph
-from circuit.schema import (
+from circuitsmith.netgraph import NetGraph
+from circuitsmith.schema import (
     validate,
     validate_layout,
 )
-from circuit.schema.registry import load_profiles
+from circuitsmith.schema.registry import load_profiles
 
 SKILL_VERSION = "circuit-skill@0.4.0"  # bump when behaviour changes; see ADR-0011
 
@@ -102,7 +102,7 @@ def render(
 
     `use_ai_placer` controls Phase 2b dispatch. Default `False` keeps
     the renderer hermetic for CI per ADR-0002 (AI only at authoring
-    time, never in CI). Pass `True` to invoke `layout_engine.converge`
+    time, never in CI). Pass `True` to invoke `circuitsmith.layout.converge`
     when the kernel hits an `EscalationError`. The CLI `--no-ai` flag
     is the user-facing form: `--no-ai` (default) is the kernel-only
     path, `--ai` opts into the Phase 2b placer.
@@ -445,7 +445,7 @@ def _dispatch_ai_placer(
     whether to merge the proposals or abort.
     """
     if ai_client is None:
-        from circuit.layout_engine.ai_placer import AnthropicClient
+        from circuitsmith.layout.ai_placer import AnthropicClient
         ai_client = AnthropicClient()
 
     ambiguity_queue = [

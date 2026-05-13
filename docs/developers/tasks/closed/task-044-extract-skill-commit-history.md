@@ -1,15 +1,34 @@
 ---
 id: TASK-044
 title: Extract skill commit history via git subtree split; push as main
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: XS (<30m)
 complexity: Senior
 human-in-loop: Main
 epic: circuit-skill-packaging
 order: 6
 prerequisites: [TASK-043]
 ---
+
+## Closure note (2026-05-13)
+
+Retired under [ADR-0012](../../adr/0012-library-as-installable-package.md).
+The standalone-skill-repo extraction path that this task implemented
+is obsolete: under ADR-0012 the skill folder stays in this repo and
+the library is published as a PyPI package. There is no separate
+repo to push history to, so there is nothing to `git subtree split`.
+
+Superseded by **TASK-080** (`publish-circuitsmith-to-pypi`), which
+ships the library through PyPI instead. See
+[EPIC-006](epic-006-circuit-skill-packaging.md) § "Retired tasks"
+and [`idea-002`](../../ideas/archived/idea-002-consolidate-skill-python-into-central-module.md)
+for the full reckoning.
+
+The acceptance criteria below are preserved as historical record; do
+not act on them.
 
 ## Autonomy
 

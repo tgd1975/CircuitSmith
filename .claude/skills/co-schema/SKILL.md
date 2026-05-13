@@ -1,13 +1,13 @@
 ---
 name: co-schema
-description: Code-owner reminder for .claude/skills/circuit/schema/*.json — invariants surfaced before edit
+description: Code-owner reminder for src/circuitsmith/schema/*.json — invariants surfaced before edit
 ---
 
 # co-schema
 
 Surfaces the invariants the JSON schemas in
-`.claude/skills/circuit/schema/` are expected to preserve before an
-edit lands. Bound by
+`src/circuitsmith/schema/` are expected to preserve before an edit
+lands. Bound by
 [`.claude/codeowners.yaml`](../../codeowners.yaml).
 
 Authoritative source:
@@ -51,9 +51,9 @@ and
 
 A breaking schema change ripples through:
 
-- `.claude/skills/circuit/netgraph.py` — parses `.circuit.yml` into
+- `src/circuitsmith/netgraph.py` — parses `.circuit.yml` into
   the graph (see [`co-netgraph`](../co-netgraph/SKILL.md)).
-- `.claude/skills/circuit/renderer/` — consumes `layout.yml`
+- `src/circuitsmith/renderer.py` — consumes `layout.yml`
   slot vocabulary.
 - The schema-validation pre-commit hook (TASK-052) — refuses
   malformed inputs against the **current** schema; lagging it

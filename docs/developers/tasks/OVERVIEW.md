@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 34** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 45** | **Total: 79** | ██████░░░░ 57%
+⚪ **Open: 28** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 52** | **Total: 80** | ██████░░░░ 65%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -51,19 +51,13 @@ _No paused tasks._
 | [TASK-040](open/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) | Junior | ⚪ open |
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
 | [TASK-042](open/task-042-finalise-skill-docs.md) | Finalise all .claude/skills/circuit/docs/ files | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-043](open/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-044](open/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-045](open/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-049](open/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-052](open/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-053](open/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-074](open/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-075](open/task-075-fix-idea-skill-template-markdownlint.md) | Fix /ts-idea-new template so generated files pass markdownlint on first run | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-076](open/task-076-write-adr-0012-supersede-adr-0007.md) | Write ADR-0012 (library as installable package) superseding ADR-0007 | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-077](open/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) | Medium | ⚪ open |
-| [TASK-078](open/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-079](open/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-080](open/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) | Senior | ⚪ open |
 
 ## Closed Tasks
 
@@ -90,6 +84,9 @@ _No paused tasks._
 | [TASK-019](closed/task-019-extend-rubric-with-numeric-checks.md) | Extend rubric with numeric checks promoted from advisory | Medium (2-8h) |
 | [TASK-020](closed/task-020-extend-meta-yml-provenance.md) | Extend meta.yml.provenance with ai_invoked and escalations | Small (&lt;2h) |
 | [TASK-021](closed/task-021-update-layout-docs-for-ai-placer.md) | Update docs/layout.md with AI-placer invocation and cost notes | Small (&lt;2h) |
+| [TASK-043](closed/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) |
+| [TASK-044](closed/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) |
+| [TASK-045](closed/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) |
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
@@ -114,4 +111,8 @@ _No paused tasks._
 | [TASK-071](closed/task-071-author-commit-policy-doc.md) | Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy) | Medium (2-8h) |
 | [TASK-072](closed/task-072-author-branch-protection-doc.md) | Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset | Small (&lt;2h) |
 | [TASK-073](closed/task-073-apply-branch-protection.md) | Apply GitHub branch protection on main per BRANCH_PROTECTION_CONCEPT.md | Small (&lt;2h) |
+| [TASK-076](closed/task-076-write-adr-0012-supersede-adr-0007.md) | Write ADR-0012 (library as installable package) superseding ADR-0007 | Medium (2-8h) |
+| [TASK-077](closed/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) |
+| [TASK-078](closed/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) |
+| [TASK-079](closed/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) |
 <!-- END GENERATED -->

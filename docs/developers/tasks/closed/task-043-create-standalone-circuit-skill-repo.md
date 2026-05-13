@@ -1,15 +1,35 @@
 ---
 id: TASK-043
 title: Create circuit-skill standalone GitHub repository
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Small (<2h)
+effort_actual: XS (<30m)
 complexity: Medium
 human-in-loop: Main
 epic: circuit-skill-packaging
 order: 5
 prerequisites: [TASK-041, TASK-042]
 ---
+
+## Closure note (2026-05-13)
+
+Retired under [ADR-0012](../../adr/0012-library-as-installable-package.md).
+The standalone-skill-repo extraction path that this task implemented
+is obsolete: under ADR-0012 the library is published as a PyPI
+package (`circuitsmith`) from this repo, and the skill folder at
+`.claude/skills/circuit/` stays here as the agent-facing surface.
+There is no separate skill repo to create.
+
+Superseded by **TASK-080** (`publish-circuitsmith-to-pypi`), which
+ships the library through PyPI instead. See
+[EPIC-006](epic-006-circuit-skill-packaging.md) § "Retired tasks"
+and [`idea-002`](../../ideas/archived/idea-002-consolidate-skill-python-into-central-module.md)
+for the full reckoning.
+
+The acceptance criteria below are preserved as historical record; do
+not act on them.
 
 ## Autonomy
 

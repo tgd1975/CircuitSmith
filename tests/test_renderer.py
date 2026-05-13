@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from circuit.renderer import RenderError, _main, render
+from circuitsmith.renderer import RenderError, _main, render
 
 
 def _write_yaml(path: Path, content: str) -> None:
@@ -153,7 +153,7 @@ def test_cli_returns_non_zero_on_error(tmp_path: Path):
 
 def test_module_has_no_host_project_imports():
     import re
-    src = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "circuit" / "renderer.py"
+    src = Path(__file__).resolve().parents[1] / "src" / "circuitsmith" / "renderer.py"
     text = src.read_text()
     forbidden = [
         r"\bimport\s+scripts\b",

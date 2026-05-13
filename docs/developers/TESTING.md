@@ -25,10 +25,11 @@ acceptance gate is the same either way: the test file is collected by
 
 A second test root, `scripts/tests/`, exists for **task-system tooling
 tests** (housekeep, code-owner hook, portability lint, etc.). These
-are not product-code tests and do not move when the
-[`.claude/skills/circuit/`](../../.claude/skills/circuit/) skill is
-extracted into a standalone repo at Phase 7
-([EPIC-006](tasks/open/epic-006-circuit-skill-packaging.md)).
+are not product-code tests; they stay in this repo when the
+[`circuitsmith`](../../src/circuitsmith/) library is published to
+PyPI at Phase 7
+([EPIC-006](tasks/active/epic-006-circuit-skill-packaging.md)). The
+package's own tests live in `tests/` and ship with the library.
 
 ## `pyproject.toml` configuration
 

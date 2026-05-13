@@ -1,9 +1,11 @@
 ---
 id: TASK-078
 title: Update agent-facing surface for circuitsmith package rename
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-13
 effort: Small (<2h)
+effort_actual: XS (<30m)
 complexity: Junior
 human-in-loop: No
 epic: circuitsmith-package
@@ -42,13 +44,18 @@ moved that.
 
 ## Acceptance Criteria
 
-- [ ] All `from circuit.*` references in
+- [x] All `from circuit.*` references in
       `.claude/skills/circuit/docs/**/*.md` are rewritten to
-      `from circuitsmith.*`.
-- [ ] The three `co-*` reminder skills load against the new
-      paths — i.e. editing a file under `src/circuitsmith/`
-      that the reminder is supposed to guard fires the reminder.
-- [ ] No skill shim `.py` files added in this task (deferred
+      `from circuitsmith.*` (index.md:77, components.md:135).
+- [x] The three `co-*` reminder skills load against the new
+      paths — `.claude/codeowners.yaml` patterns shift from
+      `.claude/skills/circuit/...` to `src/circuitsmith/...`
+      (co-netgraph → `netgraph.py`, co-schema →
+      `schema/*.json`, co-erc-engine → `erc_engine.py`).
+      Skill registry confirms the new descriptions are loaded.
+      Reminder bodies updated to reference ADR-0012 in place of
+      ADR-0007 where the portability invariant is named.
+- [x] No skill shim `.py` files added in this task (deferred
       per the idea's § "Phase 3.3").
 
 ## Test Plan

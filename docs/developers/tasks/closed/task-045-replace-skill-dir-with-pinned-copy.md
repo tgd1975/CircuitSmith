@@ -1,15 +1,38 @@
 ---
 id: TASK-045
 title: Replace skill dir with pinned copy; update doc links; write RELEASING.md and README
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: XS (<30m)
 complexity: Medium
 human-in-loop: Main
 epic: circuit-skill-packaging
 order: 7
 prerequisites: [TASK-044]
 ---
+
+## Closure note (2026-05-13)
+
+Retired under [ADR-0012](../../adr/0012-library-as-installable-package.md).
+Pinned folder copies of `.claude/skills/circuit/` are obsolete: the
+skill folder stays in this repo as the canonical location, and the
+library ships as the `circuitsmith` PyPI package. There is no
+external pinned copy to replace.
+
+`RELEASING.md` survives the rewrite — it migrates to the **CircuitSmith
+repo root** (not a standalone repo) as part of TASK-080
+(`publish-circuitsmith-to-pypi`), documenting the PyPI release flow
+rather than the folder-copy procedure described below.
+
+Superseded by **TASK-080** (`publish-circuitsmith-to-pypi`). See
+[EPIC-006](epic-006-circuit-skill-packaging.md) § "Retired tasks"
+and [`idea-002`](../../ideas/archived/idea-002-consolidate-skill-python-into-central-module.md)
+for the full reckoning.
+
+The acceptance criteria below are preserved as historical record; do
+not act on them.
 
 ## Autonomy
 

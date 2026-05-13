@@ -29,16 +29,22 @@ adjacent module because it's convenient. The decoupling is part of why
 extraction (Phase 7) and AI containment (Phase 2b) work; a silent
 violation undermines both.
 
-Implementation: AST-walk each module under `.claude/skills/circuit/`,
+Implementation: AST-walk each module under `src/circuitsmith/`,
 collect its import set, and assert the disallowed-edge table. AST
 walking (rather than runtime import) avoids ordering dependencies on
 the rest of the package being importable in test scope.
+
+**Scope note (2026-05-13).** Under
+[ADR-0012](../../adr/0012-library-as-installable-package.md), the
+library code moved from `.claude/skills/circuit/` to
+`src/circuitsmith/` (EPIC-010 / TASK-077). The boundary this test
+guards therefore shifts with it — the contract itself is unchanged.
 
 ## Acceptance Criteria
 
 - [ ] `tests/test_module_boundaries.py` exists and is picked up by pytest.
 - [ ] Asserts: `bom_exporter` does not import (directly or transitively at the source level) anything named `netgraph`.
-- [ ] Asserts: `netlist_exporter` does not import any module from `.claude/skills/circuit/components/`.
+- [ ] Asserts: `netlist_exporter` does not import any module from `src/circuitsmith/components/` (i.e. no `from circuitsmith.components.*` imports).
 - [ ] Asserts: `renderer` does not import `layout_engine.ai_placer`.
 - [ ] Test fails with a structured diagnostic that names the offending file, the forbidden import, and the dossier section that defines the rule.
 - [ ] Self-test: a deliberately-violating fixture module in `tests/fixtures/` confirms the test catches a violation (mutation-test the rule, not just the happy path).

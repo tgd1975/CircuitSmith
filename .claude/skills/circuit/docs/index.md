@@ -74,7 +74,7 @@ connections:
 In Phase 1 you can validate this file today:
 
 ```python
-from circuit.schema import validate
+from circuitsmith.schema import validate
 
 import yaml
 with open("hello.circuit.yml") as f:

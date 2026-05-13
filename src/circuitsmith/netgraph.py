@@ -5,7 +5,7 @@ Single shared contract between the YAML source and three downstream
 consumers (ADR-0003):
 
   - erc_engine.py            — runs ERC predicates against this graph
-  - layout_engine/kernel.py  — routes nets between component pins
+  - layout/kernel.py         — routes nets between component pins
   - netlist_exporter.py      — emits KiCad .net by walking NetGraph.nets
 
 bom_exporter.py is deliberately not a consumer (ADR-0004): it iterates
@@ -18,9 +18,9 @@ code never branches on which form the human wrote.
 Invariants surfaced by .claude/skills/co-netgraph/SKILL.md:
   - Hash determinism across parses (canonical_hash).
   - No layout coordinates in the model — geometry lives in
-    layout_engine/.
+    circuitsmith.layout.
   - Read-only contract for consumers.
-  - No host-project imports (ADR-0007 portability).
+  - No host-project imports (ADR-0012 portability, supersedes ADR-0007).
 
 Source of truth: idea-001.erc-engine.md §Net graph data model and
 idea-001.yaml-format.md §Form 2 (path segment-count rule).

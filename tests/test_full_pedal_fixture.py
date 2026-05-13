@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from circuit.renderer import render
+from circuitsmith.renderer import render
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CIRCUIT_DIR = REPO_ROOT / "data"
@@ -42,7 +42,7 @@ def test_full_pipeline_runs_clean(target: str, tmp_path: Path):
 
 @pytest.mark.parametrize("target", TARGETS)
 def test_layout_yaml_validates_against_schema(target: str, tmp_path: Path):
-    from circuit.schema import validate_layout_file
+    from circuitsmith.schema import validate_layout_file
 
     circuit_path = CIRCUIT_DIR / f"{target}.circuit.yml"
     out_svg = tmp_path / f"{target}.svg"

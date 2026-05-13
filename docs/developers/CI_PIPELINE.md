@@ -31,7 +31,7 @@ Steps, in order:
 | Install Python dev deps | `pip install -r requirements-dev.txt`. | A declared dep is missing from PyPI or the lock file diverged. |
 | Install markdownlint-cli2 | `npm install -g markdownlint-cli2`. | npm registry issue. |
 | Markdown lint | `markdownlint-cli2 "**/*.md" "#node_modules" "#.claude/security-review-latest.md"`. Mirror of the local pre-commit step. | A `.md` file violates the configured ruleset. Reproduce locally with the same command. |
-| Portability lint | `python scripts/portability_lint.py .claude/skills/circuit`. No-op on missing dir, so safe pre-skill-scaffold. | A path or import in `.claude/skills/circuit/` is OS-specific. |
+| Portability lint | `python scripts/portability_lint.py src/circuitsmith`. No-op on missing dir, so safe pre-package-scaffold. | A path or import in `src/circuitsmith/` is OS-specific. |
 | Pytest | `pytest`. Picks up both test roots (`tests`, `scripts/tests`) per [`pyproject.toml`](../../pyproject.toml). | A test failed. Reproduce locally per [`TESTING.md`](TESTING.md). |
 
 ## Local mirror — the pre-commit hook
@@ -43,7 +43,7 @@ via the pre-commit hook installed by
 | CI step | Local equivalent |
 |---|---|
 | Markdown lint | `scripts/pre-commit` invokes `markdownlint-cli2` on staged `*.md`. |
-| Portability lint | `scripts/pre-commit` invokes `scripts/portability_lint.py` on staged paths under `.claude/skills/circuit/`. |
+| Portability lint | `scripts/pre-commit` invokes `scripts/portability_lint.py` on staged paths under `src/circuitsmith/`. |
 | Pytest | **Not** in the pre-commit hook — pytest is too slow for the per-commit budget. Run it manually before pushing. |
 | Security review | `pre-merge-commit`, `post-merge`, `pre-rebase` hooks scan pulls/merges/rebases. Reports land at `.claude/security-review-latest.md`. |
 
@@ -77,7 +77,7 @@ Both must be green before a PR can merge to `main`.
 2. **Reproduce locally** with the same command. CI commands are
    intentionally short so you can copy-paste them:
    - Markdown lint: `markdownlint-cli2 "**/*.md" "#node_modules" "#.claude/security-review-latest.md"`
-   - Portability lint: `python scripts/portability_lint.py .claude/skills/circuit`
+   - Portability lint: `python scripts/portability_lint.py src/circuitsmith`
    - Pytest: `pytest`
 3. **Fix and re-push.** No need to rerun the workflow by hand — a new
    push re-triggers it.
@@ -94,8 +94,10 @@ The senior-review pre-implementation audit flagged that
 the local pre-commit hook but **not yet** running as a CI step. The
 gap is intentional in the current pre-implementation phase (no
 substantive Python source tree yet), and will be closed as soon as
-EPIC-001 lands real Python under `.claude/skills/circuit/` — adding a
-`ruff check .` step to `ci.yml` is a one-line change at that point.
+EPIC-001 landed real Python (now relocated to `src/circuitsmith/`
+under [ADR-0012](adr/0012-library-as-installable-package.md) and
+EPIC-010) — adding a `ruff check .` step to `ci.yml` is a one-line
+change.
 
 ## Future workflows
 

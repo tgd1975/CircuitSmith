@@ -10,7 +10,7 @@ Covers the four acceptance criteria:
 """
 from __future__ import annotations
 
-from circuit.layout_engine import (
+from circuitsmith.layout import (
     LayoutResult,
     Placement,
     RouterResult,
@@ -18,7 +18,7 @@ from circuit.layout_engine import (
     WireRoute,
     evaluate,
 )
-from circuit.netgraph import PinRef
+from circuitsmith.netgraph import PinRef
 
 
 def _clean_layout() -> LayoutResult:

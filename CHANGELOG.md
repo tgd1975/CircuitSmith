@@ -507,3 +507,76 @@ the [EPIC-010](docs/developers/tasks/EPICS.md) relocation seed below.
   a standalone folder; TASK-045 retires. EPIC-010 gates EPIC-003.
   Branch will be `release/epic-010-circuitsmith-package`. Execution
   plan lives in the seeding idea file under `ideas/archived/`.
+
+### Circuit skill (EPIC-010 — circuitsmith package relocation)
+
+- Relocate library code from `.claude/skills/circuit/` to
+  `src/circuitsmith/` and rename the importable package from
+  `circuit` to `circuitsmith` (supersedes ADR-0007 via ADR-0012).
+  The agent-facing surface (SKILL.md, `docs/`) stays at
+  `.claude/skills/circuit/`; only the library leaves.
+- TASK-076 closed:
+  [ADR-0012](docs/developers/adr/0012-library-as-installable-package.md)
+  authored — *library is an installable package; skill folder is
+  the agent-facing surface*. ADR-0007 status flipped to
+  `Superseded by ADR-0012` with a `## Supersession` section
+  forward-linking to the new ADR.
+  [EPIC-006](docs/developers/tasks/active/epic-006-circuit-skill-packaging.md)
+  rewritten in place: Phase 7 reframed as PyPI publication
+  (`python -m build`, trusted publishing, `RELEASING.md`);
+  TASK-043 / TASK-044 / TASK-045 retired with closure notes
+  (standalone-skill-repo extraction is obsolete under ADR-0012);
+  Phase 6 → Phase 7 hard prereq dropped (soft "real-circuit use"
+  gate survives on the `0.1.0.dev0 → 0.1.0` version bump only).
+  New
+  [TASK-080](docs/developers/tasks/open/task-080-publish-circuitsmith-to-pypi.md)
+  covers the publication mechanics.
+  [TASK-050](docs/developers/tasks/open/task-050-boundary-import-contract-test.md)
+  scope updated — boundary is now `src/circuitsmith/`.
+- TASK-077 closed: atomic relocation. `netgraph.py`, `renderer.py`,
+  `components/`, `schema/` moved into `src/circuitsmith/`;
+  `layout_engine/` renamed to `layout/` (the `_engine` suffix
+  made sense inside a skill folder, not as a top-level package
+  surface). New `__init__.py` with `__version__ = "0.1.0.dev0"`;
+  empty `render/` and `export/` placeholders for EPIC-002 / EPIC-004.
+  Imports rewritten across `src/circuitsmith/**/*.py` and
+  `tests/**/*.py`. `tests/conftest.py` deleted — the `sys.path`
+  splice is obsolete under `pip install -e .`. `pyproject.toml`
+  flipped to src-layout discovery
+  (`[tool.setuptools.packages.find] where = ["src"]`) +
+  `[tool.setuptools.package-data] "circuitsmith.schema" = ["*.json"]`
+  so the JSON schemas ship inside the wheel. Pytest 305/305 green
+  after the rewrite. `python -m build` produces
+  `circuitsmith-0.1.0.dev0-py3-none-any.whl` with all three
+  `schema/*.json` files included.
+- TASK-078 closed: agent-facing surface aligned. `from circuit.*`
+  → `from circuitsmith.*` in `.claude/skills/circuit/docs/index.md`
+  and `components.md`. `.claude/codeowners.yaml` patterns retargeted
+  from `.claude/skills/circuit/...` to `src/circuitsmith/...` for
+  the three bound files (`netgraph.py`, `schema/*.json`,
+  `erc_engine.py`). `co-netgraph`, `co-schema`, `co-erc-engine`
+  SKILL.md frontmatter descriptions and invariant ADR references
+  updated. Skill shim `.py` files deferred (Phase 3.3 of the
+  idea-002 plan).
+- TASK-079 closed: repo docs sweep. `ARCHITECTURE.md` module table
+  retargeted; Section 4 (decoupling seams) renamed *Package
+  portability* and points at ADR-0012. `TESTING.md` Phase 7 language
+  shifted from folder extraction to PyPI publication. `CI_PIPELINE.md`
+  portability_lint invocations now point at `src/circuitsmith`.
+  `CODE_OWNERS.md` codeowners.yaml pattern example retargeted.
+  `AUTONOMY.md` definition-of-done portability bullet retargeted.
+  `scripts/README.md` regenerated to pick up the
+  `portability_lint.py` docstring change. Library-code references
+  to the old path are gone from the named in-scope files;
+  agent-facing references (`SKILL.md`, `docs/`) stay at
+  `.claude/skills/circuit/`.
+- Tooling: `scripts/portability_lint.py` now lints
+  `src/circuitsmith/` (rule set unchanged); `scripts/pre-commit`
+  triggers the portability check on `^src/circuitsmith/` staged
+  paths; `scripts/check_phase2b_trigger.py` docstring schema path
+  retargeted.
+- **EPIC-010 closed** — the `circuitsmith` package now lives at
+  [`src/circuitsmith/`](src/circuitsmith/) as a first-class
+  installable artefact, and EPIC-003 (ERC engine) is unblocked to
+  open against this layout. PyPI publication itself lands later in
+  EPIC-006 / TASK-080.

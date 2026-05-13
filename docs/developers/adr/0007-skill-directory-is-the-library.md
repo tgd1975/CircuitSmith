@@ -1,7 +1,7 @@
 ---
 id: ADR-0007
 title: The skill directory is the library; portability contract holds
-status: Accepted
+status: Superseded by ADR-0012
 date: 2026-05-12
 dossier-section: idea-001.skill-packaging.md
 ---
@@ -75,3 +75,17 @@ directory, add the standalone-repo's `pyproject.toml`, push.
 [`idea-001.skill-packaging.md`](../ideas/archived/idea-001.skill-packaging.md)
 for the full portability contract and the Phase 7 extraction
 procedure.
+
+## Supersession
+
+Superseded by [ADR-0012](0012-library-as-installable-package.md)
+(2026-05-13). The folder-copy delivery model proved untenable as the
+Python tree grew — readers could no longer tell library code from
+skill configuration, and the user reported the shape as "no oversight
+possible". ADR-0012 splits the deliverable into two artefacts: an
+installable `circuitsmith` Python package at `src/circuitsmith/` and
+the skill folder at `.claude/skills/circuit/` (now agent-facing only).
+The portability invariant survives unchanged — its scope shifts from
+`.claude/skills/circuit/` to `src/circuitsmith/`. See ADR-0012 §
+"Decision" for the new contract; full rationale lives in
+[`idea-002-consolidate-skill-python-into-central-module.md`](../ideas/archived/idea-002-consolidate-skill-python-into-central-module.md).

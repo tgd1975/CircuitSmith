@@ -1,6 +1,6 @@
 ---
 name: co-netgraph
-description: Code-owner reminder for .claude/skills/circuit/netgraph.py — invariants surfaced before edit
+description: Code-owner reminder for src/circuitsmith/netgraph.py — invariants surfaced before edit
 ---
 
 # co-netgraph
@@ -25,14 +25,15 @@ See also [ADR-0003](../../../docs/developers/adr/0003-netgraph-shared-contract.m
       the data, the form is gone.
 - [ ] **No layout coordinates in the model.** `NetGraph` is purely
       topological. Anything carrying `(x, y)` or a slot name is a
-      layout concern and belongs in `layout_engine/`, not here.
+      layout concern and belongs in `circuitsmith.layout`, not here.
 - [ ] **Read-only contract for consumers.** ERC, layout, and the
       netlist exporter consume `NetGraph` without mutating it. A
       consumer that needs to "annotate" the graph is a sign the
       annotation belongs in a sibling structure, not as a member.
 - [ ] **Portability contract holds.** No host-project paths, no
       imports of `scripts.*` / `data.*`, no `CircuitSmith` references
-      (per ADR-0007 and the portability lint, TASK-051).
+      (per ADR-0012, supersedes ADR-0007, and the portability lint,
+      TASK-051).
 
 ## Authority
 
@@ -47,11 +48,11 @@ A breaking change to `NetGraph`'s public shape silently rots
 **all three** of these — bump the schema-version (per
 [`co-schema`](../co-schema/SKILL.md)) and re-test before landing:
 
-- `.claude/skills/circuit/erc_engine.py` — runs ERC predicates
+- `src/circuitsmith/erc_engine.py` — runs ERC predicates
   against `NetGraph` (see [`co-erc-engine`](../co-erc-engine/SKILL.md)).
-- `.claude/skills/circuit/layout_engine/kernel.py` — routes nets
-  between component pins.
-- `.claude/skills/circuit/netlist_exporter.py` — emits KiCad netlist
+- `src/circuitsmith/layout/kernel.py` — routes nets between
+  component pins.
+- `src/circuitsmith/export/netlist_exporter.py` — emits KiCad netlist
   by walking `NetGraph` (see [ADR-0004](../../../docs/developers/adr/0004-exporter-decoupling.md)).
 
 `bom_exporter.py` is **not** a consumer — it walks `components`, not

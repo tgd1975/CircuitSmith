@@ -61,7 +61,7 @@ cleanly (skill at write-time, CODEOWNERS at PR-time).
 
    ```yaml
    entries:
-     - pattern: .claude/skills/circuit/<file>.py
+     - pattern: src/circuitsmith/<file>.py
        skill: co-<name>
    ```
 

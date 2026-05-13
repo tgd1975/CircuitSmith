@@ -54,13 +54,17 @@ Homepage = "https://github.com/tgd1975/CircuitSmith"
 Issues = "https://github.com/tgd1975/CircuitSmith/issues"
 Changelog = "https://github.com/tgd1975/CircuitSmith/blob/main/CHANGELOG.md"
 
-# No importable Python package yet — the skill lives in
-# .claude/skills/circuit/ (created in Phase 1) and scripts/ holds
-# task-system utilities, not a library. Tell setuptools to install
-# metadata only so `pip install -e .` succeeds without auto-discovery
-# guessing wrong.
-[tool.setuptools]
-py-modules = []
+# Src-layout package discovery (ADR-0012). The library lives at
+# src/circuitsmith/; the agent-facing skill at .claude/skills/circuit/
+# is no longer a Python package.
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Ship the JSON schemas inside the wheel. They live next to their
+# validators (circuitsmith/schema/{circuit,layout,meta}.schema.json)
+# and are loaded with `Path(__file__).parent / "..."`.
+[tool.setuptools.package-data]
+"circuitsmith.schema" = ["*.json"]
 
 [tool.pytest.ini_options]
 # Two test roots: product-code tests at `tests/` (created when EPIC-001

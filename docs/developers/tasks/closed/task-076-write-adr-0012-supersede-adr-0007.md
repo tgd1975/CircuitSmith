@@ -1,9 +1,11 @@
 ---
 id: TASK-076
 title: Write ADR-0012 (library as installable package) superseding ADR-0007
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Senior
 human-in-loop: Main
 epic: circuitsmith-package
@@ -44,18 +46,21 @@ TASK-077 (the atomic relocation) begins.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/adr/0012-library-as-installable-package.md`
+- [x] `docs/developers/adr/0012-library-as-installable-package.md`
       exists, Status: Accepted, follows the ADR template.
-- [ ] [ADR-0007](../../adr/0007-skill-directory-is-the-library.md)
+- [x] [ADR-0007](../../adr/0007-skill-directory-is-the-library.md)
       is marked `Superseded by ADR-0012` with a `## Supersession`
       section forward-linking to the new ADR.
-- [ ] [EPIC-006](epic-006-circuit-skill-packaging.md) body is
+- [x] [EPIC-006](epic-006-circuit-skill-packaging.md) body is
       rewritten: Phase 7 reframed as PyPI publication; new
-      publication sub-task added; TASK-045 retired (file marked
-      closed or moved to closed/ with a closure note pointing at
-      ADR-0012); Phase 6 → Phase 7 prerequisite chain dropped.
-- [ ] [TASK-050](task-050-boundary-import-contract-test.md) body
-      updated to scope the boundary as `src/circuitsmith/`.
+      publication sub-task (TASK-080) added; TASK-045 retired (and
+      TASK-043 / TASK-044 by extension — all three named in
+      EPIC-006 § "Retired tasks" with closure notes pointing at
+      ADR-0012); Phase 6 → Phase 7 prerequisite chain dropped (the
+      hard prereq; the soft "real-circuit use" gate survives on the
+      `0.1.0.dev0 → 0.1.0` version bump only).
+- [x] [TASK-050](../open/task-050-boundary-import-contract-test.md)
+      body updated to scope the boundary as `src/circuitsmith/`.
 
 ## Test Plan
 

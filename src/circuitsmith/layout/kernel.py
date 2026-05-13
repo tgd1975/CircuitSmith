@@ -35,7 +35,7 @@ from dataclasses import dataclass, field
 from hashlib import sha1
 from typing import Any, Iterable
 
-from circuit.netgraph import NetGraph, PinRef
+from circuitsmith.netgraph import NetGraph, PinRef
 
 PIN_TYPE_GROUND = "GROUND"
 PIN_TYPE_POWER = "POWER"

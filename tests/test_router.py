@@ -9,14 +9,14 @@ Covers the four acceptance criteria:
 """
 from __future__ import annotations
 
-from circuit.layout_engine import (
+from circuitsmith.layout import (
     LayoutResult,
     Placement,
     RouterResult,
     Segment,
     route,
 )
-from circuit.netgraph import NetGraph
+from circuitsmith.netgraph import NetGraph
 
 
 def _profiles() -> dict:
@@ -124,7 +124,7 @@ def test_segment_intersection_helper_is_pure():
     """Two segments at the same point on different orientations cross once."""
     h = Segment(-2, 0, 2, 0)
     v = Segment(0, -2, 0, 2)
-    from circuit.layout_engine.router import _segments_cross
+    from circuitsmith.layout.router import _segments_cross
     assert _segments_cross(h, v) is True
     assert _segments_cross(v, h) is True
     # Parallel-same-axis segments do not "cross" by this contract.

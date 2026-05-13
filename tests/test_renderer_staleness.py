@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pytest
 
-from circuit.renderer import render
+from circuitsmith.renderer import render
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = REPO_ROOT / "data"

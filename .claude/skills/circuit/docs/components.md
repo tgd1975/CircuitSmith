@@ -132,7 +132,7 @@ A profile-authoring checklist:
 5. Validate against the schema:
 
    ```python
-   from circuit.schema import validate
+   from circuitsmith.schema import validate
    # … load your circuit.yml that references the new profile …
    findings = validate(circuit)
    assert not findings

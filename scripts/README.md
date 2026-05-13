@@ -11,7 +11,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | [`commit-pathspec.sh`](commit-pathspec.sh) | scripts/commit-pathspec.sh — wrapper for git's pathspec-form commit | `./commit-pathspec.sh` |
 | [`housekeep.py`](housekeep.py) | Central housekeeping for the task system. | `python3 housekeep.py` |
 | [`install_git_hooks.sh`](install_git_hooks.sh) | Install repo-side git hooks into .git/hooks/. | `./install_git_hooks.sh` |
-| [`portability_lint.py`](portability_lint.py) | Portability lint for ``.claude/skills/circuit/``. | `python3 portability_lint.py` |
+| [`portability_lint.py`](portability_lint.py) | Portability lint for ``src/circuitsmith/``. | `python3 portability_lint.py` |
 | [`pre-commit`](pre-commit) | Pre-commit hook for CircuitSmith. | `python3 pre-commit` |
 | [`release_burnup.py`](release_burnup.py) | Generate the burn-up section for OVERVIEW.md. | `python3 release_burnup.py` |
 | [`release_snapshot.py`](release_snapshot.py) | Snapshot OVERVIEW / EPICS / KANBAN into `archive/<version>/` on release. | `python3 release_snapshot.py` |
@@ -55,7 +55,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 
 ### portability_lint.py
 
-**Purpose**: Portability lint for ``.claude/skills/circuit/``.
+**Purpose**: Portability lint for ``src/circuitsmith/``.
 
 **Usage**: `python3 portability_lint.py`
 

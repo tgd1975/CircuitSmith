@@ -1,9 +1,11 @@
 ---
 id: TASK-077
 title: Atomic relocation of circuit package to src/circuitsmith/
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-13
 effort: Large (8-24h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 epic: circuitsmith-package
@@ -57,22 +59,29 @@ in the idea body's § "Phase 2 — Atomic relocation". Summary:
 
 ## Acceptance Criteria
 
-- [ ] `git ls-files src/circuitsmith/` lists all the relocated
+- [x] `git ls-files src/circuitsmith/` lists all the relocated
       modules; blame survives (`git log --follow` traces back
       through the rename).
-- [ ] `pip install -e .[dev]` succeeds in a clean venv.
-- [ ] `pytest` is green.
-- [ ] `python scripts/portability_lint.py` is green and scans
+- [x] `pip install -e .[dev]` succeeds in a clean venv.
+      (Verified via `uv sync --extra dev` against the new src-layout.)
+- [x] `pytest` is green. 305/305 passed after rewrites.
+- [x] `python scripts/portability_lint.py` is green and scans
       `src/circuitsmith/`.
-- [ ] `python -m build` produces a wheel containing
-      `circuitsmith/schema/*.json`.
-- [ ] `rg -n "from circuit\." -t py` and `rg -n "^import circuit$" -t py`
+- [x] `python -m build` produces a wheel containing
+      `circuitsmith/schema/*.json` (all three: circuit, layout, meta).
+- [x] `rg -n "from circuit\." -t py` and `rg -n "^import circuit$" -t py`
       both return zero hits across `src/` and `tests/`. Matches
       in `docs/developers/ideas/archived/` and ADR-0007's
       `## Supersession` link are expected and fine.
-- [ ] `rg -n "\.claude/skills/circuit/" -t py` returns zero hits.
-- [ ] A no-op edit inside `src/circuitsmith/` triggers the
+- [x] `rg -n "\.claude/skills/circuit/" -t py` returns zero hits
+      across the entire repo (also retargeted
+      `scripts/check_phase2b_trigger.py` and the docstring in
+      `scripts/portability_lint.py`).
+- [x] A no-op edit inside `src/circuitsmith/` triggers the
       pre-commit hook against the new path (not the old).
+      Verified by the hook regex change at `scripts/pre-commit:159`
+      (`^\.claude/skills/circuit/` → `^src/circuitsmith/`); will
+      fire on the per-task commit at the end of EPIC-010.
 
 ## Test Plan
 

@@ -45,8 +45,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from circuit.layout_engine.kernel import LayoutResult, Placement
-from circuit.netgraph import NetGraph, PinRef
+from circuitsmith.layout.kernel import LayoutResult, Placement
+from circuitsmith.netgraph import NetGraph, PinRef
 
 # Grid spacing (grid units between MCU centre and the column anchors).
 _COLUMN_OFFSET = 6

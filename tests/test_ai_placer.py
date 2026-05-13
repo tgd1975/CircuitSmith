@@ -22,8 +22,8 @@ from __future__ import annotations
 import json
 
 
-from circuit.layout_engine import LayoutResult, Placement
-from circuit.layout_engine.ai_placer import (
+from circuitsmith.layout import LayoutResult, Placement
+from circuitsmith.layout.ai_placer import (
     AmbiguityEntry,
     ConvergenceResult,
     DEFAULT_ITERATION_CAP,
@@ -397,7 +397,7 @@ def test_non_success_result_is_distinguishable_for_caller():
 def test_module_has_no_host_project_imports():
     import re
     from pathlib import Path
-    src = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "circuit" / "layout_engine" / "ai_placer.py"
+    src = Path(__file__).resolve().parents[1] / "src" / "circuitsmith" / "layout" / "ai_placer.py"
     text = src.read_text()
     forbidden = [
         r"\bimport\s+scripts\b",

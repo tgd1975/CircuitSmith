@@ -10,7 +10,7 @@ Covers:
 """
 from __future__ import annotations
 
-from circuit.schema import validate_layout
+from circuitsmith.schema import validate_layout
 
 
 def _clean_layout() -> dict:

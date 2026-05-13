@@ -17,8 +17,8 @@ from __future__ import annotations
 
 import pytest
 
-from circuit.layout_engine import EscalationError, place, render_layout_yaml
-from circuit.netgraph import NetGraph
+from circuitsmith.layout import EscalationError, place, render_layout_yaml
+from circuitsmith.netgraph import NetGraph
 
 
 # ── Profile stubs (minimal, dict-shaped) ─────────────────────────────────
@@ -314,7 +314,7 @@ def test_orphan_resistor_raises_escalation():
 def test_layout_engine_has_no_host_project_imports():
     import re
     from pathlib import Path
-    root = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "circuit" / "layout_engine"
+    root = Path(__file__).resolve().parents[1] / "src" / "circuitsmith" / "layout"
     forbidden = [
         r"\bimport\s+scripts\b",
         r"\bfrom\s+scripts\b",

@@ -1,6 +1,6 @@
 ---
 name: co-erc-engine
-description: Code-owner reminder for .claude/skills/circuit/erc_engine.py — invariants surfaced before edit
+description: Code-owner reminder for src/circuitsmith/erc_engine.py — invariants surfaced before edit
 ---
 
 # co-erc-engine
@@ -43,8 +43,8 @@ and [ADR-0006](../../../docs/developers/adr/0006-rule-catalog-authoritative.md).
       consumes the graph without mutating it (see
       [`co-netgraph`](../co-netgraph/SKILL.md)).
 - [ ] **Portability contract holds.** No host-project paths,
-      `scripts.*` imports, or `CircuitSmith` references (ADR-0007,
-      TASK-051).
+      `scripts.*` imports, or `CircuitSmith` references (ADR-0012,
+      supersedes ADR-0007; TASK-051).
 
 ## Authority
 

@@ -58,15 +58,17 @@ the original reasoning stays as historical record.
 | [0004](0004-exporter-decoupling.md) | `bom_exporter` walks `components`; `netlist_exporter` walks `NetGraph`; they never cross | `idea-001-circuit-skill.md §Architecture` |
 | [0005](0005-erc-pre-layout.md) | ERC runs strictly pre-layout | `idea-001.erc-engine.md §Pipeline ordering` |
 | [0006](0006-rule-catalog-authoritative.md) | The rule catalog is authoritative; the LLM does NL understanding only | `idea-001.rule-catalog.md §Hallucination policy` |
-| [0007](0007-skill-directory-is-the-library.md) | The skill directory is the library; portability contract holds | `idea-001.skill-packaging.md` |
 | [0008](0008-phase-2b-trigger-on-evidence.md) | Phase 2b opens on evidence (escalation count), not calendar | `idea-001-circuit-skill.md §Phase 2b trigger gate` |
 | [0009](0009-autonomous-implementation-mode.md) | Autonomous-implementation mode — protocol + driver skill | `docs/developers/AUTONOMY.md` |
 | [0010](0010-mcu-profile-is-dev-board-shape.md) | MCU profiles describe the dev-board pinout, with silicon metadata at the chip level | `idea-001.components.md` |
 | [0011](0011-content-identity-not-byte-identity.md) | SVG regression test uses content-identity (matplotlib non-determinism normalised), not literal byte-identity | TASK-006 |
+| [0012](0012-library-as-installable-package.md) | Library is an installable package; skill folder is the agent-facing surface | `idea-002-consolidate-skill-python-into-central-module.md` |
 
 ### Superseded
 
-(none yet)
+| ADR | Title | Superseded by |
+|---|---|---|
+| [0007](0007-skill-directory-is-the-library.md) | The skill directory is the library; portability contract holds | [ADR-0012](0012-library-as-installable-package.md) |
 
 ### Deprecated
 

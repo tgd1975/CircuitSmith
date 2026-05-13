@@ -132,7 +132,7 @@ Before invoking `/ts-task-done` on any task, the agent verifies:
 - [ ] `ruff check` passes on every `*.py` file in the pathspec.
 - [ ] `markdownlint-cli2` passes on every `*.md` file in the
       pathspec.
-- [ ] Portability lint passes if `.claude/skills/circuit/` files
+- [ ] Portability lint passes if `src/circuitsmith/` files
       are in the pathspec.
 - [ ] `/housekeep` shows no unexpected moves (only the task's own
       open→active or active→closed transition).

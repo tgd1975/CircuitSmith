@@ -20,7 +20,7 @@ Usage:
 
 The contract for `provenance.escalations` and the category enum are
 documented in `docs/layout.md`. The schema is at
-`.claude/skills/circuit/schema/meta.schema.json`.
+`src/circuitsmith/schema/meta.schema.json`.
 """
 from __future__ import annotations
 

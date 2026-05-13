@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import pytest
 
-from circuit.netgraph import NetGraph, PinRef
+from circuitsmith.netgraph import NetGraph, PinRef
 
 
 # ── Fixtures ─────────────────────────────────────────────────────────────
@@ -267,15 +267,15 @@ def test_components_between_rejects_pins_not_on_a_path():
         g.components_between(PinRef("U1", "D13"), PinRef("SW1", "1"))
 
 
-# ── Portability smoke test (ADR-0007) ───────────────────────────────────
+# ── Portability smoke test (ADR-0012) ───────────────────────────────────
 
 
 def test_module_has_no_host_project_imports():
-    """netgraph.py must not import scripts.*, data.*, or CircuitSmith — ADR-0007."""
+    """netgraph.py must not import scripts.*, data.*, or CircuitSmith — ADR-0012."""
     import re
     from pathlib import Path
 
-    src = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "circuit" / "netgraph.py"
+    src = Path(__file__).resolve().parents[1] / "src" / "circuitsmith" / "netgraph.py"
     text = src.read_text()
     forbidden = [
         r"\bimport\s+scripts\b",

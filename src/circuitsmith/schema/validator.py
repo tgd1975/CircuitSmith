@@ -42,8 +42,7 @@ def validate(
     success; otherwise one Finding per problem found.
 
     `profiles` overrides the component library — useful in tests. When
-    omitted, the registry is loaded from
-    `.claude/skills/circuit/components/`.
+    omitted, the registry is loaded from `circuitsmith/components/`.
     """
     findings: list[Finding] = []
 

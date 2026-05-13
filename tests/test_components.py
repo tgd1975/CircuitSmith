@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from circuit.components.connectors import make_header, make_screw_terminal
+from circuitsmith.components.connectors import make_header, make_screw_terminal
 
 
 @pytest.mark.parametrize("factory", [make_header, make_screw_terminal])

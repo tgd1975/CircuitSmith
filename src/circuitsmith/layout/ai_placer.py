@@ -49,7 +49,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Any, Callable, Protocol
 
-from circuit.layout_engine.kernel import LayoutResult
+from circuitsmith.layout.kernel import LayoutResult
 
 # Iteration cap from §7.3 (provisional pending v1 calibration). The cap's
 # job is to bound cost and guarantee termination, not to hit a measured

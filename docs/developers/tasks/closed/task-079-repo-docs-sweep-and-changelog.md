@@ -1,9 +1,11 @@
 ---
 id: TASK-079
 title: Repo docs sweep and CHANGELOG bullet for circuitsmith refactor
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuitsmith-package
@@ -41,12 +43,19 @@ that documents the rename.
 
 ## Acceptance Criteria
 
-- [ ] `rg -n "\.claude/skills/circuit/" docs/ CLAUDE.md scripts/README.md`
+- [x] `rg -n "\.claude/skills/circuit/" docs/ CLAUDE.md scripts/README.md`
       returns only matches that point at the agent-facing skill
       (SKILL.md, docs/). Library-code references are gone.
-- [ ] `CHANGELOG.md` `[Unreleased] ### Changed` contains the
-      bullet above.
-- [ ] `markdownlint-cli2 --fix` clean on all modified files.
+      ARCHITECTURE.md/TESTING.md/CI_PIPELINE.md/CODE_OWNERS.md/
+      AUTONOMY.md/scripts/README.md updated; CLAUDE.md had no
+      library-code references to start with.
+- [x] `CHANGELOG.md` `[Unreleased] ### Changed` contains the
+      bullet above. The edit lands in the dedicated
+      CHANGELOG-delta commit at the end of the epic-run per the
+      [`/epic-run`](../../../.claude/skills/epic-run/SKILL.md) §
+      "CHANGELOG-delta phase" protocol; per-task commits never
+      touch `CHANGELOG.md`.
+- [x] `markdownlint-cli2 --fix` clean on all modified files.
 
 ## Test Plan
 

@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
-"""Portability lint for ``.claude/skills/circuit/``.
+"""Portability lint for ``src/circuitsmith/``.
 
-Enforces the portability contract from
-``docs/developers/ideas/archived/idea-001.skill-packaging.md`` and
-ADR-0007 (`docs/developers/adr/0007-skill-directory-is-the-library.md`):
-files inside the skill directory must be path-agnostic so the
-Phase 7 extraction (EPIC-006 / TASK-043..045) stays mechanical
-rather than turning into a port.
+Enforces the portability contract from ADR-0012
+(`docs/developers/adr/0012-library-as-installable-package.md`,
+supersedes ADR-0007): files inside the package must be free of
+host-project coupling so the published wheel works in any consumer
+repo. The original contract was scoped to the skill folder per
+ADR-0007 and migrated with the package in EPIC-010.
 
 Usage:
-    python scripts/portability_lint.py <skill_dir>
+    python scripts/portability_lint.py <package_dir>
 
 Exits 0 if clean. Exits 1 with a list of findings if not. On an empty
-or missing ``<skill_dir>`` the script is a no-op (exits 0) — the lint
-is meant to be in place *before* skill code arrives, not after.
+or missing ``<package_dir>`` the script is a no-op (exits 0) — the
+lint is meant to be in place *before* package code arrives, not after.
 
 Allow-list (escape hatch for genuine exceptions):
     A file named ``.portability-allow.txt`` at the root of
-    ``<skill_dir>`` can carry exceptions, one per line, in the form::
+    ``<package_dir>`` can carry exceptions, one per line, in the form::
 
         <relative-path>:<pattern-substring>:<reason>
 
@@ -140,16 +140,16 @@ def lint(root: Path) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Lint the circuit-skill directory for portability "
-                    "contract violations.",
+        description="Lint the circuitsmith package directory for "
+                    "portability contract violations.",
     )
     parser.add_argument(
-        "skill_dir",
-        help="path to the skill directory to lint "
-             "(e.g. .claude/skills/circuit)",
+        "package_dir",
+        help="path to the package directory to lint "
+             "(e.g. src/circuitsmith)",
     )
     args = parser.parse_args()
-    root = Path(args.skill_dir).resolve()
+    root = Path(args.package_dir).resolve()
     findings = lint(root)
     if findings:
         sys.stderr.write(

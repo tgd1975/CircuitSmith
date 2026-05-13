@@ -27,8 +27,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from circuit.layout_engine.kernel import LayoutResult, Placement
-from circuit.layout_engine.router import RouterResult
+from circuitsmith.layout.kernel import LayoutResult, Placement
+from circuitsmith.layout.router import RouterResult
 
 # Per-region default label budget (grid units). Configurable per slot
 # via `label-budget:` in layout.yml (idea-001 §4.2); the v0.1 default is

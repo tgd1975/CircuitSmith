@@ -51,9 +51,13 @@ Two contract points anchor the flow:
 
 ## Module boundaries
 
-Everything ships inside [`.claude/skills/circuit/`](../../.claude/skills/circuit/)
-— see [ADR-0007](adr/0007-skill-directory-is-the-library.md) for why
-the skill directory *is* the library, not a wrapper around one.
+The library lives at [`src/circuitsmith/`](../../src/circuitsmith/);
+the agent-facing surface (SKILL.md + docs/) lives at
+[`.claude/skills/circuit/`](../../.claude/skills/circuit/). See
+[ADR-0012](adr/0012-library-as-installable-package.md) (supersedes
+[ADR-0007](adr/0007-skill-directory-is-the-library.md)) for why
+the library is published as the `circuitsmith` Python package rather
+than shipped as the skill folder itself.
 
 ```mermaid
 graph TD
@@ -63,9 +67,9 @@ graph TD
     NETGRAPH["netgraph"]
     ERC["erc_engine"]
     KNOWLEDGE["knowledge/<br/>rules.json"]
-    LAYOUT_KERNEL["layout_engine/<br/>kernel"]
-    LAYOUT_ROUTER["layout_engine/<br/>router"]
-    LAYOUT_AI["layout_engine/<br/>ai_placer"]
+    LAYOUT_KERNEL["layout/<br/>kernel"]
+    LAYOUT_ROUTER["layout/<br/>router"]
+    LAYOUT_AI["layout/<br/>ai_placer"]
     RENDERER["renderer"]
     BOM_EXP["bom_exporter"]
     NETLIST_EXP["netlist_exporter"]
@@ -97,27 +101,27 @@ by [TASK-050](tasks/open/task-050-boundary-import-contract-test.md):
    directly.
 2. `netlist_exporter` never reads `components` internals — it walks
    `NetGraph`.
-3. `renderer` never imports `layout_engine/ai_placer` — it consumes
-   pre-committed `layout.yml` via `layout.py`, preserving AI
-   containment.
+3. `renderer` never imports `circuitsmith.layout.ai_placer` — it
+   consumes pre-committed `layout.yml` via `layout.py`, preserving
+   AI containment.
 
 ## Component table
 
-| Module | Path under `.claude/skills/circuit/` | Governing ADR(s) | Code-owner skill | Responsibility |
+| Module | Path | Governing ADR(s) | Code-owner skill | Responsibility |
 |---|---|---|---|---|
-| Skill prompt | `SKILL.md` | [0006](adr/0006-rule-catalog-authoritative.md), [0007](adr/0007-skill-directory-is-the-library.md) | — | LLM-facing instructions and invocation contract. |
-| `renderer` | `renderer.py` | [0002](adr/0002-ai-only-at-authoring-time.md), [0007](adr/0007-skill-directory-is-the-library.md) | — | YAML → Schemdraw → SVG; consumes layout.yml, never the AI placer. |
-| `netgraph` | `netgraph.py` | [0003](adr/0003-netgraph-shared-contract.md) | [co-netgraph](../../.claude/skills/co-netgraph/) | The typed net graph shared by ERC, layout, and netlist export. |
-| `erc_engine` | `erc_engine.py` | [0005](adr/0005-erc-pre-layout.md), [0006](adr/0006-rule-catalog-authoritative.md) | [co-erc-engine](../../.claude/skills/co-erc-engine/) | Structural S1–S3 + electrical E1–E10 checks against `NetGraph`. |
-| `bom_exporter` | `bom_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `components`; emits BOM markdown + CSV. |
-| `netlist_exporter` | `netlist_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `NetGraph`; emits KiCad `.net`. |
-| `layout` (CLI) | `layout.py` | [0001](adr/0001-slots-not-coordinates.md) | — | CLI entry for `/circuit layout`; orchestrates kernel + router. |
-| `layout_engine.kernel` | `layout_engine/kernel.py` | [0001](adr/0001-slots-not-coordinates.md) | — | Canonical-slot placement. |
-| `layout_engine.router` | `layout_engine/router.py` | [0001](adr/0001-slots-not-coordinates.md) | — | Manhattan-routing of nets between placed slots. |
-| `layout_engine.ai_placer` | `layout_engine/ai_placer.py` | [0002](adr/0002-ai-only-at-authoring-time.md), [0008](adr/0008-phase-2b-trigger-on-evidence.md) | — | AI-driven placer; **authoring-time only**, output is committed `layout.yml`. |
-| `schema/` | `schema/*.json` | [0007](adr/0007-skill-directory-is-the-library.md) | [co-schema](../../.claude/skills/co-schema/) | JSON-schemas for circuit + layout YAML; reject malformed inputs at the seam. |
-| `components/` | `components/*.yml` | [0004](adr/0004-exporter-decoupling.md) | — | Component profiles: pin maps, footprints, BOM metadata. |
-| `knowledge/` | `knowledge/rules.json` | [0006](adr/0006-rule-catalog-authoritative.md) | — | Curated ERC rule catalog (30–50 rules). No runtime LLM authoring. |
+| Skill prompt | `.claude/skills/circuit/SKILL.md` | [0006](adr/0006-rule-catalog-authoritative.md), [0012](adr/0012-library-as-installable-package.md) | — | LLM-facing instructions and invocation contract. |
+| `renderer` | `src/circuitsmith/renderer.py` | [0002](adr/0002-ai-only-at-authoring-time.md), [0012](adr/0012-library-as-installable-package.md) | — | YAML → Schemdraw → SVG; consumes layout.yml, never the AI placer. |
+| `netgraph` | `src/circuitsmith/netgraph.py` | [0003](adr/0003-netgraph-shared-contract.md) | [co-netgraph](../../.claude/skills/co-netgraph/) | The typed net graph shared by ERC, layout, and netlist export. |
+| `erc_engine` | `src/circuitsmith/erc_engine.py` | [0005](adr/0005-erc-pre-layout.md), [0006](adr/0006-rule-catalog-authoritative.md) | [co-erc-engine](../../.claude/skills/co-erc-engine/) | Structural S1–S3 + electrical E1–E10 checks against `NetGraph`. |
+| `bom_exporter` | `src/circuitsmith/export/bom_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `components`; emits BOM markdown + CSV. |
+| `netlist_exporter` | `src/circuitsmith/export/netlist_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `NetGraph`; emits KiCad `.net`. |
+| `layout` (CLI) | `src/circuitsmith/layout.py` | [0001](adr/0001-slots-not-coordinates.md) | — | CLI entry for `/circuit layout`; orchestrates kernel + router. |
+| `layout.kernel` | `src/circuitsmith/layout/kernel.py` | [0001](adr/0001-slots-not-coordinates.md) | — | Canonical-slot placement. |
+| `layout.router` | `src/circuitsmith/layout/router.py` | [0001](adr/0001-slots-not-coordinates.md) | — | Manhattan-routing of nets between placed slots. |
+| `layout.ai_placer` | `src/circuitsmith/layout/ai_placer.py` | [0002](adr/0002-ai-only-at-authoring-time.md), [0008](adr/0008-phase-2b-trigger-on-evidence.md) | — | AI-driven placer; **authoring-time only**, output is committed `layout.yml`. |
+| `schema/` | `src/circuitsmith/schema/*.json` | [0012](adr/0012-library-as-installable-package.md) | [co-schema](../../.claude/skills/co-schema/) | JSON-schemas for circuit + layout YAML; reject malformed inputs at the seam. |
+| `components/` | `src/circuitsmith/components/*.py` | [0004](adr/0004-exporter-decoupling.md) | — | Component profiles: pin maps, footprints, BOM metadata. |
+| `knowledge/` | `src/circuitsmith/knowledge/rules.json` | [0006](adr/0006-rule-catalog-authoritative.md) | — | Curated ERC rule catalog (30–50 rules). No runtime LLM authoring. |
 
 ## Decoupling — the four load-bearing seams
 
@@ -149,13 +153,17 @@ NetGraph stage. Removes the "did layout corrupt my circuit, or was
 the circuit broken?" failure mode.
 *Enforcement:* pipeline ordering (renderer.py orchestrates).
 
-### 4. Skill directory portability — [ADR-0007](adr/0007-skill-directory-is-the-library.md)
+### 4. Package portability — [ADR-0012](adr/0012-library-as-installable-package.md)
 
-`.claude/skills/circuit/` contains no project-specific paths or
-imports. Phase 7 (EPIC-006) extraction is mechanical because every
-commit on the way passed the portability lint.
+`src/circuitsmith/` contains no project-specific paths or imports.
+Phase 7 (EPIC-006) publication to PyPI works because every commit
+on the way passed the portability lint. The contract was originally
+scoped to `.claude/skills/circuit/` under
+[ADR-0007](adr/0007-skill-directory-is-the-library.md) (now
+superseded); ADR-0012 migrated the contract scope to the new
+package location without changing its rules.
 *Enforcement:* the portability lint
-([TASK-051](tasks/open/task-051-portability-lint-for-circuit-skill.md))
+([TASK-051](tasks/closed/task-051-portability-lint.md))
 runs in CI and in the pre-commit hook.
 
 ## AI containment

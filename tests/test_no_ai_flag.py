@@ -19,8 +19,8 @@ from pathlib import Path
 
 import pytest
 
-from circuit.layout_engine import LLMClient
-from circuit.renderer import RenderError, _main, render
+from circuitsmith.layout import LLMClient
+from circuitsmith.renderer import RenderError, _main, render
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 

@@ -1,6 +1,6 @@
 """
 Component-profile registry — derives the set of valid `type:` strings and
-per-profile pin sets from `.claude/skills/circuit/components/*.py`.
+per-profile pin sets from `circuitsmith/components/*.py`.
 
 Profile detection rule: any top-level module attribute whose value is a
 dict containing the three keys `category`, `metadata`, `pins` is treated
@@ -47,8 +47,8 @@ class Profile:
 def load_profiles(components_dir: Path | None = None) -> dict[str, Profile]:
     """
     Return a mapping `type_string → Profile` covering every profile under
-    `components_dir` (default: `.claude/skills/circuit/components/` relative
-    to this file).
+    `components_dir` (default: `circuitsmith/components/` relative to this
+    file).
     """
     if components_dir is None:
         components_dir = Path(__file__).resolve().parent.parent / "components"

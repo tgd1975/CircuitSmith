@@ -17,12 +17,12 @@ from pathlib import Path
 
 import pytest
 
-from circuit.layout_engine import LayoutResult, Placement, RouterResult, evaluate
-from circuit.layout_engine.rubric import (
+from circuitsmith.layout import LayoutResult, Placement, RouterResult, evaluate
+from circuitsmith.layout.rubric import (
     DEFAULT_DENSITY_THRESHOLD,
     DEFAULT_MIN_LABEL_DISTANCE_THRESHOLD,
 )
-from circuit.renderer import render
+from circuitsmith.renderer import render
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 

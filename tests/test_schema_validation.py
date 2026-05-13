@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from circuit.schema import validate, validate_file
+from circuitsmith.schema import validate, validate_file
 
 
 def _minimal_circuit() -> dict:

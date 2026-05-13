@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from circuit.renderer import RenderError, render
+from circuitsmith.renderer import RenderError, render
 
 
 def _write(path: Path, content: str) -> None:
@@ -102,7 +102,7 @@ def test_escalations_use_known_category_enum(tmp_path: Path):
     from pathlib import Path as _Path
     schema_path = (
         _Path(__file__).resolve().parents[1]
-        / ".claude" / "skills" / "circuit" / "schema" / "meta.schema.json"
+        / "src" / "circuitsmith" / "schema" / "meta.schema.json"
     )
     schema = json.loads(schema_path.read_text())
     known = set(schema["$defs"]["escalation"]["properties"]["category"]["enum"])

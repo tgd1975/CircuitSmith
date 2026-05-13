@@ -20,12 +20,12 @@ from pathlib import Path
 
 import pytest
 
-from circuit.layout_engine import LLMClient
-from circuit.renderer import RenderError, render
+from circuitsmith.layout import LLMClient
+from circuitsmith.renderer import RenderError, render
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 META_SCHEMA = (
-    REPO_ROOT / ".claude" / "skills" / "circuit" / "schema" / "meta.schema.json"
+    REPO_ROOT / "src" / "circuitsmith" / "schema" / "meta.schema.json"
 )
 
 

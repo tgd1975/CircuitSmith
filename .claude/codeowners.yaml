@@ -24,17 +24,18 @@
 # String values may be unquoted or single-/double-quoted.
 
 entries:
-  # Initial three high-blast-radius modules (TASK-056). New entries
-  # land alongside the file they bind — when `bom_exporter.py` /
+  # Initial three high-blast-radius modules (TASK-056; retargeted to
+  # src/circuitsmith/ in TASK-078 under ADR-0012). New entries land
+  # alongside the file they bind — when `bom_exporter.py` /
   # `netlist_exporter.py` / `knowledge/rules.json` /
-  # `layout_engine/kernel.py` arrive, their co-* skills and entries
-  # land in the same commit.
+  # `circuitsmith/layout/kernel.py` arrive, their co-* skills and
+  # entries land in the same commit.
 
-  - pattern: .claude/skills/circuit/netgraph.py
+  - pattern: src/circuitsmith/netgraph.py
     skill: co-netgraph
 
-  - pattern: .claude/skills/circuit/schema/*.json
+  - pattern: src/circuitsmith/schema/*.json
     skill: co-schema
 
-  - pattern: .claude/skills/circuit/erc_engine.py
+  - pattern: src/circuitsmith/erc_engine.py
     skill: co-erc-engine
