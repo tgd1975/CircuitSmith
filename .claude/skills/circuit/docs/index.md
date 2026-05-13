@@ -6,37 +6,48 @@ against the rule catalog, and emits a documentation-quality SVG
 schematic, a BOM, and a KiCad-compatible netlist.
 
 This page is the install + first-circuit walkthrough. For the format
-itself, see [`docs/components.md`](components.md) and (when it lands
-in EPIC-002) `docs/circuit-yaml.md`. The dossier behind the design
-lives in `docs/developers/ideas/archived/idea-001*.md` in the host
-project; it is not duplicated here.
+itself, see [`docs/components.md`](components.md) and
+[`docs/circuit-yaml.md`](circuit-yaml.md). The dossier behind the
+design lives in `docs/developers/ideas/archived/idea-001*.md` in the
+host project; it is not duplicated here.
 
 ## Status
 
-Phase 1 of the dossier roadmap: **component library + schema only**.
-The YAML-driven renderer, ERC engine, BOM / netlist exporters, and
-Markdown integration ship in EPIC-002..006. The skill is usable
-today for profile authoring and schema validation; the full
-`/circuit` workflow is not yet wired up.
+The full `/circuit` skill workflow is wired up: declarative
+`.circuit.yml` authoring, deterministic layout (kernel + Manhattan
+router, optional AI-placer escape hatch), ERC against a 15-rule
+catalog, SVG render, BOM, KiCad netlist, and Markdown ` ```circuit `
+block rewriting. Phase 7 of EPIC-006 cuts the first PyPI release of
+the `circuitsmith` package; until that tag lands the install path
+is the pinned-copy shape below.
 
 ## Install
 
-Two supported shapes:
+Two supported shapes — both rely on the `circuitsmith` Python
+package being importable. Under
+[ADR-0012](../../../../docs/developers/adr/0012-library-as-installable-package.md)
+the package is the unit of distribution; the skill folder is the
+agent-facing surface that *consumes* it.
 
-1. **Pinned copy inside a host project.** Clone this skill directory
-   into `.claude/skills/circuit/` of the consuming repo and pin to a
-   tag. This is how the host project currently ships it. The
-   directory is fully self-contained — `LICENSE`, `CHANGELOG.md`,
-   `components/`, `schema/`, `docs/` — and is designed for this
-   drop-in use per the portability contract
-   (`idea-001.skill-packaging.md`).
+1. **pip + skill clone (recommended, once `0.1.0` ships).**
 
-2. **Standalone repository.** Once EPIC-006 lands, the skill is also
-   published as its own repo (the "skill extraction" task). At that
-   point the install instruction becomes a one-liner clone + symlink;
-   this page will be updated then.
+   ```bash
+   pip install circuitsmith
+   git clone <this-skill-folder> .claude/skills/circuit
+   ```
 
-Runtime dependencies (declared in the host's `pyproject.toml`):
+   Add `circuit` to `enabled_skills` in your project's
+   `.vibe/config.toml` (see [`SKILL.md`](../SKILL.md)). The Python
+   package and the skill prompt are versioned independently; pin
+   both.
+
+2. **Editable / development install.** Clone the full CircuitSmith
+   repo and `pip install -e .` against its `pyproject.toml`; the
+   skill folder is already at `.claude/skills/circuit/`. This is
+   the in-repo development path the maintainers use.
+
+Runtime dependencies (declared in `circuitsmith`'s `pyproject.toml`,
+installed automatically by `pip install circuitsmith`):
 
 - `schemdraw >= 0.20` — schematic rendering primitives.
 - `matplotlib >= 3.7` — schemdraw's drawing backend.
@@ -71,7 +82,17 @@ connections:
     pins: [U1.GNDL, U1.GNDR]
 ```
 
-In Phase 1 you can validate this file today:
+Drive the full pipeline from a `/circuit` session:
+
+> **You.** `/circuit Render the ESP32 hello-circuit above. Save the
+> SVG, BOM, and netlist next to it.`
+>
+> **`/circuit`.** *Runs `python scripts/regenerate_circuit_artefacts.py
+> --targets hello`. Reports: SVG written, ERC clean, BOM 1 row
+> (220 Ω resistor × 1, green LED × 1), netlist written to
+> `hello.net`.*
+
+If you prefer the library API for one-off scripts:
 
 ```python
 from circuitsmith.schema import validate
@@ -90,8 +111,59 @@ else:
 ```
 
 The validator catches structural errors (S4 unknown component type,
-S5 unknown pin reference) before any rendering or ERC work. From
-EPIC-002 onward the renderer turns the same file into an SVG.
+S5 unknown pin reference) before any rendering or ERC work.
+
+## Using `/circuit` — worked invocation examples
+
+These are illustrative interactions, drawn from the skill's behaviour
+contract in [`SKILL.md`](../SKILL.md). Real five-test acceptance
+transcripts replace them when
+[TASK-041](../../../../docs/developers/tasks/open/task-041-run-five-acceptance-tests.md)
+lands.
+
+### Example 1 — happy path
+
+> **You.** `/circuit Author a minimal LED blinker for an ESP32:
+> one indicator LED on a free GPIO, a 220 Ω current-limit resistor,
+> ground reference. Render the schematic.`
+>
+> **`/circuit`.** *Picks `GPIO5` (free, non-strapping). Writes
+> `blinker.circuit.yml` with `U1: mcu/esp32`, `D1: passives/led`,
+> `R1: passives/resistor (220 Ω)` and a `[U1.D5, R1.a, R1.b, D1.A,
+> D1.K, GND]` path. Runs ERC — clean. Renders `blinker.svg`. Reports
+> the BOM (1× LED, 1× 220 Ω resistor) and confirms the netlist is
+> ready for KiCad import.*
+
+### Example 2 — ERC error surfaces the catalog
+
+> **You.** `/circuit I want to drive an LED directly from GPIO13.
+> Skip the resistor.`
+>
+> **`/circuit`.** *Authors the YAML, runs ERC. **E2** fires (LED
+> missing resistor) from the catalog — quotes the rationale
+> (forward-voltage drop and Vf/Vsupply current calc) from
+> [`docs/erc-checks.md`](erc-checks.md). Does **not** silently work
+> around the rule. Offers two paths: insert a 220 Ω current limiter
+> (E2-compliant) or document an explicit suppression with the
+> per-net override syntax (rare; flags the trade-off).*
+
+### Example 3 — add a component profile
+
+> **You.** `/circuit Add a BME280 over I2C. Use GPIO21/22 for the
+> bus.`
+>
+> **`/circuit`.** *Notes BME280 is missing from
+> `src/circuitsmith/components/sensors/`. Writes a new profile with
+> pins (`VCC`, `GND`, `SDA`, `SCL`), declared `i2c` bus role.
+> Validates the profile via
+> `python -m circuitsmith.knowledge.validate_catalog`. Updates the
+> circuit YAML. Runs ERC — **E7** (I2C missing pull-up) fires;
+> resolves by adding two 4.7 kΩ pull-ups to VCC. Reports: profile
+> added, ERC clean.*
+
+These three examples cover the three high-frequency flows: clean
+authoring, ERC-driven correction, and library extension. The full
+five-test acceptance script lives in TASK-041.
 
 ## Library reference
 
@@ -230,30 +302,37 @@ no theme-specific extension is required.
 
 ### Build-time mechanism
 
-Today the rewriter runs as a GitHub Actions workflow
-([`.github/workflows/generate-circuits.yml`](../../../../.github/workflows/generate-circuits.yml)):
-on push to a topic branch it rewrites blocks and commits the result;
-on PRs it runs `--check` and fails the job on any drift. The CLI is
-`python -m circuitsmith.markdown <paths>` (`--check` for verify-only).
+The rewriter ships two execution paths and the consuming project
+picks one:
 
-### Swap procedure (when IDEA-022 lands)
+- **CI workflow.** A GitHub Actions job calls
+  `python -m circuitsmith.markdown <paths>` on push (rewrite blocks
+  + commit the result) and `--check` on PRs (fail the job on drift).
+  The CircuitSmith repo ships an example at
+  `.github/workflows/generate-circuits.yml`.
+- **In-process during site build.** When the consuming project uses
+  MkDocs with `pymdownx.superfences`, a custom formatter calls
+  `circuitsmith.markdown.compute_hash` + `render_block_to_svg` at
+  site-build time. No CI rewrite needed.
 
-When the MkDocs site (IDEA-022 in AwesomeStudioPedal) ships and
-`mkdocs.yml` is added to this repo:
-
-1. Add a `pymdownx.superfences` custom formatter that calls
-   `circuitsmith.markdown.compute_hash` + `render_block_to_svg` at
-   site-build time. The block contract (info-string flags, hash
-   filename) is identical to the workflow path — only the trigger
-   moves from "post-push CI" to "in-process during mkdocs build."
-2. Remove `.github/workflows/generate-circuits.yml`. The `--check`
-   gate becomes redundant because every site build re-renders.
-3. Drop the bot-commit half of the workflow flow. Site builds do
-   not write back to the source tree.
+The block contract (info-string flags, hash-derived filenames) is
+identical across both paths.
 
 The `find_blocks` / `compute_hash` / `format_embed` helpers in
-[`src/circuitsmith/markdown.py`](../../../../src/circuitsmith/markdown.py)
-are the shared surface — both paths consume the same scanner.
+`circuitsmith.markdown` are the shared surface — both paths consume
+the same scanner. See the API in your installed package
+(`python -c "from circuitsmith import markdown; help(markdown)"`).
+
+## Portability
+
+Under ADR-0012 the skill folder is **self-contained against the
+installed `circuitsmith` package**: it does not require any sibling
+file from the host project to function. Informational cross-references
+elsewhere in this `docs/` directory (to ADRs, dossier files, or
+host-repo CI workflows) are allowed because they are explanatory —
+not load-bearing. A consumer installing only `pip install
+circuitsmith` plus the skill folder can drive the full `/circuit`
+workflow without those references being resolvable.
 
 ## License
 

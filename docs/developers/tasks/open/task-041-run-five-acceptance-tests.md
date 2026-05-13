@@ -7,7 +7,7 @@ effort: Large (8-24h)
 complexity: Senior
 human-in-loop: Main
 epic: circuit-skill-packaging
-order: 3
+order: 13
 prerequisites: [TASK-040]
 ---
 
@@ -16,6 +16,17 @@ prerequisites: [TASK-040]
 `Main` kept per TASK-060 sweep. Interactive five-test acceptance
 session requires the user driving the skill end-to-end — agent
 stops here, user runs the session.
+
+**Non-blocking within EPIC-006 (2026-05-13 reorganisation).** This
+task ran at order 3 originally and gated TASK-042 / TASK-080 — that
+ordering kept the entire epic stalled behind a Main-HIL interactive
+session that the user runs on their own cadence. Under the reshuffle,
+no other task in this epic depends on TASK-041; it lives at the end
+of the order list and is closed when the user has time to run the
+five-test session. The soft "real-circuit-use" gate documented in the
+EPIC-006 body still applies to the `0.1.0.dev0 → 0.1.0` version bump
+in TASK-080, but TASK-041's formal ceremony does not gate the publish
+step itself.
 
 ## Description
 

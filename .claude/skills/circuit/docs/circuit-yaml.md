@@ -193,9 +193,9 @@ renderer touches it:
 
 The renderer halts with a non-zero exit code on any finding.
 
-## Markdown `circuit` blocks (preview)
+## Markdown `circuit` blocks
 
-EPIC-005 lands the integration that lets a Markdown document embed
+The block-rewrite integration lets a Markdown document embed
 `.circuit.yml` content directly:
 
 ````markdown
@@ -211,8 +211,8 @@ connections:
 ```
 ````
 
-The block-rewrite tool (TASK-036) and the pre-commit hook (TASK-038)
-ship in EPIC-005. The rewriter scans Markdown files for ` ```circuit `
+The block-rewrite tool and the pre-commit hook ship as part of
+EPIC-005 (closed). The rewriter scans Markdown files for ` ```circuit `
 fenced blocks, renders each block's YAML to
 `<docname>.circuits/<hash>.svg`, and replaces the block with an image
 embed. The 8-char hash in the filename is a SHA-256 prefix of the

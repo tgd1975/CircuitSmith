@@ -799,3 +799,86 @@ the [EPIC-010](docs/developers/tasks/EPICS.md) relocation seed below.
   place; the workflow / pre-commit hook keep embedded SVGs in lock-
   step with their source on every push, and the shared scanner
   surface is ready for the future MkDocs-superfences transition.
+
+### Circuit skill (EPIC-006 — Skill Packaging and PyPI Publication)
+
+- 2026-05-13: EPIC-006 reorganised ahead of execution. TASK-041
+  (five-test acceptance ceremony, `Main` HIL, Large effort) moved to
+  the end of the order list (`order: 13`) and removed as a
+  prerequisite from TASK-042 and TASK-080 — the interactive ceremony
+  now runs on the user's own cadence instead of stalling the rest of
+  the epic. The soft "real-circuit-use" gate documented in the
+  EPIC-006 body still applies to the `0.1.0.dev0 → 0.1.0` version
+  bump. Two new tasks added: TASK-081 (general release workflow
+  scaffolding) and TASK-082 (`/release` skill). TASK-080 prereqs
+  updated to consume them.
+- TASK-039 closed:
+  [`.claude/skills/circuit/SKILL.md`](.claude/skills/circuit/SKILL.md)
+  authored. Frontmatter declares `name: circuit`, a trigger-keyword
+  description, and the post-ADR-0012 `allowed-tools` allowlist
+  (`python -m circuitsmith.{renderer,erc_engine,markdown,knowledge.validate_catalog}`
+  plus `python scripts/regenerate_circuit_artefacts.py`; BOM /
+  netlist / layout submodules are library-only and run through the
+  regenerator). The body codifies the seven behavioural rules from
+  `idea-001-circuit-skill.md §AI Skill Prompt` with concrete YAML
+  examples per rule (know the library, write YAML not Python,
+  layout conventions, catalog-grounded defaults, batched ambiguity
+  questions, ERC-first loop, component-profile additions), an
+  Invocations section, and a "Deliberately does not do" section
+  forbidding runtime LLM hardware advice and `src/circuitsmith/`
+  Python edits.
+- TASK-040 closed: `circuit` registered in
+  [`.vibe/config.toml`](.vibe/config.toml) `enabled_skills`. The
+  edit rides with TASK-082's commit (shared file across the same
+  batch); `/circuit` is invocable in this repo.
+- TASK-042 closed: skill `docs/` finalised. `docs/index.md`
+  rewritten end-to-end — Status section drops "Phase 1 only / full
+  workflow not wired" framing, Install section maps to the
+  post-ADR-0012 `pip install circuitsmith` shape, three worked
+  `/circuit` invocation examples added (happy path, ERC-driven E2
+  correction, component-profile extension for BME280 over I2C),
+  Markdown-blocks section collapses build-time + swap-procedure
+  into a unified two-paths description, new Portability section
+  documents the ADR-0012 reinterpretation. `docs/erc-checks.md`
+  off-by-one relative paths corrected (`../../../src/...` →
+  `../../../../src/...`, twelve `Catalog.` links + the engine
+  `CHECK_TABLE` link + the `rules.json` top-of-file link).
+  `docs/circuit-yaml.md` detensed ("EPIC-005 lands" → "ship as part
+  of EPIC-005 (closed)").
+- TASK-081 closed: general release workflow scaffolding. Four
+  deliverables — [`RELEASING.md`](RELEASING.md) at the repo root
+  (when-to-cut, semver policy, tag convention, two-file version
+  lockstep, CHANGELOG promotion, snapshot/burn-up steps, tag-push
+  hand-off to release.yml);
+  [`.github/workflows/release.yml`](.github/workflows/release.yml)
+  triggered on `v*` tag push (three jobs: build wheel+sdist with
+  smoke install, publish to PyPI via trusted publishing with
+  token-based fallback documented, create GitHub Release with the
+  matching CHANGELOG slice as body and `dist/*` attached);
+  [`scripts/tests/test_version_lockstep.py`](scripts/tests/test_version_lockstep.py)
+  asserting `circuitsmith.__version__` equals `[project] version`
+  in `pyproject.toml`; and a CI_PIPELINE.md update moving Release
+  from "Future workflows" to an actual `release.yml` section. Plus
+  a one-line note in CLAUDE.md under "CHANGELOG release-promotion
+  rides with the release commit" — sibling to the existing
+  "CHANGELOG updates ride with the merge" rule.
+- TASK-082 closed: `/release` skill authored at
+  [`.claude/skills/release/SKILL.md`](.claude/skills/release/SKILL.md)
+  and registered in `.vibe/config.toml`. 13-step driver mirroring
+  AwesomeStudioPedal's `/release` step order — verify clean state,
+  verify branch (main only), read current version from both
+  lockstep files, confirm new version with user, bump both files,
+  promote CHANGELOG, /housekeep, snapshot, burn-up, /commit,
+  annotated tag, push (REQUIRES EXPLICIT USER APPROVAL per
+  AUTONOMY.md), hand off to release.yml. `/release-branch` is
+  out-of-scope (CircuitSmith always cuts from main). Anti-patterns
+  section enumerates lockstep drift, push-without-approval, version
+  reuse, and CHANGELOG rewording during promotion.
+- TASK-041 remains open (Main HIL, non-blocking, order 13). The
+  formal five-test acceptance ceremony runs on the user's cadence;
+  ordinary `/circuit` use during Phase 6/7 satisfies the soft
+  real-circuit-use gate for the version bump.
+- TASK-080 remains open (Main HIL). First real `0.1.0` PyPI
+  publication awaits the user-driven pypi.org trusted-publishing
+  registration and the `git push --tags` approval at the
+  `/release v0.1.0` push step.

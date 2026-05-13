@@ -8,7 +8,7 @@ complexity: Senior
 human-in-loop: Main
 epic: circuit-skill-packaging
 order: 8
-prerequisites: [TASK-041, TASK-042]
+prerequisites: [TASK-042, TASK-081, TASK-082]
 ---
 
 ## Autonomy
@@ -87,11 +87,20 @@ artefact matches the local build.
 
 ## Prerequisites
 
-- **TASK-041** — Phase 6 acceptance tests must pass; the published
-  package must be usable for the workflows the acceptance tests
-  exercise.
 - **TASK-042** — Skill `docs/` must be finalised; `RELEASING.md`
   links into the skill docs from the published-package perspective.
+- **TASK-081** — Release workflow scaffolding (RELEASING.md,
+  release.yml, version-lockstep guard) must exist; this task is its
+  first live consumer.
+- **TASK-082** — `/release` skill must exist; this task drives the
+  publish via the skill rather than ad-hoc shell.
+
+TASK-041 (five-test acceptance ceremony) is **not** a prerequisite as
+of the 2026-05-13 EPIC-006 reorganisation. The soft "skill has been
+used on at least one real circuit addition" gate documented in the
+EPIC-006 body still applies to the `0.1.0.dev0 → 0.1.0` version
+bump; that gate is satisfied by ordinary skill use, not by the
+formal five-test ceremony.
 
 Implicit prerequisite (not an EPIC-006 task): TASK-077 (atomic
 relocation to `src/circuitsmith/`) must have landed before this

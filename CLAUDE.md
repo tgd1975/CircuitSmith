@@ -127,6 +127,15 @@ amend before merging — do not merge first and "circle back". A
 CHANGELOG diff that lags behind `git log` defeats the purpose of
 having a changelog.
 
+## CHANGELOG release-promotion rides with the release commit
+
+When `/release vX.Y.Z` cuts a tag, the `[Unreleased]` section is
+renamed to `[vX.Y.Z] — YYYY-MM-DD` and a fresh empty `[Unreleased]`
+block is seeded above it. That **promotion edit is part of the same
+commit that bumps the version files** — never a follow-up. Sibling
+rule to "CHANGELOG updates ride with the merge"; the release flow is
+documented in [`RELEASING.md`](RELEASING.md).
+
 ## Project env vars — use `$CS_*`, never hard-code paths
 
 Per-developer paths and credentials live in `.envrc` and are exposed as

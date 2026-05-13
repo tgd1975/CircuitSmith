@@ -1,9 +1,11 @@
 ---
 id: TASK-039
 title: Write .claude/skills/circuit/SKILL.md with full system prompt
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Support
 epic: circuit-skill-packaging
@@ -38,10 +40,21 @@ turns the skill from a library into a Claude Code skill. Per
 
 ## Acceptance Criteria
 
-- [ ] `SKILL.md` frontmatter declares `name`, `description`, and `allowed-tools`.
-- [ ] All seven behavioural rules are present with concrete examples.
-- [ ] No rule advocates runtime LLM generation of hardware advice — the catalog is the source.
-- [ ] System prompt cross-references the relevant docs (`docs/circuit-yaml.md`, `docs/erc-checks.md`, `docs/components.md`).
+- [x] `SKILL.md` frontmatter declares `name`, `description`, and `allowed-tools`.
+- [x] All seven behavioural rules are present with concrete examples.
+- [x] No rule advocates runtime LLM generation of hardware advice — the catalog is the source.
+- [x] System prompt cross-references the relevant docs (`docs/circuit-yaml.md`, `docs/erc-checks.md`, `docs/components.md`).
+
+## Closure note
+
+`allowed-tools` allowlist re-pointed from the dossier's stale
+`python .claude/skills/circuit/<script>.py` patterns to the
+post-[ADR-0012](../../adr/0012-library-as-installable-package.md)
+form: `python -m circuitsmith.<module>` plus
+`python scripts/regenerate_circuit_artefacts.py`. BOM, netlist, and
+layout submodules are library-only (no CLIs) and are driven via the
+regenerator, not direct invocation. The skill draft surfaces this
+contract explicitly in the **Invocations** section.
 
 ## Test Plan
 

@@ -5,9 +5,9 @@ meaning, severity, suppression, and a link to the catalog entry's
 "Why / Senior's tip / Source" block.
 
 Authoritative source: the engine's
-[`CHECK_TABLE`](../../../src/circuitsmith/erc_engine.py) and the
+[`CHECK_TABLE`](../../../../src/circuitsmith/erc_engine.py) and the
 catalog at
-[`src/circuitsmith/knowledge/rules.json`](../../../src/circuitsmith/knowledge/rules.json).
+[`src/circuitsmith/knowledge/rules.json`](../../../../src/circuitsmith/knowledge/rules.json).
 This document mirrors those for human reading; if a divergence
 appears, the code and catalog win and this doc gets a correcting PR.
 
@@ -41,7 +41,7 @@ components:
       EN: { required: false }
 ```
 
-**Catalog.** [`rules.json` → S1](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → S1](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -59,7 +59,7 @@ second pin but lost it during a refactor or copy-paste.
 genuinely want an isolated test point, declare it on a component pin
 rather than as a free net.
 
-**Catalog.** [`rules.json` → S2](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → S2](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -89,7 +89,7 @@ single `pins:` entry listing every endpoint:
   pins: [J1.VBUS, U1.VIN]
 ```
 
-**Catalog.** [`rules.json` → S3](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → S3](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -108,7 +108,7 @@ column.
 **Suppression.** Not suppressible — fix the reference. Use your
 editor's project-wide rename when refactoring component refs.
 
-**Catalog.** [`rules.json` → S4](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → S4](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -127,7 +127,7 @@ component's profile.
 profile dict in `src/circuitsmith/components/` to see the valid pin
 names; the `alt:` field on each pin holds the silicon-level name.
 
-**Catalog.** [`rules.json` → S5](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → S5](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -163,7 +163,7 @@ To suppress on a specific net (deliberate floating test point):
   erc: { E1: off }
 ```
 
-**Catalog.** [`rules.json` → E1](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E1](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -192,7 +192,7 @@ components:
     erc: { E2: off }
 ```
 
-**Catalog.** [`rules.json` → E2](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E2](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -220,7 +220,7 @@ a specific net:
   erc: { E3: off }
 ```
 
-**Catalog.** [`rules.json` → E3](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E3](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -245,7 +245,7 @@ another peripheral drives the line):
   erc: { E4: off }
 ```
 
-**Catalog.** [`rules.json` → E4](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E4](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -276,7 +276,7 @@ components:
     erc: { E5: off }   # I trust my firmware to handle boot mode
 ```
 
-**Catalog.** [`rules.json` → E5](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E5](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -302,7 +302,7 @@ meta:
 decoupled by a shared bulk cap, no further action is needed — E6 is
 satisfied by any cap on the net.
 
-**Catalog.** [`rules.json` → E6](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E6](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -328,7 +328,7 @@ components:
     erc: { E7: off }   # breakout has integrated pull-ups
 ```
 
-**Catalog.** [`rules.json` → E7](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E7](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -352,7 +352,7 @@ meta:
   erc: { E8: off }
 ```
 
-**Catalog.** [`rules.json` → E8](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E8](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -383,7 +383,7 @@ components:
     erc: { E9: off }
 ```
 
-**Catalog.** [`rules.json` → E9](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E9](../../../../src/circuitsmith/knowledge/rules.json).
 
 ---
 
@@ -412,4 +412,4 @@ signal sharing two roles):
   erc: { E10: off }
 ```
 
-**Catalog.** [`rules.json` → E10](../../../src/circuitsmith/knowledge/rules.json).
+**Catalog.** [`rules.json` → E10](../../../../src/circuitsmith/knowledge/rules.json).

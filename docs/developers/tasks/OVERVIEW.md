@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 5** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 75** | **Total: 80** | █████████░ 94%
+⚪ **Open: 2** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 80** | **Total: 82** | ██████████ 98%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,10 +30,7 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-039](open/task-039-write-skill-md-system-prompt.md) | Write .claude/skills/circuit/SKILL.md with full system prompt | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-040](open/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) | Junior | ⚪ open |
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-042](open/task-042-finalise-skill-docs.md) | Finalise all .claude/skills/circuit/docs/ files | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-080](open/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) | Senior | ⚪ open |
 
 ## Closed Tasks
@@ -78,6 +75,9 @@ _No paused tasks._
 | [TASK-036](closed/task-036-implement-markdown-block-rewrite.md) | Implement Markdown ```circuit block rewrite (workflow or superfences formatter) | Medium (2-8h) |
 | [TASK-037](closed/task-037-implement-show-source-flag.md) | Implement show_source flag for Markdown blocks | Small (&lt;2h) |
 | [TASK-038](closed/task-038-update-pre-commit-hook-for-circuit-yml.md) | Update pre-commit hook to trigger on .circuit.yml changes | Small (&lt;2h) |
+| [TASK-039](closed/task-039-write-skill-md-system-prompt.md) | Write .claude/skills/circuit/SKILL.md with full system prompt | Medium (2-8h) |
+| [TASK-040](closed/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) |
+| [TASK-042](closed/task-042-finalise-skill-docs.md) | Finalise all .claude/skills/circuit/docs/ files | Medium (2-8h) |
 | [TASK-043](closed/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) |
 | [TASK-044](closed/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) |
 | [TASK-045](closed/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) |
@@ -115,4 +115,6 @@ _No paused tasks._
 | [TASK-077](closed/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) |
 | [TASK-078](closed/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) |
 | [TASK-079](closed/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) |
+| [TASK-081](closed/task-081-author-release-workflow-scaffolding.md) | Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep) | Medium (2-8h) |
+| [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
 <!-- END GENERATED -->

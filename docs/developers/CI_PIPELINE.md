@@ -99,15 +99,40 @@ under [ADR-0012](adr/0012-library-as-installable-package.md) and
 EPIC-010) — adding a `ruff check .` step to `ci.yml` is a one-line
 change.
 
+### `release.yml` — `Release`
+
+Triggered on every git tag matching `v*` (and on `workflow_dispatch`).
+Three jobs in series: `build` → `publish` → `github-release`.
+
+| Field | Value |
+|---|---|
+| File | [`.github/workflows/release.yml`](../../.github/workflows/release.yml) |
+| Trigger | tag push (`v*`), `workflow_dispatch` |
+| Runner | `ubuntu-latest` |
+| Python | 3.11 |
+| Permissions | `contents: write` (GitHub Release), `id-token: write` (PyPI trusted publishing) |
+
+Job summary:
+
+| Job | What it does | Red means |
+|---|---|---|
+| `build` | `python -m build` produces wheel + sdist under `dist/`. Verifies the wheel installs into a fresh venv and `import circuitsmith` succeeds. Uploads `dist/*` as a build artefact. | Packaging regression — the wheel cannot be built or installed cleanly. Reproduce locally with `python -m build && pip install dist/circuitsmith-*.whl`. |
+| `publish` | `pypa/gh-action-pypi-publish@release/v1` uploads the artefacts to PyPI via [trusted publishing](https://docs.pypi.org/trusted-publishers/). No long-lived token in the repo. | Trusted-publishing trust relationship broken, or the version was already published (PyPI does not permit file-name reuse). |
+| `github-release` | Slices the matching `## [vX.Y.Z]` block out of `CHANGELOG.md`, creates a GitHub Release on the tag with `dist/*` attached and that block as the body. | CHANGELOG section missing for the tag (falls back to a one-line note), or GitHub API issue. |
+
+The agent-facing driver for the bump-CHANGELOG-tag-push flow that
+*triggers* this workflow is the [`/release`](../../.claude/skills/release/SKILL.md)
+skill. Procedural details — when to cut, semver policy, version
+lockstep, the manual click-throughs PyPI requires — live in
+[`RELEASING.md`](../../RELEASING.md).
+
 ## Future workflows
 
 Placeholders for workflows that do not yet exist; documented here so
 they are not invented twice.
 
-- **Release** — tag-driven build that produces a packaged skill once
-  EPIC-006 (Phase 7) lands.
 - **Docs site** — if [IDEA-022 (MkDocs)](https://github.com/tgd1975/AwesomeStudioPedal/blob/main/docs/developers/ideas/open/idea-022-mkdocs-documentation-site.md)
   is adopted, a Pages-deploy workflow joins the matrix.
 
-Both stay unimplemented until they are needed; this doc updates when
-they land.
+Stays unimplemented until it is needed; this doc updates when it
+lands.

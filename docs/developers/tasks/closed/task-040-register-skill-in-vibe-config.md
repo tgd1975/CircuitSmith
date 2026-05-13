@@ -1,9 +1,11 @@
 ---
 id: TASK-040
 title: Register circuit skill in .vibe/config.toml enabled_skills
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: XS (<30m)
+effort_actual: XS (<30m)
 complexity: Junior
 human-in-loop: No
 epic: circuit-skill-packaging
@@ -20,9 +22,9 @@ matching entry in this list — no entry, no invocation.
 
 ## Acceptance Criteria
 
-- [ ] `.vibe/config.toml` contains `circuit` in `enabled_skills`.
-- [ ] `/circuit` is invocable from a Claude Code session after this change.
-- [ ] No other skill is accidentally disabled by the edit.
+- [x] `.vibe/config.toml` contains `circuit` in `enabled_skills`.
+- [x] `/circuit` is invocable from a Claude Code session after this change.
+- [x] No other skill is accidentally disabled by the edit.
 
 ## Test Plan
 

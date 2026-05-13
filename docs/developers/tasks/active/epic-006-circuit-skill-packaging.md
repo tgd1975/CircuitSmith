@@ -19,26 +19,38 @@ other projects can use it without depending on CircuitSmith") is
 unchanged; only the *mechanism* moved from folder-copy to
 package-publish.
 
-Two phases, paired because the second consumes the first:
+Three phases, paired because the second consumes the first:
 
-- **Phase 6** — write `.claude/skills/circuit/SKILL.md` with the full
-  system prompt and `allowed-tools` frontmatter, register in
-  `.vibe/config.toml`, run the five acceptance tests (happy path, ERC
-  error, BME280 over I2C, controller-swap to Raspberry Pi, incremental
-  layout stability), finalise the skill `docs/`.
-- **Phase 7** — publish the `circuitsmith` package to PyPI. Configure
-  `python -m build` to produce a wheel + sdist; set up trusted
-  publishing on PyPI (token-based fallback); write `RELEASING.md`
-  documenting the tag-and-release flow; cut the first real `0.1.0`
-  release. Consumers get the package via `pip install circuitsmith`;
-  the skill folder stays in this repo as the agent-facing surface.
+- **Phase 6 — Skill** (TASK-039, TASK-040, TASK-042): write
+  `.claude/skills/circuit/SKILL.md` with the full system prompt and
+  `allowed-tools` frontmatter, register in `.vibe/config.toml`,
+  finalise the skill `docs/`.
+- **Phase 7a — Release scaffolding** (TASK-081, TASK-082): author
+  the general release workflow — `RELEASING.md`, a tag-triggered
+  `.github/workflows/release.yml` that publishes to PyPI, a
+  version-lockstep guard, and a `/release` skill that drives the
+  bump → CHANGELOG → tag → push flow. Mirrors the shape of
+  AwesomeStudioPedal's release flow (`/release` skill +
+  `RELEASE_CHECKLIST.md` + `release.yml`) but adapted to a
+  single-deliverable Python package under ADR-0012.
+- **Phase 7b — First real publication** (TASK-080): cut the first
+  `circuitsmith 0.1.0` release through the new `/release` skill.
+  Consumers get the package via `pip install circuitsmith`; the
+  skill folder stays in this repo as the agent-facing surface.
 
-**Phase 7 prerequisite (soft).** Phase 6 acceptance passes and the
-skill has been used on at least one real circuit addition in this
-project. ADR-0012 decouples publication from real-circuit usage at
-the *mechanism* level, but the version-bump from `0.1.0.dev0` to
-`0.1.0` is still gated on real use — first-publication rough edges
-should be discovered before a tagged release advertises stability.
+**Phase 7b prerequisite (soft).** The skill has been used on at least
+one real circuit addition in this project. ADR-0012 decouples
+publication from real-circuit usage at the *mechanism* level, but the
+version-bump from `0.1.0.dev0` to `0.1.0` is still gated on real use
+— first-publication rough edges should be discovered before a tagged
+release advertises stability.
+
+**Acceptance-test ceremony (TASK-041) — non-blocking.** The five
+Phase 6 acceptance tests are kept in the epic at the end of the
+order list and do not gate any other task as of the 2026-05-13
+reorganisation. The interactive Main-HIL ceremony runs on the user's
+own cadence; ordinary skill use during Phase 6/7 work satisfies the
+soft real-circuit-use gate for the version bump.
 
 Companion design doc:
 [`idea-001.skill-packaging.md`](../../ideas/archived/idea-001.skill-packaging.md)
