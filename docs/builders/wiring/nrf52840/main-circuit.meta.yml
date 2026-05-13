@@ -1,7 +1,7 @@
 schema: circuit-meta/v1
 sources:
-  circuit: data/nrf52840.circuit.yml
-  layout:  docs/builders/wiring/nrf52840/main-circuit.layout.yml
+  circuit: /home/tobias/Dokumente/Projekte/CircuitSmith/data/nrf52840.circuit.yml
+  layout:  /home/tobias/Dokumente/Projekte/CircuitSmith/docs/builders/wiring/nrf52840/main-circuit.layout.yml
 layout:
   state: complete
   placed: 17
@@ -19,3 +19,4 @@ provenance:
   ai_invoked: false
   iterations: 0
   escalations: []
+  fingerprint: 8b8c74eb6ed8bcf3

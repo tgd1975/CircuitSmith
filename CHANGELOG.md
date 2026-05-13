@@ -754,3 +754,48 @@ the [EPIC-010](docs/developers/tasks/EPICS.md) relocation seed below.
   pair, both targets ship the four exporter artefacts, the staleness
   gate guards them in CI + pre-commit, and the structural grammar
   test backs the KiCad spot-check with an automated regression guard.
+
+### Circuit skill (EPIC-005 — Markdown Block Integration)
+
+- TASK-036 closed:
+  [`src/circuitsmith/markdown.py`](src/circuitsmith/markdown.py)
+  scans Markdown files for ` ```circuit ` fenced blocks, renders each
+  block's `.circuit.yml` body to `<docname>.circuits/<hash>.svg`, and
+  rewrites the block to an image embed. The 8-char hash in the
+  filename is a SHA-256 prefix of the verbatim source — identical
+  snippets share an SVG, a one-byte edit forces a new filename, and
+  staleness is detected by a file-name lookup alone (no contents
+  diff). `python -m circuitsmith.markdown <paths>` rewrites in place;
+  `--check` exits non-zero on any drift. GitHub Actions workflow at
+  [`.github/workflows/generate-circuits.yml`](.github/workflows/generate-circuits.yml)
+  rewrites on push to topic branches and runs `--check` on PRs; it
+  retires when AwesomeStudioPedal IDEA-022 (MkDocs site) lands and
+  the same scanner moves into a `pymdownx.superfences` formatter.
+  Swap procedure documented in the skill's
+  [`docs/index.md`](.claude/skills/circuit/docs/index.md).
+- TASK-037 closed: `show_source` flag on the block info string wraps
+  the rendered embed in a `<details>` block that reveals the
+  verbatim source YAML on click — `<details>` is native to both
+  GitHub Markdown and MkDocs, so no theme-specific extension is
+  needed. Default (flag absent) is unchanged: bare image embed, no
+  source disclosure. Worked example in
+  [`.claude/skills/circuit/docs/circuit-yaml.md`](.claude/skills/circuit/docs/circuit-yaml.md).
+- TASK-038 closed:
+  [`scripts/regenerate_circuit_artefacts.py`](scripts/regenerate_circuit_artefacts.py)
+  re-runs the full renderer pipeline for every shipped target on
+  `.circuit.yml` or component-profile edits, writes the seven
+  canonical artefacts (SVG, layout, meta, erc-report, BOM .md/.csv,
+  KiCad netlist), and `git add`s them so the commit picks them up.
+  A 16-char fingerprint stored under `provenance:` in
+  `main-circuit.meta.yml` (hashing the circuit body + every
+  component-profile source) short-circuits the renderer when inputs
+  are byte-identical, keeping the hook well under 5 s on the
+  shipped circuits. Wired into [`scripts/pre-commit`](scripts/pre-commit)
+  alongside the existing schema / ERC / exporter gates;
+  `CS_COMMIT_BYPASS` still skips it.
+  `Bash(python scripts/regenerate_circuit_artefacts.py:*)` added to
+  the `.claude/settings.json` allow-list.
+- **EPIC-005 closed** — Markdown ` ```circuit ` blocks render in
+  place; the workflow / pre-commit hook keep embedded SVGs in lock-
+  step with their source on every push, and the shared scanner
+  surface is ready for the future MkDocs-superfences transition.

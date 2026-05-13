@@ -17,6 +17,7 @@
       "Bash(python scripts/check_phase2b_trigger.py:*)",
       "Bash(python scripts/housekeep.py:*)",
       "Bash(python scripts/portability_lint.py:*)",
+      "Bash(python scripts/regenerate_circuit_artefacts.py:*)",
       "Bash(python scripts/release_burnup.py:*)",
       "Bash(python scripts/release_snapshot.py:*)",
       "Bash(python scripts/security_review_changes.py:*)",

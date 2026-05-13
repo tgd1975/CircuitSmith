@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 8** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 72** | **Total: 80** | █████████░ 90%
+⚪ **Open: 5** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 75** | **Total: 80** | █████████░ 94%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,9 +30,6 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-036](open/task-036-implement-markdown-block-rewrite.md) | Implement Markdown ```circuit block rewrite (workflow or superfences formatter) | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-037](open/task-037-implement-show-source-flag.md) | Implement show_source flag for Markdown blocks | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-038](open/task-038-update-pre-commit-hook-for-circuit-yml.md) | Update pre-commit hook to trigger on .circuit.yml changes | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-039](open/task-039-write-skill-md-system-prompt.md) | Write .claude/skills/circuit/SKILL.md with full system prompt | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-040](open/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) | Junior | ⚪ open |
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
@@ -78,6 +75,9 @@ _No paused tasks._
 | [TASK-033](closed/task-033-implement-netlist-exporter.md) | Implement netlist_exporter.py — flatten NetGraph to KiCad .net | Medium (2-8h) |
 | [TASK-034](closed/task-034-kicad-netlist-import-spot-check.md) | Spot-check main-circuit.net imports into KiCad without errors | XS (&lt;30m) |
 | [TASK-035](closed/task-035-extend-ci-and-docs-for-exporters.md) | Extend CI staleness guard for bom + netlist; update docs/index.md | Small (&lt;2h) |
+| [TASK-036](closed/task-036-implement-markdown-block-rewrite.md) | Implement Markdown ```circuit block rewrite (workflow or superfences formatter) | Medium (2-8h) |
+| [TASK-037](closed/task-037-implement-show-source-flag.md) | Implement show_source flag for Markdown blocks | Small (&lt;2h) |
+| [TASK-038](closed/task-038-update-pre-commit-hook-for-circuit-yml.md) | Update pre-commit hook to trigger on .circuit.yml changes | Small (&lt;2h) |
 | [TASK-043](closed/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) |
 | [TASK-044](closed/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) |
 | [TASK-045](closed/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) |

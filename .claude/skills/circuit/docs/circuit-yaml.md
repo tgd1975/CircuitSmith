@@ -211,10 +211,55 @@ connections:
 ```
 ````
 
-The pre-commit hook (TASK-038) and the block-rewrite tool (TASK-036)
-ship in EPIC-005. Today the canonical path is a stand-alone
-`<name>.circuit.yml` file passed to the renderer via
-`--circuit <path>`.
+The block-rewrite tool (TASK-036) and the pre-commit hook (TASK-038)
+ship in EPIC-005. The rewriter scans Markdown files for ` ```circuit `
+fenced blocks, renders each block's YAML to
+`<docname>.circuits/<hash>.svg`, and replaces the block with an image
+embed. The 8-char hash in the filename is a SHA-256 prefix of the
+verbatim block body — identical sources share an SVG; a one-byte edit
+changes the filename and the stale render is detected by file-name
+lookup alone.
+
+### `show_source` flag (TASK-037)
+
+Add `show_source` to the fence info string for a `<details>` wrapper
+that reveals the verbatim source YAML on click — useful for tutorial
+pages where readers benefit from seeing input alongside output:
+
+````markdown
+```circuit show_source
+meta:
+  title: Inline button demo
+  target: esp32
+components:
+  U1:  { type: mcu/esp32 }
+  SW1: { type: passives/pushbutton }
+connections:
+  - { net: BTN_A, path: [U1.D13, SW1.1, SW1.2, GND], pull: firmware }
+```
+````
+
+After rewrite, that block becomes:
+
+```markdown
+<details>
+<summary>circuit source</summary>
+
+![circuit](page.circuits/9a04f7e1.svg)
+
+\`\`\`yaml
+meta:
+  title: Inline button demo
+…
+\`\`\`
+
+</details>
+```
+
+The flag is absent by default: a bare ` ```circuit ` block produces
+just the image embed — no source disclosure, no `<details>` wrapper.
+Both GitHub Markdown and MkDocs render `<details>` natively, so the
+same output works in either build path.
 
 ## Staleness detection
 

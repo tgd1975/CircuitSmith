@@ -194,6 +194,67 @@ per-component / per-circuit. Cross-references to the catalog entries
 in `circuitsmith.knowledge.rules.json` carry the
 Why / Senior's tip / Source content the report writer embeds.
 
+## Markdown ` ```circuit ` blocks
+
+Embed a `.circuit.yml` snippet directly inside a Markdown page; the
+build pipeline renders it to an SVG and rewrites the block to an
+image embed. Filenames carry an 8-char hash of the source, so a stale
+embed is detected by a file-name lookup alone.
+
+```markdown
+```circuit
+meta:
+  title: Inline button demo
+  target: esp32
+components:
+  U1:  { type: mcu/esp32 }
+  SW1: { type: passives/pushbutton }
+connections:
+  - { net: BTN_A, path: [U1.D13, SW1.1, SW1.2, GND], pull: firmware }
+```
+
+```
+
+Add `show_source` to the info string for a `<details>` wrapper that
+reveals the source YAML on click:
+
+```markdown
+```circuit show_source
+…
+```
+
+```
+
+The `<details>` element renders natively on GitHub and on MkDocs —
+no theme-specific extension is required.
+
+### Build-time mechanism
+
+Today the rewriter runs as a GitHub Actions workflow
+([`.github/workflows/generate-circuits.yml`](../../../../.github/workflows/generate-circuits.yml)):
+on push to a topic branch it rewrites blocks and commits the result;
+on PRs it runs `--check` and fails the job on any drift. The CLI is
+`python -m circuitsmith.markdown <paths>` (`--check` for verify-only).
+
+### Swap procedure (when IDEA-022 lands)
+
+When the MkDocs site (IDEA-022 in AwesomeStudioPedal) ships and
+`mkdocs.yml` is added to this repo:
+
+1. Add a `pymdownx.superfences` custom formatter that calls
+   `circuitsmith.markdown.compute_hash` + `render_block_to_svg` at
+   site-build time. The block contract (info-string flags, hash
+   filename) is identical to the workflow path — only the trigger
+   moves from "post-push CI" to "in-process during mkdocs build."
+2. Remove `.github/workflows/generate-circuits.yml`. The `--check`
+   gate becomes redundant because every site build re-renders.
+3. Drop the bot-commit half of the workflow flow. Site builds do
+   not write back to the source tree.
+
+The `find_blocks` / `compute_hash` / `format_embed` helpers in
+[`src/circuitsmith/markdown.py`](../../../../src/circuitsmith/markdown.py)
+are the shared surface — both paths consume the same scanner.
+
 ## License
 
 [MIT](../LICENSE).

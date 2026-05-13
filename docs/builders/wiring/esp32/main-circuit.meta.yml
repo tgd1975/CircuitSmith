@@ -1,7 +1,7 @@
 schema: circuit-meta/v1
 sources:
-  circuit: data/esp32.circuit.yml
-  layout:  docs/builders/wiring/esp32/main-circuit.layout.yml
+  circuit: /home/tobias/Dokumente/Projekte/CircuitSmith/data/esp32.circuit.yml
+  layout:  /home/tobias/Dokumente/Projekte/CircuitSmith/docs/builders/wiring/esp32/main-circuit.layout.yml
 layout:
   state: complete
   placed: 17
@@ -19,3 +19,4 @@ provenance:
   ai_invoked: false
   iterations: 0
   escalations: []
+  fingerprint: 942455d898a8eb26

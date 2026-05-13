@@ -1,0 +1,62 @@
+name: Generate circuit embeds
+
+# Re-renders Markdown ```circuit blocks under docs/ to their SVG embeds.
+# Two modes:
+#   - On push to a topic branch: rewrite blocks and commit the result back.
+#   - On PR / push to main: --check only; the job fails if any block is
+#     stale or unrendered, leaving the fix to the author.
+#
+# Retires when IDEA-022 (MkDocs site) lands and the rewrite moves into a
+# pymdownx.superfences formatter that runs at site-build time.
+
+on:
+  push:
+    branches-ignore: [main]
+    paths:
+      - 'docs/**/*.md'
+      - 'src/circuitsmith/**'
+      - '.github/workflows/generate-circuits.yml'
+  pull_request:
+    paths:
+      - 'docs/**/*.md'
+      - 'src/circuitsmith/**'
+      - '.github/workflows/generate-circuits.yml'
+
+jobs:
+  rewrite:
+    name: Rewrite circuit blocks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # We need to push back on topic branches; default checkout uses
+          # the GITHUB_TOKEN which can write to the same repo.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Rewrite (push, non-main)
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        run: python -m circuitsmith.markdown docs
+
+      - name: Commit any rewrites
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name 'circuitsmith-bot'
+            git config user.email 'circuitsmith-bot@users.noreply.github.com'
+            git add -A docs/
+            CS_COMMIT_BYPASS='generate-circuits workflow' git commit -m 'chore(docs): regenerate circuit embeds'
+            git push
+          fi
+
+      - name: Check-only (PR)
+        if: github.event_name == 'pull_request'
+        run: python -m circuitsmith.markdown --check docs

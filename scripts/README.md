@@ -16,6 +16,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | [`install_git_hooks.sh`](install_git_hooks.sh) | Install repo-side git hooks into .git/hooks/. | `./install_git_hooks.sh` |
 | [`portability_lint.py`](portability_lint.py) | Portability lint for ``src/circuitsmith/``. | `python3 portability_lint.py` |
 | [`pre-commit`](pre-commit) | Pre-commit hook for CircuitSmith. | `python3 pre-commit` |
+| [`regenerate_circuit_artefacts.py`](regenerate_circuit_artefacts.py) | Regenerate circuit artefacts for the pre-commit hook (TASK-038). | `python3 regenerate_circuit_artefacts.py` |
 | [`release_burnup.py`](release_burnup.py) | Generate the burn-up section for OVERVIEW.md. | `python3 release_burnup.py` |
 | [`release_snapshot.py`](release_snapshot.py) | Snapshot OVERVIEW / EPICS / KANBAN into `archive/<version>/` on release. | `python3 release_snapshot.py` |
 | [`security_review_changes.py`](security_review_changes.py) | Security review for incoming changes (pull / merge / rebase). | `python3 security_review_changes.py` |
@@ -86,6 +87,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 **Purpose**: Pre-commit hook for CircuitSmith.
 
 **Usage**: `python3 pre-commit`
+
+### regenerate_circuit_artefacts.py
+
+**Purpose**: Regenerate circuit artefacts for the pre-commit hook (TASK-038).
+
+**Usage**: `python3 regenerate_circuit_artefacts.py`
 
 ### release_burnup.py
 

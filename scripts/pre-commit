@@ -178,6 +178,29 @@ if [ -n "$STAGED_CIRCUIT_YML" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# Circuit-artefact regeneration (TASK-038). Fires when a `.circuit.yml` or
+# component profile is staged. Re-runs the full renderer pipeline for
+# every affected target and `git add`s the updated SVG, layout, meta,
+# erc-report, BOM, and netlist so they ride along with the commit. The
+# script short-circuits via a fingerprint stored under `provenance:` in
+# `main-circuit.meta.yml` — unchanged inputs skip the render entirely,
+# which keeps the hook well under 5 s on the shipped circuits.
+#
+# Bypass: CS_COMMIT_BYPASS="<reason>" (handled at the top of this hook).
+# ---------------------------------------------------------------------------
+STAGED_RENDER_INPUTS=$(git diff --cached --name-only --diff-filter=ACM | \
+    grep -E '^(data/.*\.circuit\.yml|src/circuitsmith/components/.*\.py)$' \
+    || true)
+if [ -n "$STAGED_RENDER_INPUTS" ]; then
+    echo -e "${YELLOW}Regenerating circuit artefacts...${NC}"
+    if ! "$CS_PYTHON" "${REPO_ROOT}/scripts/regenerate_circuit_artefacts.py"; then
+        echo -e "${RED}Circuit-artefact regeneration failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}Circuit artefacts up to date.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
 # ERC report staleness + ERROR-level gate (TASK-029). Mirrors the CI step
 # in .github/workflows/ci.yml. Fires when any of the relevant inputs are
 # staged: package code, the shipped circuit YAMLs, or the committed
