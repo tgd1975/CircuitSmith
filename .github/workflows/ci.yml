@@ -48,6 +48,15 @@ jobs:
       - name: Pytest
         run: pytest
 
+      - name: .circuit.yml schema validation (TASK-052)
+        # Re-validates every committed .circuit.yml in data/ and
+        # tests/fixtures/ against circuit.schema.json. Catches the case
+        # where the local pre-commit hook was bypassed with --no-verify
+        # or run on a machine where hooks are not installed.
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_circuit_schema.py --all
+
       - name: ERC report staleness + ERROR-level gate
         # Re-renders each shipped target's ERC report and diffs against the
         # committed copy; also fails on any ERROR-level ERC finding.

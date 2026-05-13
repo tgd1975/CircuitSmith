@@ -200,6 +200,141 @@ def removed_lines(diff: str) -> list[str]:
     return out
 
 
+# ── Personal-data leak detection (TASK-074) ──────────────────────────────
+#
+# Patterns live OUTSIDE the repo (in `scripts/git-hooks/personal_data_patterns.yml`,
+# which is `.gitignore`d) — committing the literal patterns would defeat the
+# protection, since the whole point is to catch them landing in the diff.
+# A `.example` template ships in the repo so the file shape is documented.
+
+PERSONAL_DATA_PATTERNS_PATH = REPO_ROOT / "scripts" / "git-hooks" / "personal_data_patterns.yml"
+
+# Text-bearing file extensions in scope for personal-data scanning.
+# Independent of INTERESTING_SUFFIXES (which targets code-injection vectors)
+# because the threat models differ: a Markdown file or a YAML doc can leak
+# a contact detail just as easily as a Python source file.
+PERSONAL_DATA_SUFFIXES = {
+    ".md", ".markdown",
+    ".txt", ".rst",
+    ".toml", ".yml", ".yaml",
+    ".json",
+    ".py", ".sh", ".bash", ".zsh",
+    ".cfg", ".ini",
+}
+
+
+def _load_personal_data_patterns() -> dict | None:
+    """Return parsed patterns from the local (gitignored) config, or None.
+
+    Returns None when the file doesn't exist — the hook silently skips
+    the personal-data check rather than failing. This is the "no
+    patterns configured locally" path; contributors who don't carry
+    PII patterns don't need to maintain a placeholder file.
+
+    The check is deliberately lenient on missing config because the
+    threat model is *protect the maintainer from accidentally committing
+    their own contact details*. Other contributors don't need to opt in.
+    """
+    if not PERSONAL_DATA_PATTERNS_PATH.exists():
+        return None
+    try:
+        from ruamel.yaml import YAML
+        yaml = YAML(typ="safe")
+        with open(PERSONAL_DATA_PATTERNS_PATH) as fh:
+            data = yaml.load(fh)
+    except Exception:  # noqa: BLE001 — broad on purpose; never block the hook
+        return None
+    if not isinstance(data, dict):
+        return None
+    return data
+
+
+def _personal_data_in_scope(path: str) -> bool:
+    """True iff `path` is a text-bearing file we scan for PII leaks."""
+    return Path(path).suffix.lower() in PERSONAL_DATA_SUFFIXES
+
+
+def _is_allowlisted(
+    line: str,
+    file_path: str,
+    rule: str,
+    allowlist: list[dict],
+) -> bool:
+    """Return True if (line, file, rule) is exempted by the allowlist.
+
+    Match is by substring on `line` and exact `file` path. The optional
+    `rule` field on an allowlist entry scopes the exemption to one
+    pattern — omitting it exempts the line for any matched pattern.
+    """
+    for entry in allowlist or []:
+        if entry.get("file") != file_path:
+            continue
+        sub = entry.get("contains") or ""
+        if sub and sub not in line:
+            continue
+        entry_rule = entry.get("rule")
+        if entry_rule and entry_rule != rule:
+            continue
+        return True
+    return False
+
+
+def scan_personal_data(path: str, diff: str, config: dict) -> list[Finding]:
+    """Match every pattern against added lines in `diff`.
+
+    Emits one Finding per (pattern, line) hit, capped at one per rule
+    per file (mirrors `scan_added_lines` to keep noise down on a
+    multi-line leak — the operator just needs to know the rule fired).
+    """
+    findings: list[Finding] = []
+    if not _personal_data_in_scope(path):
+        return findings
+    patterns = config.get("patterns") or []
+    allowlist = config.get("allowlist") or []
+    adds = added_lines(diff)
+    if not adds:
+        return findings
+    for pat in patterns:
+        rule = pat.get("rule") or "personal-data"
+        regex = pat.get("regex")
+        if not regex:
+            continue
+        sev = (pat.get("severity") or "HIGH").upper()
+        if sev not in BLOCKING:
+            sev = "HIGH"
+        desc = pat.get("description") or "personal data leak"
+        try:
+            rx = re.compile(regex)
+        except re.error:
+            # A malformed pattern is a config bug, not a hook bug — surface
+            # it but don't crash the review.
+            findings.append(
+                Finding(
+                    severity="LOW",
+                    file=str(PERSONAL_DATA_PATTERNS_PATH.relative_to(REPO_ROOT)),
+                    rule="personal-data-config",
+                    detail=f"invalid regex for rule {rule!r}: {regex!r}",
+                )
+            )
+            continue
+        for line in adds:
+            if not rx.search(line):
+                continue
+            if _is_allowlisted(line, path, rule, allowlist):
+                continue
+            findings.append(
+                Finding(
+                    severity=sev,
+                    file=path,
+                    rule=f"personal-data:{rule}",
+                    detail=desc,
+                    snippet=line.strip()[:200],
+                )
+            )
+            break  # one finding per rule per file
+    return findings
+
+
 SHELL_PATTERNS: list[tuple[str, str, str]] = [
     # (severity, rule, regex)
     ("CRITICAL", "pipe-to-shell", r"(curl|wget|fetch)\b[^\n]*\|\s*(sh|bash|zsh|python|python3|node|perl|ruby)\b"),
@@ -533,13 +668,40 @@ def main() -> int:
     # otherwise "interesting" by suffix (mostly redundant but cheap).
     referenced = scripts_referenced_by_allowlist()
 
+    # Personal-data scan (TASK-074) — runs on a broader file set than the
+    # code-injection scanners above (any text-bearing file). Loaded once
+    # here so the per-file loop reuses the parsed config.
+    personal_data_config = _load_personal_data_patterns()
+
     report = Report(old_ref=args.old_ref, new_ref=args.new_ref, label=args.label)
 
+    # Personal-data scan covers every text-bearing file in the diff,
+    # not just the "interesting" code/config subset. Done before the
+    # early-return on no-interesting-files so a markdown-only diff
+    # that leaks an email still trips the hook.
+    if personal_data_config:
+        for status, path in files:
+            if status == "D":
+                continue
+            if not _personal_data_in_scope(path):
+                continue
+            d = diff_for(args.old_ref, args.new_ref, path)
+            report.findings.extend(scan_personal_data(path, d, personal_data_config))
+
     if not interesting:
-        report.claude_skipped_reason = "no script/settings/skill files in diff"
+        if not report.findings:
+            report.claude_skipped_reason = "no script/settings/skill files in diff"
+            write_report(report)
+            print_summary(report, blocked=False)
+            return 0
+        # Personal-data findings on a non-code diff still need to surface
+        # (and block on HIGH/CRITICAL). Skip the semantic Claude pass —
+        # there's no script/settings context for it to review.
+        report.claude_skipped_reason = "no script/settings/skill files in diff (personal-data scan ran)"
         write_report(report)
-        print_summary(report, blocked=False)
-        return 0
+        blocked = report.is_blocking() and not args.non_blocking
+        print_summary(report, blocked=blocked)
+        return 1 if blocked else 0
 
     full_diff_parts: list[str] = []
     for status, path in interesting:

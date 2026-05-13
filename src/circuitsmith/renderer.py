@@ -485,7 +485,12 @@ def _dispatch_ai_placer(
     whether to merge the proposals or abort.
     """
     if ai_client is None:
-        from circuitsmith.layout.ai_placer import AnthropicClient
+        # Re-exported through `circuitsmith.layout` so the renderer's
+        # source-level imports stay above the `ai_placer` submodule
+        # boundary — see TASK-050 / EPIC-008. The lazy import is still
+        # required because instantiating `AnthropicClient` pulls in
+        # the `anthropic` SDK, which ADR-0002 keeps off the CI path.
+        from circuitsmith.layout import AnthropicClient
         ai_client = AnthropicClient()
 
     ambiguity_queue = [

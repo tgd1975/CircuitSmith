@@ -11,6 +11,7 @@
       "Bash(.venv/bin/pytest:*)",
       "Bash(.venv/bin/ruff:*)",
 
+      "Bash(python scripts/check_circuit_schema.py:*)",
       "Bash(python scripts/check_erc_reports.py:*)",
       "Bash(python scripts/check_exporters.py:*)",
       "Bash(python scripts/check_phase2b_trigger.py:*)",
@@ -20,6 +21,7 @@
       "Bash(python scripts/release_snapshot.py:*)",
       "Bash(python scripts/security_review_changes.py:*)",
       "Bash(python scripts/update_idea_overview.py:*)",
+      "Bash(python scripts/update_netgraph_golden.py:*)",
       "Bash(python scripts/update_task_overview.py:*)",
       "Bash(python scripts/update_scripts_readme.py:*)",
 

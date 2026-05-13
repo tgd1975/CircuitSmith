@@ -1,0 +1,43 @@
+# Personal-data patterns for the security-review hook (TASK-074).
+#
+# Copy this file to `personal_data_patterns.yml` (in the same directory)
+# and fill in your real patterns. The real file is `.gitignore`d — the
+# whole point of the hook is to detect leaks of these exact strings, so
+# committing them would defeat the protection.
+#
+# Format:
+#
+#   patterns:
+#     - rule: <short-slug>             # used in finding output
+#       regex: <Python re pattern>     # matched against added-line text
+#       severity: HIGH | CRITICAL      # both block the hook
+#       description: <one line>        # included in finding detail
+#
+#   allowlist:
+#     - file: <path relative to repo root>
+#       contains: <substring>          # exact substring on the offending line
+#       rule: <rule-slug>              # the pattern this exempts (optional)
+#
+# Scope: the scanner only inspects text-bearing files
+# (.md, .toml, .yml, .json, .py, .sh and a few siblings). Binaries
+# are skipped by file-extension allowlist, not by content sniff.
+
+patterns:
+  - rule: maintainer-email
+    regex: "(?i)\\bfirst\\.last\\.NN@example\\.com\\b"
+    severity: HIGH
+    description: literal maintainer email address
+
+  - rule: phone-e164
+    # E.164: + followed by 8-15 digits. Real-world phone numbers also
+    # appear in local formats; add explicit local patterns here as needed.
+    regex: "\\+[1-9][0-9]{7,14}\\b"
+    severity: HIGH
+    description: E.164-formatted phone number
+
+allowlist:
+  # Example: the CHANGELOG quotes a removed-leak commit message. The
+  # substring must match the offending line exactly.
+  # - file: CHANGELOG.md
+  #   contains: "scrub maintainer email from"
+  #   rule: maintainer-email

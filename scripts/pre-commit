@@ -152,18 +152,38 @@ if [ -n "$STAGED_PY" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# Python interpreter selection. Prefer the project's venv when present —
+# the circuitsmith package and its YAML loader live there, not on the
+# system python. Several gates below share this interpreter; defined once
+# up here so the .circuit.yml schema gate (immediately below) can use it.
+# ---------------------------------------------------------------------------
+CS_PYTHON="${REPO_ROOT}/.venv/bin/python"
+if [ ! -x "$CS_PYTHON" ]; then
+    CS_PYTHON="python3"
+fi
+
+# ---------------------------------------------------------------------------
+# .circuit.yml schema validation (TASK-052). Fires when any *.circuit.yml is
+# staged. Catches malformed circuit YAML before the renderer is invoked.
+# Mirrors the CI step in .github/workflows/ci.yml.
+# ---------------------------------------------------------------------------
+STAGED_CIRCUIT_YML=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.circuit\.yml$' || true)
+if [ -n "$STAGED_CIRCUIT_YML" ]; then
+    echo -e "${YELLOW}Validating .circuit.yml against schema...${NC}"
+    if ! "$CS_PYTHON" "${REPO_ROOT}/scripts/check_circuit_schema.py"; then
+        echo -e "${RED}.circuit.yml schema validation failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}.circuit.yml schema OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
 # ERC report staleness + ERROR-level gate (TASK-029). Mirrors the CI step
 # in .github/workflows/ci.yml. Fires when any of the relevant inputs are
 # staged: package code, the shipped circuit YAMLs, or the committed
 # reports themselves. The check is a no-op on commits that only touch
 # unrelated files.
 # ---------------------------------------------------------------------------
-# Prefer the project's venv interpreter when present — the circuitsmith
-# package and its YAML loader live there, not on the system python.
-CS_PYTHON="${REPO_ROOT}/.venv/bin/python"
-if [ ! -x "$CS_PYTHON" ]; then
-    CS_PYTHON="python3"
-fi
 
 STAGED_ERC_INPUTS=$(git diff --cached --name-only --diff-filter=ACM | \
     grep -E '^(src/circuitsmith/(erc_engine|erc_report|netgraph|renderer)\.py|src/circuitsmith/components/.*\.py|src/circuitsmith/knowledge/rules\.json|data/.*\.circuit\.yml|docs/builders/wiring/.*/erc-report\.md)$' \

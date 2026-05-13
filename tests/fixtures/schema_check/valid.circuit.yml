@@ -1,0 +1,13 @@
+meta:
+  title: Minimal valid circuit fixture for TASK-052
+  target: esp32
+
+components:
+  U1: { type: mcu/esp32, label: U1 }
+  R1: { type: passives/resistor, value: 220 }
+
+connections:
+  - net: GND
+    pins:
+      - U1.GNDL
+      - U1.GNDR

@@ -43,6 +43,13 @@ Thumbs.db
 # Housekeep single-instance lock
 .housekeep.lock
 
+# Personal-data patterns used by the security-review hook (TASK-074).
+# The real patterns are personal-data themselves (your literal email
+# address) — they would defeat their own purpose if committed. The
+# .example file documents the format; the local file is loaded at hook
+# runtime if present.
+scripts/git-hooks/personal_data_patterns.yml
+
 # Secrets (never commit)
 .env
 .env.local

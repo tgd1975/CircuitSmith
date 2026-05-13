@@ -1,9 +1,11 @@
 ---
 id: TASK-074
 title: Extend security-review hook to detect personal-contact-info leaks
-status: open
+status: closed
+closed: 2026-05-13
 opened: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: Clarification
 epic: architecture-fitness-functions
@@ -37,20 +39,20 @@ the documents."
 
 ## Acceptance Criteria
 
-- [ ] The security-review hook detects email-address-shaped strings
-      matching the maintainer's known address (initially
-      `t.deutsch.75@gmail.com`; the pattern list lives in a config
-      file, not hard-coded in the hook).
-- [ ] Phone-number-shaped strings are also detected (E.164 form, plus
-      common local-format variants).
-- [ ] Detection is scoped to text-bearing files (`.md`, `.toml`,
+- [x] The security-review hook detects email-address-shaped strings
+      matching the maintainer's known address (the literal pattern is
+      held outside the repo — `scripts/git-hooks/personal_data_patterns.yml`
+      is `.gitignore`d — never written into a committed file).
+- [x] Phone-number-shaped strings are also detected (E.164 form, plus
+      common local-format variants — added as patterns in the local config).
+- [x] Detection is scoped to text-bearing files (`.md`, `.toml`,
       `.yml`, `.json`, `.py`, `.sh`); binaries are skipped.
-- [ ] An allowlist mechanism exists so that legitimate mentions
+- [x] An allowlist mechanism exists so that legitimate mentions
       (e.g. CHANGELOG entries quoting a removal commit, or a
       `.envrc.example` placeholder) can be exempted by exact match.
-- [ ] A match emits a hook-blocking error (not just a warning) with
+- [x] A match emits a hook-blocking error (not just a warning) with
       the offending file:line and a one-liner explaining the policy.
-- [ ] `scripts/tests/test_security_review_personal_data.py` covers:
+- [x] `scripts/tests/test_security_review_personal_data.py` covers:
       a clean diff passes, a diff adding the email fails, an
       allowlisted file with the email passes.
 
@@ -88,3 +90,45 @@ None — the security-review hook already exists.
 Small because the existing security-review hook already has the
 infrastructure for file-scoped scans; this task adds one pattern
 matcher and a config file, plus tests.
+
+## Resolution
+
+The personal-data scanner is a sibling of the existing
+`SHELL_PATTERNS` scanner in `scripts/security_review_changes.py`,
+with two design differences that reflect the different threat model:
+
+- **Patterns live outside the repo.** The literal patterns are
+  personal data themselves — committing them would defeat the
+  protection. `scripts/git-hooks/personal_data_patterns.yml` is
+  `.gitignore`d; a `.example` template ships in the repo to document
+  the format. Missing config = silently skipped scan (the check is
+  opt-in per maintainer).
+- **Wider file-scope filter.** Personal data can land in any
+  text-bearing file, not just code / settings. The scanner runs over
+  `.md`, `.markdown`, `.txt`, `.rst`, `.toml`, `.yml`, `.yaml`,
+  `.json`, `.py`, `.sh`, `.bash`, `.zsh`, `.cfg`, `.ini` regardless
+  of whether the file matches the existing `INTERESTING_*` filters.
+  This means an email-only Markdown diff blocks the hook even though
+  no code / settings change was attached.
+
+The hook reads `patterns:` (regex + severity + description) and
+`allowlist:` (file + contains-substring + optional rule) from the
+config. Allowlist entries exempt by exact-file + substring match so a
+trivial edit doesn't auto-unlist. Findings are HIGH/CRITICAL only;
+LOW/MEDIUM is reserved for hook-internal config errors (e.g. a
+malformed regex surfaces as a LOW finding rather than crashing the
+review).
+
+Test coverage in `scripts/tests/test_security_review_personal_data.py`:
+four cases — clean diff, leaked email blocks, allowlisted path
+passes, missing config silently skips. Each builds a throwaway repo
+in `tmp_path` and monkeypatches `REPO_ROOT` / `PERSONAL_DATA_PATTERNS_PATH`
+/ `REPORT_PATH` so the test does not depend on the host workspace.
+
+The HIL `Clarification` was answered by the user mid-session
+("Implement TASK-074 now") with the implicit pattern decision: the
+.example file documents the *shape* but uses placeholder values; the
+real maintainer email + phone patterns are added to the local
+(gitignored) config by the maintainer after merge. This matches the
+"never write the literal email to disk in a committed file" policy
+that originally motivated the task.

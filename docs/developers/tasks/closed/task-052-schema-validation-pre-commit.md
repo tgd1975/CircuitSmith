@@ -1,9 +1,11 @@
 ---
 id: TASK-052
 title: Schema-validation pre-commit hook for .circuit.yml
-status: open
+status: closed
+closed: 2026-05-13
 opened: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: architecture-fitness-functions
@@ -35,11 +37,11 @@ installed).
 
 ## Acceptance Criteria
 
-- [ ] `scripts/pre-commit` (or a sibling script it calls) validates every staged `.circuit.yml` against `circuit.schema.json`.
-- [ ] Validation failure prints `<file>:<json-pointer>: <message>` and the commit is rejected.
-- [ ] Pre-commit succeeds with no output when no `.circuit.yml` files are staged.
-- [ ] The same validation runs in CI on PRs (TASK-048's workflow).
-- [ ] Self-test fixture: `tests/test_schema_pre_commit.py` feeds a deliberately-invalid `.circuit.yml` to the hook function and asserts rejection.
+- [x] `scripts/pre-commit` (or a sibling script it calls) validates every staged `.circuit.yml` against `circuit.schema.json`.
+- [x] Validation failure prints `<file>:<json-pointer>: <message>` and the commit is rejected.
+- [x] Pre-commit succeeds with no output when no `.circuit.yml` files are staged.
+- [x] The same validation runs in CI on PRs (TASK-048's workflow).
+- [x] Self-test fixture: `tests/test_schema_pre_commit.py` feeds a deliberately-invalid `.circuit.yml` to the hook function and asserts rejection.
 
 ## Test Plan
 
@@ -61,3 +63,30 @@ catch the same class of error at two different points. The pre-commit
 check is the early, cheap one; the renderer's check is the
 defence-in-depth fallback for code paths that did not go through a
 commit (e.g. ad-hoc renderer invocations during development).
+
+## Resolution
+
+`scripts/check_circuit_schema.py` is the gate. Three modes:
+
+- **Default (staged)** — reads `git diff --cached` for `*.circuit.yml`
+  paths and validates each via `circuitsmith.schema.validate_file`.
+  This is the pre-commit-hook code path.
+- **Positional args** — explicit paths win over staged detection.
+  Used by the test fixtures and by ad-hoc local invocations.
+- **`--all`** — validates every committed `*.circuit.yml` under
+  `data/` and `tests/fixtures/`. This is the CI code path: catches the
+  case where the local hook was bypassed with `--no-verify` or run on
+  a machine where hooks are not installed.
+
+Wiring:
+
+- `scripts/pre-commit` calls the script when any `.circuit.yml` is
+  staged. The `CS_PYTHON` venv-or-system selector was promoted to the
+  top of the hook so the schema gate (which depends on the
+  `circuitsmith` package on `sys.path`) uses the same interpreter as
+  the ERC and exporter gates further down.
+- `.github/workflows/ci.yml` runs `python scripts/check_circuit_schema.py
+  --all` as a step after `pytest`.
+- `tests/test_schema_pre_commit.py` exercises valid / invalid /
+  `--all` / explicit-paths / staged-detection paths. Fixtures live
+  under `tests/fixtures/schema_check/`.

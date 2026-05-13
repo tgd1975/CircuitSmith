@@ -76,35 +76,35 @@ prerequisites: [TASK-NNN, TASK-NNN]   # omit entirely if none
 
 ## Description
 
-<expanded description with context and purpose>.
+<!-- Expanded description with context and purpose. -->
 
 ## Acceptance Criteria
 
-- [ ] <specific criterion 1>
-- [ ] <specific criterion 2>
-- [ ] <specific criterion 3>
+- [ ] _specific criterion 1_
+- [ ] _specific criterion 2_
+- [ ] _specific criterion 3_
 
 ## Test Plan
 
-<See rules below — fill in the appropriate section(s)>
+<!-- See rules below — fill in the appropriate section(s). -->
 
 ## Prerequisites
 
-<!-- Omit this section entirely if the frontmatter prerequisites field is absent -->
+<!-- Omit this section entirely if the frontmatter prerequisites field is absent. -->
 
-- **TASK-NNN** — <one line: what this task delivers that the current task needs>
-- **TASK-NNN** — <one line: what this task delivers that the current task needs>
+- **TASK-NNN** — _one line: what this task delivers that the current task needs_
+- **TASK-NNN** — _one line: what this task delivers that the current task needs_
 
 ## Sizing rationale
 
 <!-- Include this section ONLY when effort is L or XL AND the user kept the
      task whole (or skipped the split nudge per step 4). Omit otherwise. -->
 
-<one line explaining why this task is intentionally sized L/XL and not split>
+<!-- One line explaining why this task is intentionally sized L/XL and not split. -->
 
 ## Notes
 
-<dependencies, risks, considerations, and other context>
+<!-- Dependencies, risks, considerations, and other context. -->
 ```
 
    Set `opened` to today's date in `YYYY-MM-DD` format.

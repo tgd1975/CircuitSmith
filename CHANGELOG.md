@@ -132,9 +132,53 @@ first tag is cut; until then the `[Unreleased]` section is the only entry.
   `knowledge/rules.json`, `layout_engine/kernel.py`) land alongside
   the modules they bind, not upfront.
 
-EPIC-008 is partially closed: the four unblocked tasks above are done;
-TASK-050 / TASK-052 / TASK-053 remain open until their respective
-feature-epic deliverables land.
+- TASK-050 closed: boundary-import contract test
+  (`tests/test_module_boundaries.py`) AST-walks `bom_exporter`,
+  `netlist_exporter`, and `renderer` to assert the three decoupling
+  edges named in the IDEA-001 dossier. Self-test fixture
+  (`tests/fixtures/bad_boundary/`) confirms the checker trips on a
+  deliberate violation. Adopting the test surfaced one real drift:
+  `renderer._dispatch_ai_placer` reached directly into
+  `circuitsmith.layout.ai_placer`; fix re-routes the lazy import
+  through the `circuitsmith.layout` package re-export, preserving the
+  ADR-0002 ai-deps-off-CI lazy-load property.
+- TASK-052 closed: `.circuit.yml` schema gate.
+  `scripts/check_circuit_schema.py` validates staged (or `--all`)
+  circuits against `circuit.schema.json`. Wired into
+  `scripts/pre-commit` (fires on staged `*.circuit.yml`) and
+  `.github/workflows/ci.yml` (validates the committed corpus under
+  `data/`). Five tests in `tests/test_schema_pre_commit.py` exercise
+  valid / invalid / staged / `--all` / explicit-path paths; fixtures
+  live under `tests/fixtures/schema_check/`.
+- TASK-053 closed: NetGraph golden-hash CI contract.
+  `tests/fixtures/golden_hashes.json` freezes the canonical_hash of
+  each shipped circuit (esp32, nrf52840) plus a `schema_version` proxy
+  (SHA-256 of `circuit.schema.json`). `tests/test_netgraph_golden.py`
+  emits distinct diagnostics for serialiser drift versus stale-golden.
+  `scripts/update_netgraph_golden.py --bump-schema-version` is the
+  regen CLI; it refuses to regenerate when the schema hash is
+  unchanged (silent-drift guard).
+- TASK-074 closed: personal-data leak detection in the security-review
+  hook. `scripts/security_review_changes.py` gained a `scan_personal_data`
+  pass driven by `scripts/git-hooks/personal_data_patterns.yml` — a
+  `.gitignore`d local config (the literal patterns are personal data;
+  committing them would defeat the protection). A `.example` template
+  documents the format. Scans text-bearing files (`.md`, `.toml`,
+  `.yml`, `.py`, `.sh`, …); supports an exact-file + substring
+  allowlist. Four tests in
+  `scripts/tests/test_security_review_personal_data.py` cover clean
+  pass, leaked block, allowlisted pass, missing-config silent skip.
+- TASK-075 closed: scaffolded files from `/ts-idea-new` and
+  `/ts-task-new` now lint clean against `.markdownlint.json` on first
+  run. Two rules were firing: MD025 (the idea template added a body
+  `# <title>` H1 after the frontmatter `title:`) and MD033 (the task
+  template's `<expanded description …>` placeholders were parsed as
+  inline HTML tags). Both templates updated; `/ts-epic-new` was
+  already clean.
+
+**EPIC-008 is now fully closed** — all seven attributed tasks
+(TASK-050/051/052/053/054/055/056) plus the TASK-074 / TASK-075
+ride-alongs are done.
 
 ### Autonomy
 

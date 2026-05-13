@@ -6,6 +6,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
+| [`check_circuit_schema.py`](check_circuit_schema.py) | Schema-validation gate for ``.circuit.yml`` files (TASK-052 / EPIC-008). | `python3 check_circuit_schema.py` |
 | [`check_erc_reports.py`](check_erc_reports.py) | ERC-report staleness + error-gate for CI (TASK-029). | `python3 check_erc_reports.py` |
 | [`check_exporters.py`](check_exporters.py) | Exporter staleness guard for CI (TASK-035). | `python3 check_exporters.py` |
 | [`check_phase2b_trigger.py`](check_phase2b_trigger.py) | Phase 2b trigger observer (TASK-058). | `python3 check_phase2b_trigger.py` |
@@ -20,10 +21,17 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | [`security_review_changes.py`](security_review_changes.py) | Security review for incoming changes (pull / merge / rebase). | `python3 security_review_changes.py` |
 | [`task_system_config.py`](task_system_config.py) | Shared config loader for the task system. | `python3 task_system_config.py` |
 | [`update_idea_overview.py`](update_idea_overview.py) | Regenerate docs/developers/ideas/OVERVIEW.md from idea files in | `python3 update_idea_overview.py` |
+| [`update_netgraph_golden.py`](update_netgraph_golden.py) | Regenerate ``tests/fixtures/golden_hashes.json`` for TASK-053. | `python3 update_netgraph_golden.py` |
 | [`update_scripts_readme.py`](update_scripts_readme.py) | Automatically update scripts/README.md based on current scripts in the folder. | `python3 update_scripts_readme.py` |
 | [`update_task_overview.py`](update_task_overview.py) | DEPRECATED — prefer `scripts/housekeep.py` for the full flow (file | `python3 update_task_overview.py` |
 
 ## Script Details
+
+### check_circuit_schema.py
+
+**Purpose**: Schema-validation gate for ``.circuit.yml`` files (TASK-052 / EPIC-008).
+
+**Usage**: `python3 check_circuit_schema.py`
 
 ### check_erc_reports.py
 
@@ -108,6 +116,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 **Purpose**: Regenerate docs/developers/ideas/OVERVIEW.md from idea files in
 
 **Usage**: `python3 update_idea_overview.py`
+
+### update_netgraph_golden.py
+
+**Purpose**: Regenerate ``tests/fixtures/golden_hashes.json`` for TASK-053.
+
+**Usage**: `python3 update_netgraph_golden.py`
 
 ### update_scripts_readme.py
 

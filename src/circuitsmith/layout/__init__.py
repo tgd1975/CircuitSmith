@@ -38,6 +38,7 @@ from .rubric import (
 from .ai_placer import (
     AIPlacement,
     AmbiguityEntry,
+    AnthropicClient,
     ConvergenceResult,
     LLMClient,
     converge,
@@ -46,6 +47,7 @@ from .ai_placer import (
 __all__ = [
     "AIPlacement",
     "AmbiguityEntry",
+    "AnthropicClient",
     "ConvergenceResult",
     "EscalationError",
     "Finding",

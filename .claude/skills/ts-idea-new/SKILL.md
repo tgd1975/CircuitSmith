@@ -29,7 +29,11 @@ Steps:
     and ad-hoc additions break the grouping. If the user genuinely
     can't place the idea, omit the field; the OVERVIEW renders missing
     categories as an em dash.
-4. Write the file to `docs/developers/ideas/open/` with this template:
+4. Write the file to `docs/developers/ideas/open/` with this template.
+   Do **not** add a body `# <title>` heading: the frontmatter `title:`
+   is already an H1 (per markdownlint MD025), so a body H1 would be a
+   duplicate top-level heading. Body content starts directly with the
+   motivation paragraph.
 
 ```markdown
 ---
@@ -39,10 +43,8 @@ description: <one-line description — optional>
 category: <one of the existing categories — optional>
 ---
 
-# <title>
-
-<body — free-form markdown. Describe the idea, motivation, rough
-approach, open questions. No prescribed structure.>
+<!-- Body — free-form markdown. Describe the idea, motivation, rough
+     approach, open questions. No prescribed structure. -->
 ```
 
 <!-- markdownlint-disable MD029 -->

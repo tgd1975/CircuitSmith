@@ -1,9 +1,11 @@
 ---
 id: TASK-075
 title: Fix /ts-idea-new template so generated files pass markdownlint on first run
-status: open
+status: closed
+closed: 2026-05-13
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 ---
@@ -27,13 +29,13 @@ entirely in favour of an empty section the user fills in).
 
 ## Acceptance Criteria
 
-- [ ] After running `/ts-idea-new "Some title"`, running `markdownlint-cli2`
+- [x] After running `/ts-idea-new "Some title"`, running `markdownlint-cli2`
       against the generated file reports zero errors with the project's
       `.markdownlint.json` config.
-- [ ] The `/ts-idea-new` SKILL.md template is updated in place; the workflow
+- [x] The `/ts-idea-new` SKILL.md template is updated in place; the workflow
       steps still produce a frontmatter + body file under
       `docs/developers/ideas/open/`.
-- [ ] The same scan is applied to `/ts-task-new` and `/ts-epic-new`; if
+- [x] The same scan is applied to `/ts-task-new` and `/ts-epic-new`; if
       either exhibits the same first-run failure, fix it under this task
       too. Note in the task body which siblings were also touched.
 
@@ -58,3 +60,25 @@ the new file, confirm zero errors, then delete the throwaway before committing.
 - Sibling skills `/ts-task-new` and `/ts-epic-new` use a similar
   template shape — worth checking them in the same pass even if this
   task's title only names `/ts-idea-new`.
+
+## Resolution
+
+Two rules were firing:
+
+- **`/ts-idea-new`** — MD025 (`Multiple top-level headings`). The
+  template emitted a body `# <title>` H1 after the frontmatter
+  `title:`, which is itself rendered as an H1. Fix: drop the body H1
+  and start the body with the placeholder comment, matching the
+  pattern already used by `/ts-epic-new`.
+- **`/ts-task-new`** — MD033 (`Inline HTML`). Angle-bracket
+  placeholders like `<expanded description with context and purpose>`
+  were parsed as HTML tags (`<expanded …>`) and rejected. Fix: convert
+  those placeholders to HTML comments (`<!-- … -->`) or italicised
+  inline text (`_… _`) — both render invisibly to readers but lint
+  clean. Existing user-supplied `# <Heading>` patterns elsewhere are
+  not affected; only the scaffold-time placeholders changed.
+- **`/ts-epic-new`** — already clean; the body never carried an H1
+  and used no `<word…>` placeholders. No changes were made.
+
+Verification: scaffolded fixtures matching each template's literal
+output lint clean against the project `.markdownlint.json`.

@@ -1,9 +1,11 @@
 ---
 id: TASK-050
 title: Boundary-import contract test for circuit-skill modules
-status: open
+status: closed
+closed: 2026-05-13
 opened: 2026-05-12
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: architecture-fitness-functions
@@ -42,12 +44,12 @@ guards therefore shifts with it — the contract itself is unchanged.
 
 ## Acceptance Criteria
 
-- [ ] `tests/test_module_boundaries.py` exists and is picked up by pytest.
-- [ ] Asserts: `bom_exporter` does not import (directly or transitively at the source level) anything named `netgraph`.
-- [ ] Asserts: `netlist_exporter` does not import any module from `src/circuitsmith/components/` (i.e. no `from circuitsmith.components.*` imports).
-- [ ] Asserts: `renderer` does not import `layout_engine.ai_placer`.
-- [ ] Test fails with a structured diagnostic that names the offending file, the forbidden import, and the dossier section that defines the rule.
-- [ ] Self-test: a deliberately-violating fixture module in `tests/fixtures/` confirms the test catches a violation (mutation-test the rule, not just the happy path).
+- [x] `tests/test_module_boundaries.py` exists and is picked up by pytest.
+- [x] Asserts: `bom_exporter` does not import (directly or transitively at the source level) anything named `netgraph`.
+- [x] Asserts: `netlist_exporter` does not import any module from `src/circuitsmith/components/` (i.e. no `from circuitsmith.components.*` imports).
+- [x] Asserts: `renderer` does not import `layout_engine.ai_placer`.
+- [x] Test fails with a structured diagnostic that names the offending file, the forbidden import, and the dossier section that defines the rule.
+- [x] Self-test: a deliberately-violating fixture module in `tests/fixtures/` confirms the test catches a violation (mutation-test the rule, not just the happy path).
 
 ## Test Plan
 
@@ -70,3 +72,22 @@ This is item 1 of the architecture-review recommendations
 Pairs with TASK-055/TASK-056 (code-owner skills): the skill nudges
 *during* the edit; this test fails *after* the edit if the nudge was
 ignored. Two layers of the same enforcement.
+
+## Resolution
+
+`tests/test_module_boundaries.py` AST-walks each named source file and
+parameter-tests the three forbidden edges as a single contract table
+(`RULES`). The self-test fixture at
+`tests/fixtures/bad_boundary/bom_exporter_violator.py` deliberately
+imports `circuitsmith.netgraph` so the checker has a known positive
+case — without it, a no-op checker would silently pass the happy
+paths.
+
+Adopting the test surfaced one real drift: `renderer.py`'s
+`_dispatch_ai_placer` did `from circuitsmith.layout.ai_placer import
+AnthropicClient` (a deliberate lazy import to keep the `anthropic`
+SDK off the CI path per ADR-0002). The fix routes the lazy import
+through the `circuitsmith.layout` package re-export — same lazy-load
+property, but the source-level import stays above the `ai_placer`
+submodule boundary the dossier draws. `AnthropicClient` is now in
+`circuitsmith.layout`'s `__all__` for that purpose.

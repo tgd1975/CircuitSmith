@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 13** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 67** | **Total: 80** | ████████░░ 84%
+⚪ **Open: 8** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 72** | **Total: 80** | █████████░ 90%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -37,11 +37,6 @@ _No paused tasks._
 | [TASK-040](open/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) | Junior | ⚪ open |
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
 | [TASK-042](open/task-042-finalise-skill-docs.md) | Finalise all .claude/skills/circuit/docs/ files | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-052](open/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-053](open/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-074](open/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-075](open/task-075-fix-idea-skill-template-markdownlint.md) | Fix /ts-idea-new template so generated files pass markdownlint on first run | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-080](open/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) | Senior | ⚪ open |
 
 ## Closed Tasks
@@ -90,7 +85,10 @@ _No paused tasks._
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
 | [TASK-049](closed/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) |
+| [TASK-050](closed/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) |
 | [TASK-051](closed/task-051-portability-lint.md) | Portability lint for .claude/skills/circuit/ | Small (&lt;2h) |
+| [TASK-052](closed/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) |
+| [TASK-053](closed/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) |
 | [TASK-054](closed/task-054-seed-adr-folder.md) | Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier | Medium (2-8h) |
 | [TASK-055](closed/task-055-code-owner-skills-hook.md) | Code-owner skills registry and PreToolUse hook | Medium (2-8h) |
 | [TASK-056](closed/task-056-author-initial-code-owner-skills.md) | Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine) | Medium (2-8h) |
@@ -111,6 +109,8 @@ _No paused tasks._
 | [TASK-071](closed/task-071-author-commit-policy-doc.md) | Author docs/developers/COMMIT_POLICY.md (pathspec rationale, race story, bypass policy) | Medium (2-8h) |
 | [TASK-072](closed/task-072-author-branch-protection-doc.md) | Author docs/developers/BRANCH_PROTECTION_CONCEPT.md documenting the protection ruleset | Small (&lt;2h) |
 | [TASK-073](closed/task-073-apply-branch-protection.md) | Apply GitHub branch protection on main per BRANCH_PROTECTION_CONCEPT.md | Small (&lt;2h) |
+| [TASK-074](closed/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) |
+| [TASK-075](closed/task-075-fix-idea-skill-template-markdownlint.md) | Fix /ts-idea-new template so generated files pass markdownlint on first run | Small (&lt;2h) |
 | [TASK-076](closed/task-076-write-adr-0012-supersede-adr-0007.md) | Write ADR-0012 (library as installable package) superseding ADR-0007 | Medium (2-8h) |
 | [TASK-077](closed/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) |
 | [TASK-078](closed/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) |

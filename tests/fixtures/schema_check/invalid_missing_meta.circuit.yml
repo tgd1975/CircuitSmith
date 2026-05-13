@@ -1,0 +1,10 @@
+# Missing the `meta:` section — the schema requires it. Used by
+# tests/test_circuit_schema_gate.py to confirm the validator trips on
+# structural drift.
+components:
+  U1: { type: mcu/esp32, label: U1 }
+
+connections:
+  - net: GND
+    pins:
+      - U1.GND
