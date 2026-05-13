@@ -1,9 +1,11 @@
 ---
 id: TASK-033
 title: Implement netlist_exporter.py — flatten NetGraph to KiCad .net
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: No
 epic: circuit-exporters
@@ -26,10 +28,10 @@ names. The exporter never re-parses YAML or re-walks components —
 
 ## Acceptance Criteria
 
-- [ ] `netlist_exporter.py` produces `main-circuit.net` for both shipped targets.
-- [ ] Named nets (`pins` form, e.g. `VCC`, `GND`, `SCL`, `SDA`) preserve their declared names.
-- [ ] Anonymous nets get synthetic names; numbering is deterministic across two runs.
-- [ ] Output is a valid KiCad `.net` file (parses with `kicad-cli` if available, or via a syntax sanity check).
+- [x] `netlist_exporter.py` produces `main-circuit.net` for both shipped targets.
+- [x] Named nets (`pins` form, e.g. `VCC`, `GND`, `SCL`, `SDA`) preserve their declared names.
+- [x] Anonymous nets get synthetic names; numbering is deterministic across two runs.
+- [x] Output is a valid KiCad `.net` file (parses with `kicad-cli` if available, or via a syntax sanity check).
 
 ## Test Plan
 

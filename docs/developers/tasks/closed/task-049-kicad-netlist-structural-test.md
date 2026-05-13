@@ -1,9 +1,11 @@
 ---
 id: TASK-049
 title: Structural test for KiCad netlist output (S-expression grammar)
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 epic: circuit-exporters
@@ -39,10 +41,10 @@ do not run in CI; this parser-level test does.
 
 ## Acceptance Criteria
 
-- [ ] `tests/test_netlist_structure.py` exists and asserts the five properties above.
-- [ ] Test is parametrised over all committed `.net` files (discovered, not hard-coded).
-- [ ] Test fails loudly when fed a deliberately-mangled netlist (mutation test in the test file: a fixture with a duplicate tstamp asserts the test catches it).
-- [ ] CI runs this test in TASK-048's workflow.
+- [x] `tests/test_netlist_structure.py` exists and asserts the five properties above.
+- [x] Test is parametrised over all committed `.net` files (discovered, not hard-coded).
+- [x] Test fails loudly when fed a deliberately-mangled netlist (mutation test in the test file: a fixture with a duplicate tstamp asserts the test catches it).
+- [x] CI runs this test in TASK-048's workflow.
 
 ## Test Plan
 

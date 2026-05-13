@@ -1,9 +1,11 @@
 ---
 id: TASK-032
 title: Embed BOM table in build guide
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-exporters
@@ -20,9 +22,9 @@ with the renderer output.
 
 ## Acceptance Criteria
 
-- [ ] `docs/builders/wiring/esp32/` and `docs/builders/wiring/nrf52840/` each show the BOM table inline.
-- [ ] Editing `.circuit.yml` and re-running the renderer updates the embedded BOM table without manual intervention.
-- [ ] If IDEA-022 (MkDocs) has landed, use MkDocs `pymdownx.snippets` or equivalent include syntax; otherwise use a simple CI copy step.
+- [x] `docs/builders/wiring/esp32/` and `docs/builders/wiring/nrf52840/` each show the BOM table inline.
+- [x] Editing `.circuit.yml` and re-running the renderer updates the embedded BOM table without manual intervention.
+- [x] If IDEA-022 (MkDocs) has landed, use MkDocs `pymdownx.snippets` or equivalent include syntax; otherwise use a simple CI copy step.
 
 ## Test Plan
 

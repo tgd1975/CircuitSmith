@@ -1,9 +1,11 @@
 ---
 id: TASK-031
 title: Implement bom_exporter.py — Markdown and CSV
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 epic: circuit-exporters
@@ -29,10 +31,10 @@ Outputs: `bom.md` (Markdown table for human reading) and `bom.csv`
 
 ## Acceptance Criteria
 
-- [ ] `bom_exporter.py` produces `bom.md` and `bom.csv` for both shipped targets.
-- [ ] Variant grouping follows the per-category projection: two 220 Ω resistors collapse to one row; 220 Ω and 1 kΩ are separate rows; red and green LEDs are separate rows.
-- [ ] Markdown output renders correctly in GitHub preview (tested manually).
-- [ ] CSV output imports into a spreadsheet without manual cleanup.
+- [x] `bom_exporter.py` produces `bom.md` and `bom.csv` for both shipped targets.
+- [x] Variant grouping follows the per-category projection: two 220 Ω resistors collapse to one row; 220 Ω and 1 kΩ are separate rows; red and green LEDs are separate rows.
+- [x] Markdown output renders correctly in GitHub preview (tested manually).
+- [x] CSV output imports into a spreadsheet without manual cleanup.
 
 ## Test Plan
 

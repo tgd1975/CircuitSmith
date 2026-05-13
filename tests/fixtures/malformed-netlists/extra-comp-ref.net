@@ -1,0 +1,13 @@
+(export (version "E")
+  (design
+    (source "esp32.circuit.yml")
+    (date "2026-05-13")
+    (tool "circuit-skill 0.4"))
+  (components
+    (comp (ref U1) (value "") (footprint ""))
+    (comp (ref U_GHOST) (value "") (footprint "")))
+  (nets
+    (net (code 1) (name "VCC")
+      (node (ref U1) (pin VIN))
+      (node (ref U_GHOST) (pin 1))))
+)

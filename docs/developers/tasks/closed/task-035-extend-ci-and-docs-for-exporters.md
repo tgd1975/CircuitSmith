@@ -1,9 +1,11 @@
 ---
 id: TASK-035
 title: Extend CI staleness guard for bom + netlist; update docs/index.md
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Junior
 human-in-loop: No
 epic: circuit-exporters
@@ -23,10 +25,10 @@ Two small changes that close out EPIC-004:
 
 ## Acceptance Criteria
 
-- [ ] CI staleness guard covers all three exporter artefacts per target.
-- [ ] An induced staleness on any of the three files fails CI cleanly with a clear error.
-- [ ] `docs/index.md` has BOM and netlist sections explaining when and how to use them.
-- [ ] Cross-references to `idea-001.exporters.md` resolve.
+- [x] CI staleness guard covers all three exporter artefacts per target.
+- [x] An induced staleness on any of the three files fails CI cleanly with a clear error.
+- [x] `docs/index.md` has BOM and netlist sections explaining when and how to use them.
+- [x] Cross-references to `idea-001.exporters.md` resolve.
 
 ## Test Plan
 

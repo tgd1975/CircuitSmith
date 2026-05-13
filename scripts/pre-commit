@@ -178,6 +178,24 @@ if [ -n "$STAGED_ERC_INPUTS" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# Exporter staleness gate (TASK-035). Mirrors the CI step. Fires when
+# anything that affects the BOM or netlist output is staged: the exporter
+# code, the shared NetGraph, component profiles, the circuit YAMLs, or the
+# committed artefacts themselves.
+# ---------------------------------------------------------------------------
+STAGED_EXPORT_INPUTS=$(git diff --cached --name-only --diff-filter=ACM | \
+    grep -E '^(src/circuitsmith/(export/|netgraph\.py|components/|schema/registry\.py)|data/.*\.circuit\.yml|docs/builders/wiring/.*/(bom\.md|bom\.csv|main-circuit\.net))' \
+    || true)
+if [ -n "$STAGED_EXPORT_INPUTS" ]; then
+    echo -e "${YELLOW}Checking exporter artefacts for staleness...${NC}"
+    if ! "$CS_PYTHON" "${REPO_ROOT}/scripts/check_exporters.py"; then
+        echo -e "${RED}Exporter staleness gate failed. Commit aborted.${NC}" >&2
+        exit 1
+    fi
+    echo -e "${GREEN}Exporter staleness gate OK.${NC}"
+fi
+
+# ---------------------------------------------------------------------------
 # Catalog validation (TASK-029 third gate). Fires when the catalog itself
 # or any dependent source is staged. Offline-mode by default; nightly CI
 # runs the online URL check.

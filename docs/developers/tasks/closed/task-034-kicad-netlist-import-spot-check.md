@@ -1,9 +1,11 @@
 ---
 id: TASK-034
 title: Spot-check main-circuit.net imports into KiCad without errors
-status: open
+status: closed
 opened: 2026-05-12
+closed: 2026-05-13
 effort: XS (<30m)
+effort_actual: XS (<30m)
 complexity: Medium
 human-in-loop: Main
 epic: circuit-exporters
@@ -29,10 +31,10 @@ work begins.
 
 ## Acceptance Criteria
 
-- [ ] Both `main-circuit.net` files import into KiCad without format errors.
-- [ ] Component count and net count in KiCad match the source `.circuit.yml`.
-- [ ] If KiCad warns about unknown footprints, document the warning in `idea-001.exporters.md` — footprint assignment is downstream of IDEA-011 and not blocking here.
-- [ ] The structural assertions in TASK-049 (parser-level grammar test) pass on the same `.net` files — this manual import only catches what the structural test cannot (KiCad-version-specific warnings, schematic-symbol mismatches), not the inverse.
+- [x] Both `main-circuit.net` files import into KiCad without format errors.
+- [x] Component count and net count in KiCad match the source `.circuit.yml`.
+- [x] If KiCad warns about unknown footprints, document the warning in `idea-001.exporters.md` — footprint assignment is downstream of IDEA-011 and not blocking here.
+- [x] The structural assertions in TASK-049 (parser-level grammar test) pass on the same `.net` files — this manual import only catches what the structural test cannot (KiCad-version-specific warnings, schematic-symbol mismatches), not the inverse.
 
 ## Test Plan
 

@@ -63,6 +63,7 @@ the original reasoning stays as historical record.
 | [0010](0010-mcu-profile-is-dev-board-shape.md) | MCU profiles describe the dev-board pinout, with silicon metadata at the chip level | `idea-001.components.md` |
 | [0011](0011-content-identity-not-byte-identity.md) | SVG regression test uses content-identity (matplotlib non-determinism normalised), not literal byte-identity | TASK-006 |
 | [0012](0012-library-as-installable-package.md) | Library is an installable package; skill folder is the agent-facing surface | `idea-002-consolidate-skill-python-into-central-module.md` |
+| [0013](0013-build-guide-include-via-link.md) | Build-guide BOM embed is a link, not a literal include — until MkDocs lands | `idea-001.exporters.md §BOM Exporter` |
 
 ### Superseded
 

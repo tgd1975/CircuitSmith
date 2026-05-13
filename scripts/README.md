@@ -7,6 +7,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | Script | Purpose | Usage |
 |--------|---------|-------|
 | [`check_erc_reports.py`](check_erc_reports.py) | ERC-report staleness + error-gate for CI (TASK-029). | `python3 check_erc_reports.py` |
+| [`check_exporters.py`](check_exporters.py) | Exporter staleness guard for CI (TASK-035). | `python3 check_exporters.py` |
 | [`check_phase2b_trigger.py`](check_phase2b_trigger.py) | Phase 2b trigger observer (TASK-058). | `python3 check_phase2b_trigger.py` |
 | [`codeowner_hook.py`](codeowner_hook.py) | Code-owner reminder hook — PreToolUse for ``Edit`` and ``Write``. | `python3 codeowner_hook.py` |
 | [`commit-pathspec.sh`](commit-pathspec.sh) | scripts/commit-pathspec.sh — wrapper for git's pathspec-form commit | `./commit-pathspec.sh` |
@@ -29,6 +30,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 **Purpose**: ERC-report staleness + error-gate for CI (TASK-029).
 
 **Usage**: `python3 check_erc_reports.py`
+
+### check_exporters.py
+
+**Purpose**: Exporter staleness guard for CI (TASK-035).
+
+**Usage**: `python3 check_exporters.py`
 
 ### check_phase2b_trigger.py
 

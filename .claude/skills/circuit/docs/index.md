@@ -104,6 +104,86 @@ The day-one component library is documented in
 - The component-level variant-selection pattern (used by the unified
   `LED` profile with `v_forward_by_color`).
 
+## BOM export
+
+The BOM exporter walks a validated `.circuit.yml`'s `components`
+section, groups instances by `(type, variant_key)`, and emits two
+artefacts side-by-side:
+
+- `bom.md` — Markdown table for human review (one row per group,
+  reference designators run-length-encoded).
+- `bom.csv` — One row per instance, columns named to satisfy KiCad's
+  BOM importer (`Reference`, `Value`, `Footprint`, `Datasheet`).
+
+The `Value` column carries the per-category variant projection
+(resistor on `value`, LED on `color`, capacitor on
+`value` + `dielectric`). Two 220 Ω resistors collapse to one BOM row;
+a green LED and a red LED produce two rows. ADR-0004 forbids the BOM
+exporter from consuming `NetGraph` — it is a counting problem, not a
+topology problem.
+
+```python
+from pathlib import Path
+from ruamel.yaml import YAML
+from circuitsmith.export.bom_exporter import export as export_bom
+from circuitsmith.schema.registry import load_profiles
+
+yaml = YAML(typ="safe")
+circuit = yaml.load(Path("hello.circuit.yml").read_text())
+bom_md, bom_csv = export_bom(circuit, load_profiles())
+Path("bom.md").write_text(bom_md)
+Path("bom.csv").write_text(bom_csv)
+```
+
+The committed BOM artefacts at
+`docs/builders/wiring/<target>/{bom.md,bom.csv}` are guarded against
+drift by `scripts/check_exporters.py`, run in CI and in the
+pre-commit hook.
+
+See `docs/developers/ideas/archived/idea-001.exporters.md` §"BOM
+Exporter" for the canonical row format and the per-category variant
+projection.
+
+## Netlist export
+
+The netlist exporter is a thin projection of `NetGraph` (the shared
+contract from ADR-0003) into a KiCad 7.x intermediate netlist
+(`(export (version "E") ...)`). All flattening (`pins` membership,
+`path` segmentation, terminal net-name merging, bus collapse)
+happens inside `NetGraph` — the exporter walks `NetGraph.nets` once
+and emits one `(net ...)` block per entry.
+
+```python
+from pathlib import Path
+from ruamel.yaml import YAML
+from circuitsmith.export.netlist_exporter import export as export_netlist
+from circuitsmith.netgraph import NetGraph
+from circuitsmith.schema.registry import load_profiles
+
+yaml = YAML(typ="safe")
+src = Path("hello.circuit.yml")
+circuit = yaml.load(src.read_text())
+graph = NetGraph.from_yaml_dict(circuit)
+net_text = export_netlist(circuit, graph, load_profiles(), src)
+Path("main-circuit.net").write_text(net_text)
+```
+
+Output is consumed by KiCad's "Tools → Update PCB from Netlist"
+workflow — the direct bridge to PCB layout. The committed netlist
+at `docs/builders/wiring/<target>/main-circuit.net` is guarded
+against drift by the same `check_exporters.py` script that guards
+the BOM artefacts.
+
+A round-trip parse test
+(`tests/test_netlist_exporter.py::test_round_trip_preserves_pin_memberships`)
+defends the bus-collapse and segment-naming invariants — both are
+the kind of bug that produces a KiCad-importable but electrically
+wrong netlist.
+
+See `docs/developers/ideas/archived/idea-001.exporters.md` §"Netlist
+Exporter" for the format target, segment-naming scheme, and member
+emission order.
+
 ## ERC reference
 
 When ERC fires on a PR, [`docs/erc-checks.md`](erc-checks.md) is the

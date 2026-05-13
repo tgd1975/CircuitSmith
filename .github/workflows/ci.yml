@@ -58,6 +58,15 @@ jobs:
         shell: bash
         run: python scripts/check_erc_reports.py
 
+      - name: Exporter staleness gate (BOM + netlist)
+        # Re-runs the BOM and netlist exporters for each shipped target
+        # and diffs against the committed copies. Companion to the ERC
+        # report gate above — same scoping rationale (text-only artefacts,
+        # but no need to double-run on Windows).
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_exporters.py
+
       - name: Catalog validation (offline)
         # Format + enforced_by + heuristic disclaimer + category-lint.
         # Online URL reachability runs nightly via the separate

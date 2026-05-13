@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 19** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 61** | **Total: 80** | ████████░░ 76%
+⚪ **Open: 13** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 67** | **Total: 80** | ████████░░ 84%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,11 +30,6 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-031](open/task-031-implement-bom-exporter.md) | Implement bom_exporter.py — Markdown and CSV | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-032](open/task-032-embed-bom-table-in-build-guide.md) | Embed BOM table in build guide | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-033](open/task-033-implement-netlist-exporter.md) | Implement netlist_exporter.py — flatten NetGraph to KiCad .net | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-034](open/task-034-kicad-netlist-import-spot-check.md) | Spot-check main-circuit.net imports into KiCad without errors | XS (&lt;30m) | Medium | ⚪ open |
-| [TASK-035](open/task-035-extend-ci-and-docs-for-exporters.md) | Extend CI staleness guard for bom + netlist; update docs/index.md | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-036](open/task-036-implement-markdown-block-rewrite.md) | Implement Markdown ```circuit block rewrite (workflow or superfences formatter) | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-037](open/task-037-implement-show-source-flag.md) | Implement show_source flag for Markdown blocks | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-038](open/task-038-update-pre-commit-hook-for-circuit-yml.md) | Update pre-commit hook to trigger on .circuit.yml changes | Small (&lt;2h) | Medium | ⚪ open |
@@ -42,7 +37,6 @@ _No paused tasks._
 | [TASK-040](open/task-040-register-skill-in-vibe-config.md) | Register circuit skill in .vibe/config.toml enabled_skills | XS (&lt;30m) | Junior | ⚪ open |
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
 | [TASK-042](open/task-042-finalise-skill-docs.md) | Finalise all .claude/skills/circuit/docs/ files | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-049](open/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-052](open/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-053](open/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) | Medium | ⚪ open |
@@ -84,12 +78,18 @@ _No paused tasks._
 | [TASK-028](closed/task-028-write-erc-report-and-document-e9.md) | Write erc-report.md for each target; document E9 WARNING rationale | Small (&lt;2h) |
 | [TASK-029](closed/task-029-extend-ci-staleness-and-erc-gate.md) | Extend CI — staleness guard for erc-report; ERROR-level gate; catalog validation | Small (&lt;2h) |
 | [TASK-030](closed/task-030-write-erc-checks-reference-doc.md) | Write docs/erc-checks.md | Medium (2-8h) |
+| [TASK-031](closed/task-031-implement-bom-exporter.md) | Implement bom_exporter.py — Markdown and CSV | Medium (2-8h) |
+| [TASK-032](closed/task-032-embed-bom-table-in-build-guide.md) | Embed BOM table in build guide | Small (&lt;2h) |
+| [TASK-033](closed/task-033-implement-netlist-exporter.md) | Implement netlist_exporter.py — flatten NetGraph to KiCad .net | Medium (2-8h) |
+| [TASK-034](closed/task-034-kicad-netlist-import-spot-check.md) | Spot-check main-circuit.net imports into KiCad without errors | XS (&lt;30m) |
+| [TASK-035](closed/task-035-extend-ci-and-docs-for-exporters.md) | Extend CI staleness guard for bom + netlist; update docs/index.md | Small (&lt;2h) |
 | [TASK-043](closed/task-043-create-standalone-circuit-skill-repo.md) | Create circuit-skill standalone GitHub repository | Small (&lt;2h) |
 | [TASK-044](closed/task-044-extract-skill-commit-history.md) | Extract skill commit history via git subtree split; push as main | Medium (2-8h) |
 | [TASK-045](closed/task-045-replace-skill-dir-with-pinned-copy.md) | Replace skill dir with pinned copy; update doc links; write RELEASING.md and README | Medium (2-8h) |
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
+| [TASK-049](closed/task-049-kicad-netlist-structural-test.md) | Structural test for KiCad netlist output (S-expression grammar) | Medium (2-8h) |
 | [TASK-051](closed/task-051-portability-lint.md) | Portability lint for .claude/skills/circuit/ | Small (&lt;2h) |
 | [TASK-054](closed/task-054-seed-adr-folder.md) | Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier | Medium (2-8h) |
 | [TASK-055](closed/task-055-code-owner-skills-hook.md) | Code-owner skills registry and PreToolUse hook | Medium (2-8h) |

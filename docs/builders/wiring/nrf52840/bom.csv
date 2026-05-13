@@ -1,0 +1,18 @@
+Reference,Type,Value,Footprint,Datasheet,Manufacturer
+U1,mcu/nrf52840,,,https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.7.pdf,Nordic (Adafruit Feather nRF52840 Express #4062)
+J1,connectors/usb_c,,,,
+R_PWR,passives/resistor,220,,,
+D_PWR,passives/led,blue,,,
+R_BT,passives/resistor,220,,,
+D_BT,passives/led,green,,,
+R_SEL0,passives/resistor,220,,,
+D_SEL0,passives/led,red,,,
+R_SEL1,passives/resistor,220,,,
+D_SEL1,passives/led,red,,,
+R_SEL2,passives/resistor,220,,,
+D_SEL2,passives/led,red,,,
+SW_A,passives/pushbutton,,,,
+SW_B,passives/pushbutton,,,,
+SW_C,passives/pushbutton,,,,
+SW_D,passives/pushbutton,,,,
+SW_SEL,passives/pushbutton,,,,

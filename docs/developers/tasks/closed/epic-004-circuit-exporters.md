@@ -2,9 +2,9 @@
 id: EPIC-004
 name: circuit-exporters
 title: Circuit Skill — BOM and Netlist Exporters
-status: open
+status: closed
 opened: 2026-05-12
-closed:
+closed: 2026-05-13
 assigned:
 branch: release/epic-004-circuit-exporters
 ---

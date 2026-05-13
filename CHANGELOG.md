@@ -647,3 +647,66 @@ the [EPIC-010](docs/developers/tasks/EPICS.md) relocation seed below.
   per-check contributor reference. The skill is now a "senior
   designer" mentor in the sense the dossier promised: every finding
   carries a teaching block, every block links to a curated source.
+
+### Circuit skill (EPIC-004 — BOM and Netlist Exporters)
+
+- TASK-031 closed: [`src/circuitsmith/export/bom_exporter.py`](src/circuitsmith/export/bom_exporter.py)
+  emits `bom.md` (Markdown table, run-length-encoded references) and
+  `bom.csv` (one row per ref, KiCad-importer-friendly columns) for a
+  validated `.circuit.yml`. Variant projection is per-`metadata.kind`
+  (resistor on `value`, LED on `color`, capacitor on `value` +
+  `dielectric`) — dispatching on `metadata.kind` rather than `category`
+  honours the catalog category-lint invariant. ADR-0004 keeps the
+  exporter decoupled from `NetGraph` (BOM is counting, not topology).
+  Committed artefacts under
+  [`docs/builders/wiring/{esp32,nrf52840}/bom.{md,csv}`](docs/builders/wiring/esp32/bom.md).
+- TASK-032 closed: per-target build-guide entry pages.
+  [ADR-0013](docs/developers/adr/0013-build-guide-include-via-link.md)
+  records the link-not-include mechanism — the embeddable BOM Markdown
+  table lives in `bom.md` and a thin `README.md` per target links to it
+  until MkDocs (AwesomeStudioPedal IDEA-022) lands and
+  `pymdownx.snippets` takes over.
+- TASK-033 closed: [`src/circuitsmith/export/netlist_exporter.py`](src/circuitsmith/export/netlist_exporter.py)
+  emits the KiCad 7.x intermediate netlist (`(export (version "E") ...)`)
+  by walking `NetGraph.nets` once. All flattening — `pins` membership,
+  `path` segmentation with content-addressed segment names, terminal
+  net-name merging, bus collapse — is already done inside `NetGraph`
+  per ADR-0003. The `(value ...)` field uses the same per-kind
+  projection as the BOM CSV's `Value` column so the two artefacts agree
+  row-for-row. `(datasheet ...)` is included when the profile declares
+  one and omitted otherwise (KiCad treats absent and empty
+  differently). Committed netlists under
+  [`docs/builders/wiring/{esp32,nrf52840}/main-circuit.net`](docs/builders/wiring/esp32/main-circuit.net).
+- TASK-034 closed (Main HIL): KiCad netlist import spot-check. Both
+  `main-circuit.net` files import into KiCad without format errors;
+  component and net counts match the source `.circuit.yml`.
+  Footprint-warning handling is downstream of IDEA-011 and not blocking
+  here.
+- TASK-035 closed:
+  [`scripts/check_exporters.py`](scripts/check_exporters.py) re-runs the
+  BOM and netlist exporters per shipped target and diffs against the
+  committed copies; the netlist's `(date ...)` line is normalised
+  before diffing. Wired into the CI workflow
+  ([`.github/workflows/ci.yml`](.github/workflows/ci.yml), Ubuntu-only,
+  alongside the existing ERC-report gate) and the local pre-commit
+  hook (triggers when exporter inputs or the committed artefacts are
+  staged). Skill `docs/index.md` gains BOM and netlist usage sections.
+  `Bash(python scripts/check_exporters.py:*)` added to the
+  `.claude/settings.json` allow-list.
+- TASK-049 closed: parser-level grammar test
+  ([`tests/test_netlist_structure.py`](tests/test_netlist_structure.py))
+  parametrised over every committed `main-circuit.net` (auto-discovered).
+  Asserts top form is `(export ...)` with version `"E"`, every
+  `(comp ...)` carries `ref`/`value`/`footprint`, net codes and names
+  are unique, `(comp ref ...)` set equals the source `.circuit.yml`'s
+  components set, and the parsed tree survives a serialise/parse
+  round-trip. Three fixtures under
+  [`tests/fixtures/malformed-netlists/`](tests/fixtures/malformed-netlists/)
+  exercise the mutation behaviour. Hand-rolled S-expression parser in
+  [`tests/_sexp.py`](tests/_sexp.py) keeps `tests/` zero-dep per the
+  dossier's round-trip-test contract — `tstamp` checks deferred until
+  IDEA-011 promotes the netlist format target.
+- **EPIC-004 closed** — BOM and netlist exporters land as a decoupled
+  pair, both targets ship the four exporter artefacts, the staleness
+  gate guards them in CI + pre-commit, and the structural grammar
+  test backs the KiCad spot-check with an automated regression guard.
