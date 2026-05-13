@@ -35,10 +35,13 @@ TYPE_PREFIX_OVERRIDES = {
 class Profile:
     """One component profile loaded from `components/*.py`."""
 
-    type: str                   # "mcu/esp32", "passives/led", …
-    file: str                   # module file stem (for error messages)
-    name: str                   # original dict identifier (for error messages)
-    pins: frozenset[str]        # the set of valid pin names on this profile
+    type: str                              # "mcu/esp32", "passives/led", …
+    file: str                              # module file stem (for error messages)
+    name: str                              # original dict identifier (for error messages)
+    pins: frozenset[str]                   # the set of valid pin names on this profile
+    category: str = ""                     # category from the source dict, for layout kernel dispatch
+    pins_detail: dict | None = None        # raw `pins:` dict from components/*.py (side/type/direction)
+    metadata: dict | None = None           # raw `metadata:` dict from components/*.py
 
 
 def load_profiles(components_dir: Path | None = None) -> dict[str, Profile]:
@@ -68,6 +71,9 @@ def load_profiles(components_dir: Path | None = None) -> dict[str, Profile]:
                 file=py_file.stem,
                 name=attr_name,
                 pins=frozenset(value["pins"].keys()),
+                category=value.get("category", ""),
+                pins_detail=value.get("pins"),
+                metadata=value.get("metadata"),
             )
     return profiles
 

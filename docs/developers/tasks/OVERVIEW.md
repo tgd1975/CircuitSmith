@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 46** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 28** | **Total: 74** | ████░░░░░░ 38%
+⚪ **Open: 34** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 45** | **Total: 79** | ██████░░░░ 57%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -30,20 +30,6 @@ _No paused tasks._
 
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
-| [TASK-008](open/task-008-implement-netgraph-data-model.md) | Implement netgraph.py — shared NetGraph data model | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-009](open/task-009-implement-layout-kernel-canonical-slots.md) | Implement layout_engine/kernel.py — deterministic placer | Large (8-24h) | Senior | ⚪ open |
-| [TASK-010](open/task-010-implement-manhattan-router.md) | Implement layout_engine/router.py — Manhattan router | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-011](open/task-011-implement-v01-structural-rubric.md) | Implement v0.1 structural rubric (overlaps, labels_fit, wire_crossings) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-012](open/task-012-implement-renderer.md) | Implement renderer.py — YAML to SVG via Schemdraw | Large (8-24h) | Senior | ⚪ open |
-| [TASK-013](open/task-013-write-layout-json-schema.md) | Write schema/layout.schema.json | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-014](open/task-014-author-circuit-yml-and-layout-yml-pairs.md) | Author esp32 and nrf52840 .circuit.yml + .layout.yml pairs | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-015](open/task-015-cutover-pr-retire-old-generator.md) | Cutover PR — commit full-pedal fixture, retire old generator, retarget CI | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-016](open/task-016-write-renderer-and-layout-docs.md) | Write docs/circuit-yaml.md and docs/layout.md | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-017](open/task-017-implement-ai-placer-convergence-loop.md) | Implement layout_engine/ai_placer.py — convergence loop and reason codes | Large (8-24h) | Senior | ⚪ open |
-| [TASK-018](open/task-018-add-no-ai-fallback-flag.md) | Add --no-ai fallback flag to layout.py | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-019](open/task-019-extend-rubric-with-numeric-checks.md) | Extend rubric with numeric checks promoted from advisory | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-020](open/task-020-extend-meta-yml-provenance.md) | Extend meta.yml.provenance with ai_invoked and escalations | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-021](open/task-021-update-layout-docs-for-ai-placer.md) | Update docs/layout.md with AI-placer invocation and cost notes | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-022](open/task-022-implement-erc-engine.md) | Implement erc_engine.py with structural S1–S3 and electrical E1–E10 | Large (8-24h) | Senior | ⚪ open |
 | [TASK-023](open/task-023-integrate-erc-into-renderer-pipeline.md) | Integrate ERC into renderer pipeline (post-schema, pre-drawing) | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-024](open/task-024-seed-rule-catalog-rules-json.md) | Seed knowledge/rules.json with 15 entries (S1–S5 + E1–E10) | Medium (2-8h) | Medium | ⚪ open |
@@ -72,10 +58,12 @@ _No paused tasks._
 | [TASK-050](open/task-050-boundary-import-contract-test.md) | Boundary-import contract test for circuit-skill modules | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-052](open/task-052-schema-validation-pre-commit.md) | Schema-validation pre-commit hook for .circuit.yml | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-053](open/task-053-netgraph-golden-hash-contract-test.md) | NetGraph golden-hash CI contract test | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-057](open/task-057-emit-v01-escalations-to-meta-yml.md) | Emit v0.1 kernel fail-loud events to meta.yml.provenance.escalations | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-058](open/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-059](open/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-074](open/task-074-personal-data-leak-check-in-security-review-hook.md) | Extend security-review hook to detect personal-contact-info leaks | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-075](open/task-075-fix-idea-skill-template-markdownlint.md) | Fix /ts-idea-new template so generated files pass markdownlint on first run | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-076](open/task-076-write-adr-0012-supersede-adr-0007.md) | Write ADR-0012 (library as installable package) superseding ADR-0007 | Medium (2-8h) | Senior | ⚪ open |
+| [TASK-077](open/task-077-atomic-relocation-to-src-circuitsmith.md) | Atomic relocation of circuit package to src/circuitsmith/ | Large (8-24h) | Medium | ⚪ open |
+| [TASK-078](open/task-078-update-agent-facing-surface.md) | Update agent-facing surface for circuitsmith package rename | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-079](open/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) | Junior | ⚪ open |
 
 ## Closed Tasks
 
@@ -88,6 +76,20 @@ _No paused tasks._
 | [TASK-005](closed/task-005-write-circuit-json-schema.md) | Write schema/circuit.schema.json | Medium (2-8h) |
 | [TASK-006](closed/task-006-refactor-generate-schematic-to-use-library.md) | Refactor scripts/generate-schematic.py to import from components/ | Medium (2-8h) |
 | [TASK-007](closed/task-007-skill-scaffold-license-changelog-docs.md) | Skill scaffolding — LICENSE, CHANGELOG, docs/index, docs/components | Small (&lt;2h) |
+| [TASK-008](closed/task-008-implement-netgraph-data-model.md) | Implement netgraph.py — shared NetGraph data model | Medium (2-8h) |
+| [TASK-009](closed/task-009-implement-layout-kernel-canonical-slots.md) | Implement layout_engine/kernel.py — deterministic placer | Large (8-24h) |
+| [TASK-010](closed/task-010-implement-manhattan-router.md) | Implement layout_engine/router.py — Manhattan router | Medium (2-8h) |
+| [TASK-011](closed/task-011-implement-v01-structural-rubric.md) | Implement v0.1 structural rubric (overlaps, labels_fit, wire_crossings) | Medium (2-8h) |
+| [TASK-012](closed/task-012-implement-renderer.md) | Implement renderer.py — YAML to SVG via Schemdraw | Large (8-24h) |
+| [TASK-013](closed/task-013-write-layout-json-schema.md) | Write schema/layout.schema.json | Small (&lt;2h) |
+| [TASK-014](closed/task-014-author-circuit-yml-and-layout-yml-pairs.md) | Author esp32 and nrf52840 .circuit.yml + .layout.yml pairs | Medium (2-8h) |
+| [TASK-015](closed/task-015-cutover-pr-retire-old-generator.md) | Cutover PR — commit full-pedal fixture, retire old generator, retarget CI | Medium (2-8h) |
+| [TASK-016](closed/task-016-write-renderer-and-layout-docs.md) | Write docs/circuit-yaml.md and docs/layout.md | Medium (2-8h) |
+| [TASK-017](closed/task-017-implement-ai-placer-convergence-loop.md) | Implement layout_engine/ai_placer.py — convergence loop and reason codes | Large (8-24h) |
+| [TASK-018](closed/task-018-add-no-ai-fallback-flag.md) | Add --no-ai fallback flag to layout.py | Small (&lt;2h) |
+| [TASK-019](closed/task-019-extend-rubric-with-numeric-checks.md) | Extend rubric with numeric checks promoted from advisory | Medium (2-8h) |
+| [TASK-020](closed/task-020-extend-meta-yml-provenance.md) | Extend meta.yml.provenance with ai_invoked and escalations | Small (&lt;2h) |
+| [TASK-021](closed/task-021-update-layout-docs-for-ai-placer.md) | Update docs/layout.md with AI-placer invocation and cost notes | Small (&lt;2h) |
 | [TASK-046](closed/task-046-add-pyproject-and-dev-requirements.md) | Add pyproject.toml and requirements-dev.txt | Small (&lt;2h) |
 | [TASK-047](closed/task-047-configure-pytest.md) | Configure pytest (testpaths, discovery, coverage thresholds) | XS (&lt;30m) |
 | [TASK-048](closed/task-048-add-minimal-ci-workflow.md) | Add minimal GitHub Actions CI workflow | Small (&lt;2h) |
@@ -95,6 +97,9 @@ _No paused tasks._
 | [TASK-054](closed/task-054-seed-adr-folder.md) | Seed docs/developers/adr/ with foundational decisions from the IDEA-001 dossier | Medium (2-8h) |
 | [TASK-055](closed/task-055-code-owner-skills-hook.md) | Code-owner skills registry and PreToolUse hook | Medium (2-8h) |
 | [TASK-056](closed/task-056-author-initial-code-owner-skills.md) | Author the first three code-owner skills (co-netgraph, co-schema, co-erc-engine) | Medium (2-8h) |
+| [TASK-057](closed/task-057-emit-v01-escalations-to-meta-yml.md) | Emit v0.1 kernel fail-loud events to meta.yml.provenance.escalations | Small (&lt;2h) |
+| [TASK-058](closed/task-058-implement-check-phase2b-trigger.md) | Implement scripts/check_phase2b_trigger.py | Small (&lt;2h) |
+| [TASK-059](closed/task-059-wire-phase2b-gate-into-release-script.md) | Wire Phase 2b gate into release_snapshot.py with CS_PHASE2B_BYPASS | Small (&lt;2h) |
 | [TASK-060](closed/task-060-autonomous-implementation-mode.md) | Set up autonomous-implementation mode (AUTONOMY.md, /epic-run, HIL sweep, branch hygiene) | Large (8-24h) |
 | [TASK-061](closed/task-061-adopt-python-linter-formatter.md) | Adopt a Python linter/formatter and wire it into /commit + pre-commit hook | Medium (2-8h) |
 | [TASK-062](closed/task-062-author-development-setup-doc.md) | Author docs/developers/DEVELOPMENT_SETUP.md as the canonical first-time-setup entry point | Small (&lt;2h) |

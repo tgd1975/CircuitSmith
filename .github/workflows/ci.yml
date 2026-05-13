@@ -47,3 +47,20 @@ jobs:
 
       - name: Pytest
         run: pytest
+
+      - name: Phase 2b trigger report
+        # Aggregates `provenance.escalations` from every committed
+        # meta.yml into a JSON build artifact the maintainer reviews at
+        # release-prep time (TASK-058). The script always exits 0; the
+        # gate logic lives in scripts/release_snapshot.py (TASK-059).
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_phase2b_trigger.py > phase2b-trigger.json
+
+      - name: Upload Phase 2b trigger report
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase2b-trigger
+          path: phase2b-trigger.json
+          if-no-files-found: error

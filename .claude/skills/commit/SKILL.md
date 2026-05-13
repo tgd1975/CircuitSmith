@@ -75,6 +75,15 @@ keeps blast radius scoped to the single commit attempt.
    | `*.md`     | `markdownlint-cli2 --fix <files>`                   |
    | `*.py`     | `ruff check --fix <files>`                          |
 
+   **Invoke the binaries directly — no `npx`, no `python -m` prefixes.**
+   Both fixers are installed on `$PATH` locally (`pip install -r
+   requirements-dev.txt` for ruff, the project's `npm install -g
+   markdownlint-cli2` in [`DEVELOPMENT_SETUP.md`](../../../docs/developers/DEVELOPMENT_SETUP.md))
+   and in CI (`.github/workflows/ci.yml`). Defensive launchers
+   (`npx --no-install …`) make the command harder to read without
+   buying anything; if the binary is genuinely missing, the
+   "Missing-tool behaviour" paragraph below is the contract.
+
    Classes not in the table (`*.sh`, `*.yml`, `*.json`, …) are passed
    through untouched until a follow-up task adopts tooling for them.
    The Python row was added in TASK-061; ruff was chosen over black /
@@ -196,9 +205,21 @@ keeps blast radius scoped to the single commit attempt.
    > The pre-commit hook failed, but the failure is in `<file/check>`
    > which is unrelated to the files in this commit
    > (`<list pathspec files>`). This appears to be a pre-existing
-   > issue. It may be OK to bypass the hook for this commit with
-   > `--no-verify`. Do you want me to proceed with `--no-verify`, or
-   > fix the hook failure first?
+   > issue from a parallel session. Please let me bypass the hook for
+   > this commit with `--no-verify`.
+
+   The framing is **single-track**: the agent is clean, parallel-
+   session work is unrelated, the agent asks for bypass approval.
+   Do **not** offer "or fix the hook failure first" as a second
+   option in the same question. Editing files outside the pathspec
+   to clear an unrelated hook failure is the anti-pattern below —
+   listing it as a default option for the user to pick frames it as
+   a path the agent might take, which it must not be. The absolute
+   default is that a parallel session owns the breaking file and the
+   agent must not interfere. The user may override (refuse the
+   bypass and direct the agent to fix the file as a separate action),
+   but that override is the user's call, not a default option the
+   agent surfaces.
 
    Wait for explicit user approval. On approval, retry via the
    wrapper with `--no-verify`:
@@ -207,7 +228,9 @@ keeps blast radius scoped to the single commit attempt.
    scripts/commit-pathspec.sh --no-verify --stage-untracked "<message>" <file> [<file> …]
    ```
 
-   On refusal, stop — the user will fix the hook failure first.
+   On refusal, stop — the user will either fix the unrelated breakage
+   themselves or direct the agent to fix it as a separate action with
+   its own pathspec.
 
 8. **If any of the three checks fails**, do **not** offer `--no-verify`.
    Report which check failed, surface the relevant hook output, and
@@ -236,6 +259,19 @@ duplicates work the skill is about to do.
   clean up. Re-invoke `/commit` with the same arguments after fixing
   the underlying cause, or follow step 7's three-check `--no-verify`
   flow.
+- **Editing files outside your pathspec to clear a hook failure.**
+  When the hook fails on a file you weren't going to commit — even
+  if the fix looks trivial and matches an established repo
+  convention — do **not** silently patch it. Another Claude Code
+  session (or the user) may be editing that file concurrently;
+  saving your fix on top of their working-tree changes clobbers
+  them. The three-check protocol at steps 6–7 exists for exactly
+  this case: if the failure is unrelated and pre-existing, ask the
+  user to approve `--no-verify`, or stop and let the user resolve
+  the unrelated breakage themselves. Auto-fixers (step 2) are
+  already scoped to the pathspec for the same reason. The
+  pathspec defines the work; anything outside it is not your file
+  to touch.
 
 ## Local success ≠ mergeability — the CI gate
 

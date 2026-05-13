@@ -6,6 +6,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
+| [`check_phase2b_trigger.py`](check_phase2b_trigger.py) | Phase 2b trigger observer (TASK-058). | `python3 check_phase2b_trigger.py` |
 | [`codeowner_hook.py`](codeowner_hook.py) | Code-owner reminder hook — PreToolUse for ``Edit`` and ``Write``. | `python3 codeowner_hook.py` |
 | [`commit-pathspec.sh`](commit-pathspec.sh) | scripts/commit-pathspec.sh — wrapper for git's pathspec-form commit | `./commit-pathspec.sh` |
 | [`housekeep.py`](housekeep.py) | Central housekeeping for the task system. | `python3 housekeep.py` |
@@ -21,6 +22,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | [`update_task_overview.py`](update_task_overview.py) | DEPRECATED — prefer `scripts/housekeep.py` for the full flow (file | `python3 update_task_overview.py` |
 
 ## Script Details
+
+### check_phase2b_trigger.py
+
+**Purpose**: Phase 2b trigger observer (TASK-058).
+
+**Usage**: `python3 check_phase2b_trigger.py`
 
 ### codeowner_hook.py
 

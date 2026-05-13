@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: data/nrf52840.circuit.yml
+  layout:  /tmp/nrf52840-fixture.layout.yml
+layout:
+  state: complete
+  placed: 17
+  total:  17
+rubric:
+  density: 0.1453
+  intra_component_intersections: 10
+  labels_fit: true
+  min_label_distance: 1
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

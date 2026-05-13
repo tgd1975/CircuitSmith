@@ -27,12 +27,23 @@ beside it under their suffixed names.
 from __future__ import annotations
 
 import argparse
+import datetime
+import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 # Sources to snapshot (relative to TASKS_DIR).
 SOURCES = ("OVERVIEW.md", "EPICS.md", "KANBAN.md")
+
+# Phase 2b task IDs (EPIC-002 AI placer chain).
+PHASE2B_TASK_IDS = ("TASK-017", "TASK-018", "TASK-019", "TASK-020", "TASK-021")
+
+# Bypass envelope mirrors CS_COMMIT_BYPASS (CLAUDE.md commit-policy section).
+PHASE2B_BYPASS_ENV = "CS_PHASE2B_BYPASS"
+PHASE2B_BYPASS_LOG = Path(".git/cs-phase2b-bypass.log")
 
 # Lines / blocks stripped on the way in. The chart bodies wrapped by the
 # BURNUP markers stay — they are valid Markdown / Mermaid that the reader
@@ -97,6 +108,135 @@ def write_snapshots(tasks_dir: Path, version: str, *, dry_run: bool = False) -> 
     return written
 
 
+def phase2b_task_states(tasks_dir: Path) -> dict[str, str]:
+    """Return `{TASK-NNN: status}` for every Phase 2b task in PHASE2B_TASK_IDS.
+
+    Status is derived from the folder containing the task file
+    (`open/`, `active/`, `paused/`, `closed/`). Missing files map to
+    `unknown`.
+    """
+    folders = ("open", "active", "paused", "closed")
+    states: dict[str, str] = {tid: "unknown" for tid in PHASE2B_TASK_IDS}
+    for folder in folders:
+        folder_dir = tasks_dir / folder
+        if not folder_dir.exists():
+            continue
+        for child in folder_dir.glob("task-*.md"):
+            # task-017-*.md → TASK-017
+            stem = child.stem
+            try:
+                num = stem.split("-")[1]
+            except IndexError:
+                continue
+            tid = f"TASK-{num}"
+            if tid in states:
+                states[tid] = folder
+    return states
+
+
+def run_phase2b_trigger(repo_root: Path) -> dict:
+    """Invoke check_phase2b_trigger.py and parse its JSON report."""
+    script = repo_root / "scripts" / "check_phase2b_trigger.py"
+    if not script.exists():
+        return {"total_escalations": 0, "non_addressable_count": 0, "no_rule_count": 0,
+                "by_category": {}, "circuits_with_escalations": []}
+    proc = subprocess.run(
+        [sys.executable, str(script), "--repo-root", str(repo_root)],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        print(f"release_snapshot: phase2b trigger script exited {proc.returncode}",
+              file=sys.stderr)
+        print(proc.stderr, file=sys.stderr)
+        raise SystemExit(proc.returncode)
+    return json.loads(proc.stdout)
+
+
+def check_phase2b_gate(
+    *,
+    repo_root: Path,
+    tasks_dir: Path,
+    bypass_reason: str | None,
+) -> tuple[bool, str]:
+    """Decide whether the release should proceed.
+
+    Returns `(ok, message)`. `ok=False` means the gate fires; the caller
+    aborts the release. `message` is suitable for printing to stderr.
+
+    Gate condition: trigger reports `non_addressable_count > 0` AND every
+    Phase 2b task in PHASE2B_TASK_IDS is still `open`. A bypass via
+    `CS_PHASE2B_BYPASS` unconditionally passes the gate, but the bypass
+    is logged.
+    """
+    report = run_phase2b_trigger(repo_root)
+    non_addr = report.get("non_addressable_count", 0)
+
+    if non_addr == 0:
+        return True, "phase2b gate: clean (no non-addressable escalations)"
+
+    states = phase2b_task_states(tasks_dir)
+    in_flight = [tid for tid, state in states.items() if state in ("active", "closed")]
+    if in_flight:
+        return True, (
+            f"phase2b gate: trigger has fired but response is underway "
+            f"({', '.join(in_flight)} in active/closed)"
+        )
+
+    if bypass_reason is not None:
+        _log_phase2b_bypass(repo_root, bypass_reason, report)
+        return True, (
+            f"phase2b gate: BYPASS ({bypass_reason}) — logged to "
+            f"{PHASE2B_BYPASS_LOG}"
+        )
+
+    return False, _format_gate_message(report, states)
+
+
+def _format_gate_message(report: dict, states: dict[str, str]) -> str:
+    lines = [
+        "phase2b gate: REFUSING RELEASE",
+        "",
+        f"  non-addressable escalations: {report['non_addressable_count']}",
+        "  by category:",
+    ]
+    for cat in sorted(report.get("by_category", {})):
+        lines.append(f"    - {cat}: {report['by_category'][cat]}")
+    lines.append("")
+    lines.append("  affected circuits:")
+    for circuit in report.get("circuits_with_escalations", []):
+        lines.append(f"    - {circuit}")
+    lines.append("")
+    lines.append("  Phase 2b tasks (must be active or closed to proceed):")
+    for tid in PHASE2B_TASK_IDS:
+        lines.append(f"    - {tid}: {states.get(tid, 'unknown')}")
+    lines.append("")
+    lines.append(
+        "  Next action: open EPIC-002 Phase 2b tasks via "
+        "`/ts-task-active TASK-017`, or — if the failure is genuinely one-off "
+        "— re-classify the offending escalation in the source meta.yml and "
+        "re-run."
+    )
+    lines.append("")
+    lines.append(
+        f'  Bypass (rare): {PHASE2B_BYPASS_ENV}="<reason>" '
+        f'./scripts/release_snapshot.py …'
+    )
+    return "\n".join(lines)
+
+
+def _log_phase2b_bypass(repo_root: Path, reason: str, report: dict) -> None:
+    log_path = repo_root / PHASE2B_BYPASS_LOG
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    with open(log_path, "a", encoding="utf-8") as fh:
+        fh.write(
+            f"{timestamp} | reason={reason!r} | "
+            f"non_addressable={report.get('non_addressable_count', 0)} | "
+            f"categories={sorted(report.get('by_category', {}).keys())}\n"
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Snapshot OVERVIEW / EPICS / KANBAN into archive/<version>/."
@@ -105,14 +245,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tasks-dir", type=Path,
                         default=Path("docs/developers/tasks"),
                         help="Path to the tasks/ root (default: docs/developers/tasks).")
+    parser.add_argument("--repo-root", type=Path, default=Path.cwd(),
+                        help="Repository root for the Phase 2b gate check (default: CWD).")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print what would be written, don't write.")
+    parser.add_argument("--skip-phase2b-gate", action="store_true",
+                        help="Skip the Phase 2b trigger gate (testing only).")
     args = parser.parse_args(argv)
 
     if not re.fullmatch(r"v\d+\.\d+\.\d+", args.version):
         print(f"release_snapshot: invalid version format: {args.version}"
               " (expected vX.Y.Z)", file=sys.stderr)
         return 2
+
+    if not args.skip_phase2b_gate:
+        bypass = os.environ.get(PHASE2B_BYPASS_ENV)
+        bypass_reason = bypass if bypass else None
+        ok, message = check_phase2b_gate(
+            repo_root=args.repo_root,
+            tasks_dir=args.tasks_dir,
+            bypass_reason=bypass_reason,
+        )
+        print(message, file=sys.stderr)
+        if not ok:
+            return 3
 
     write_snapshots(args.tasks_dir, args.version, dry_run=args.dry_run)
     return 0

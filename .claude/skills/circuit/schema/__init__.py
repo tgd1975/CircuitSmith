@@ -16,6 +16,13 @@ Usage:
     findings = validate(circuit_dict)  # list[Finding]; empty == valid
 """
 
+from .layout_validator import validate_layout, validate_layout_file
 from .validator import Finding, validate, validate_file
 
-__all__ = ["Finding", "validate", "validate_file"]
+__all__ = [
+    "Finding",
+    "validate",
+    "validate_file",
+    "validate_layout",
+    "validate_layout_file",
+]

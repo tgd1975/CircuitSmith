@@ -305,6 +305,205 @@ feature-epic deliverables land.
 - **EPIC-001 closed** — all 7 tasks done. Component library +
   schema delivered; Phase 1 of the dossier roadmap complete.
 
-Nothing else under `.claude/skills/circuit/` exists yet — see
-[EPIC-002..006](docs/developers/tasks/EPICS.md) and the
-governance gates in [EPIC-008](docs/developers/tasks/EPICS.md).
+### Circuit skill (EPIC-002 — Renderer and Layout Engine)
+
+- TASK-008 closed: `.claude/skills/circuit/netgraph.py` — typed
+  `NetGraph` / `PinRef` / `NetMeta` data model derived from a
+  validated `.circuit.yml`. Single shared contract between the YAML
+  source and the three downstream consumers (ERC engine, layout
+  kernel, netlist exporter) per ADR-0003. The three connection
+  forms (`pins`, `path`, `bus`) flatten into one canonical
+  representation; segment-naming for path nets is content-addressed
+  for stable PCB-side names. `canonical_hash()` gives the
+  hash-determinism gate that TASK-053's golden-hash CI contract will
+  read.
+- TASK-009 closed: `.claude/skills/circuit/layout_engine/kernel.py`
+  — v0.1 deterministic placer. Canonical-slot table covers MCU /
+  LED / resistor (LED-paired + pull-up) / button / decoupling cap /
+  I²C sensor / header-jack. Incremental stability:
+  topology-fingerprint per placement (SHA-1 of `(rule ID, canonical
+  shape form)`) auto-invalidates on drift; `kept` placements freeze
+  across runs. Adding one component produces a one-line diff in
+  `layout.yml`. `EscalationError` carries the `no-canonical-rule`
+  reason code for the Phase 2b trigger to count.
+- TASK-010 closed: `.claude/skills/circuit/layout_engine/router.py`
+  — Manhattan router. Orthogonal-only segments, L-shape (H→V)
+  routing per consecutive pin pair, deterministic across runs.
+  Crossings and intra-component-body intersections are *reported*
+  (`RouterResult.crossings`, `intra_component_intersections`) for
+  the rubric to consume — not avoided. Z-shape break enumeration
+  deferred post-v0.1.
+- TASK-011 closed:
+  `.claude/skills/circuit/layout_engine/rubric.py` — v0.1
+  structural rubric. Three blocking checks (`overlaps`,
+  `labels_fit`, `wire_crossings`) plus two advisory metrics
+  (`min_label_distance`, `density`). Each `Finding` names the
+  failing check, severity, message, and the refs/nets involved so
+  the diagnostic is actionable. Default wire-crossing threshold is
+  0; configurable per-run for waiver paths.
+- TASK-012 closed: `.claude/skills/circuit/renderer.py` — top-level
+  pipeline orchestrator. CLI `--circuit / --layout / --out` with
+  path-agnostic args. Halts on circuit-schema / kernel-escalation /
+  rubric-failure with structured `RenderError` and non-zero exit;
+  meta.yml is written on every path (success and failure) so the
+  Phase 2b trigger has a corpus to read. v0.1 SVG is structural
+  (every component has a `data-ref`, every wire is a polyline) so
+  CI's structural-equality test from idea-001 §12 has stable
+  inputs; rich Schemdraw glyphs are a follow-up.
+- TASK-013 closed:
+  `.claude/skills/circuit/schema/layout.schema.json` +
+  `schema/layout_validator.py`. Enforces the slot vocabulary,
+  `attach-index-redundant` invariant, `free`-slot `gx`/`gy`
+  requirement, and the `topology-fingerprint` required field.
+  Findings carry the same shape as the circuit-side validator
+  (`check`, `severity`, `message`, `location`).
+- TASK-014 closed: `data/{esp32,nrf52840}.{circuit,layout}.yml`.
+  Both pairs translate the AwesomeStudioPedal pedal config
+  faithfully (5 status LEDs, 5 buttons, USB-C power input);
+  `.layout.yml` files are kernel-generated and validate against
+  `layout.schema.json`.
+- TASK-015 closed: cutover landed. `scripts/generate-schematic.py`
+  and `tests/test_generator_byte_identity.py` deleted; the
+  `full-pedal` fixture under `tests/fixtures/full-pedal/{esp32,nrf52840}/`
+  carries the renderer's `expected.svg` + `expected.meta.yml`;
+  `tests/test_renderer_staleness.py` is the structural-equality
+  guard (idea-001 §12 cross-platform caveat — byte-identity is not
+  safe across OSes); `docs/builders/wiring/<target>/main-circuit.svg`
+  files re-rendered. The task body assumed a pre-existing CI
+  staleness step targeting the old generator; none existed in this
+  repo's lineage, so the cutover added a `pytest` test that runs in
+  the existing CI step rather than fabricating a "retarget".
+- TASK-016 closed: `.claude/skills/circuit/docs/circuit-yaml.md`
+  and `.claude/skills/circuit/docs/layout.md` — skill-internal
+  reference docs. `circuit-yaml.md` covers the three connection
+  forms with worked examples, schema validation, and the Markdown
+  `circuit` block preview. `layout.md` covers the slot vocabulary,
+  the §5.3 dispatch table, the rubric (blocking + advisory), the
+  meta.yml escalations enum (cross-linked to `meta.schema.json`),
+  the overflow ladder, and the v0.1 known limitations.
+- TASK-057 closed: `meta.yml.provenance.escalations` is the corpus
+  the Phase 2b trigger reads. Renderer emits one entry per
+  kernel-`EscalationError` (with `category` / `component` /
+  `circuit` / `detail`) and one entry per blocking-rubric failure
+  (`rubric-fail-{check}`); empty array on clean runs, never absent.
+  Schema lives at `.claude/skills/circuit/schema/meta.schema.json`.
+- TASK-058 closed: `scripts/check_phase2b_trigger.py` — aggregates
+  `provenance.escalations` across every committed `*.meta.yml` via
+  `git ls-files` and emits a JSON report on stdout + Markdown
+  summary on stderr. Exits 0 unconditionally (observer, not gate).
+  CI uploads the report as a `phase2b-trigger.json` build artifact
+  on every PR.
+- TASK-059 closed: `scripts/release_snapshot.py` consults the
+  trigger and refuses to cut when `non_addressable_count > 0` AND
+  every Phase 2b task (TASK-017..021) is still `open`. The
+  refusal message is actionable (lists each Phase 2b task's
+  current state + the exact `/ts-task-active TASK-017` command).
+  `CS_PHASE2B_BYPASS="<reason>"` proceeds and appends to
+  `.git/cs-phase2b-bypass.log`, mirroring the `CS_COMMIT_BYPASS`
+  envelope.
+
+### Tooling (EPIC-002 ride-alongs)
+
+- `.claude/skills/circuit/schema/registry.py` `Profile` dataclass
+  gained `category` / `pins_detail` / `metadata` fields so the
+  layout kernel can dispatch on category without re-reading the
+  source dicts.
+- `.claude/skills/circuit/layout_engine/rubric.py`
+  `DEFAULT_LABEL_BUDGET` raised from 4 to 8 grid units — typical
+  ref names (`D_PWR`, `SW_SEL`, `R_SEL0`) outgrow the original
+  budget without indicating a real readability problem.
+- `.github/workflows/ci.yml` runs
+  `scripts/check_phase2b_trigger.py` on ubuntu-latest and uploads
+  the report via `actions/upload-artifact@v4`.
+- `.claude/settings.json`: added
+  `Bash(python scripts/check_phase2b_trigger.py:*)` to the
+  allowlist; removed the now-stale `generate-schematic.py` entry.
+
+### Circuit skill (EPIC-002 — Phase 2b AI placer)
+
+Phase 2b landed in the same epic-run after a maintainer override of
+ADR-0008's evidence-driven default — the design was already
+specified in `idea-001.layout-engine-concept.md §7`, the
+implementation cost was bounded by `--no-ai`'s opt-in shape, and the
+context-switch cost of resuming Phase 2b months from now was deemed
+higher than implementing while still mid-EPIC. The five tasks below
+deliver the full v1 layout engine.
+
+- TASK-017 closed:
+  `.claude/skills/circuit/layout_engine/ai_placer.py` — the §7
+  convergence loop. `converge()` runs a bounded loop (default 5
+  iterations / 50k token cap) over an injected `LLMClient`
+  Protocol; tests inject a `_FakeLLM` so the CI path never reaches
+  the network per ADR-0002. The production `AnthropicClient`
+  adapter is a thin SDK wrapper, lazy-imported. Reason codes:
+  `converged`, `ai-cap-exceeded`, `ai-output-invalid`,
+  `ai-frozen-violation`, `ai-unknown-region`,
+  `ai-missing-component`, `ai-token-cap-exceeded`.
+- TASK-018 closed: `--no-ai` (the default, ADR-0002-aligned) and
+  `--ai` (explicit opt-in) CLI flags. Kernel gained
+  `collect_escalations: bool = False` so the AI placer sees the
+  full ambiguity set rather than the first one. Renderer's
+  `_dispatch_ai_placer()` wires the LLMClient + rubric-check
+  callback (router + rubric re-run on the proposed placements);
+  AI-merged placements get a `sha1:ai-converged` topology
+  fingerprint so the incremental-stability check (§8.4) can
+  distinguish them from kernel placements.
+- TASK-019 closed: `min_label_distance` and `density` promoted
+  from advisory to blocking. Thresholds calibrated against the
+  Phase 2a green corpus (75th-percentile floor per §10): both
+  shipped circuits report `min_label_distance = 1` and
+  `density = 0.1453`. Defaults are
+  `DEFAULT_MIN_LABEL_DISTANCE_THRESHOLD = 1` and
+  `DEFAULT_DENSITY_THRESHOLD = 0.5`. Pass `None` to either
+  parameter to suppress (matches v0.1 advisory-only behaviour for
+  pre-v1 fixtures).
+- TASK-020 closed: `meta.yml.provenance.ai_invocations[]` block
+  added — one entry per AI dispatch with `reason`, `iterations`,
+  `input_tokens`, `output_tokens`, `components`. `ai_invoked` /
+  `iterations` always written. `meta.schema.json` extended with
+  the `aiInvocation` / `aiReason` sub-schemas and the
+  `ai-placer-*` + v1 `rubric-fail-{min-label-distance, density}`
+  category enums.
+- TASK-021 closed: `.claude/skills/circuit/docs/layout.md` gained
+  the full AI-placer section — invocation, input/output contracts,
+  convergence behaviour, cost notes (5-iteration cap, 50k token
+  cap, typical 1–3k input + 200–500 output tokens per call),
+  `--no-ai` opt-out narrative, and the `meta.yml.provenance`
+  field table.
+
+**EPIC-002 fully closed** — all 16 in-scope tasks done (TASK-008..016 +
+057..059 + 017..021). The v1 layout engine ships the AI placer plus
+the trigger-gate plumbing that scheduled it.
+
+### Skills (EPIC-002 ride-along)
+
+- `/commit` SKILL.md: single-track bypass ask on unrelated hook
+  failures. The verbatim message no longer offers "or fix the hook
+  failure first" — that framing implied editing files outside the
+  pathspec was a default option, which violates the
+  parallel-session-safety contract. The user may override (refuse
+  bypass and direct the agent to fix the unrelated file as a
+  separate action), but that override is the user's call, not a
+  default the agent surfaces.
+
+Nothing else under `.claude/skills/circuit/` is in scope yet — see
+[EPIC-003..006](docs/developers/tasks/EPICS.md), the remaining
+governance gates in [EPIC-008](docs/developers/tasks/EPICS.md), and
+the [EPIC-010](docs/developers/tasks/EPICS.md) relocation seed below.
+
+### Planning (EPIC-010 seeded)
+
+- IDEA-002 archived → EPIC-010 opened (Consolidate skill-resident
+  Python into a `circuitsmith` package) with four supporting tasks:
+  - TASK-076 — author ADR-0012 (supersede ADR-0007 "skill directory
+    is the library")
+  - TASK-077 — atomic relocation of `.claude/skills/circuit/` Python
+    to `src/circuitsmith/` (single PR, no transitional aliases)
+  - TASK-078 — update agent-facing skill surface (prompts + thin
+    re-export shims, if any)
+  - TASK-079 — repo docs sweep + CHANGELOG entry on landing
+  EPIC-010 supersedes ADR-0007 via ADR-0012 and rewrites EPIC-006
+  Phase 1.3 to publish `circuitsmith` to PyPI instead of extracting
+  a standalone folder; TASK-045 retires. EPIC-010 gates EPIC-003.
+  Branch will be `release/epic-010-circuitsmith-package`. Execution
+  plan lives in the seeding idea file under `ideas/archived/`.

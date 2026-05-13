@@ -1,0 +1,73 @@
+meta:
+  title: ESP32 NodeMCU default build
+  target: esp32
+
+components:
+  # Microcontroller
+  U1:  { type: mcu/esp32,                label: ESP32 }
+
+  # Power input
+  J1:  { type: connectors/usb_c,         label: Power }
+
+  # Status LEDs with current-limit resistors
+  R_PWR:  { type: passives/resistor,     value: 220 }
+  D_PWR:  { type: passives/led,          color: blue,  label: PWR }
+  R_BT:   { type: passives/resistor,     value: 220 }
+  D_BT:   { type: passives/led,          color: green, label: BLUETOOTH }
+  R_SEL0: { type: passives/resistor,     value: 220 }
+  D_SEL0: { type: passives/led,          color: red,   label: SEL_0 }
+  R_SEL1: { type: passives/resistor,     value: 220 }
+  D_SEL1: { type: passives/led,          color: red,   label: SEL_1 }
+  R_SEL2: { type: passives/resistor,     value: 220 }
+  D_SEL2: { type: passives/led,          color: red,   label: SEL_2 }
+
+  # Buttons
+  SW_A:   { type: passives/pushbutton,   label: BTN_A }
+  SW_B:   { type: passives/pushbutton,   label: BTN_B }
+  SW_C:   { type: passives/pushbutton,   label: BTN_C }
+  SW_D:   { type: passives/pushbutton,   label: BTN_D }
+  SW_SEL: { type: passives/pushbutton,   label: BTN_SELECT }
+
+connections:
+  # Power input — USB-C VBUS to the MCU's VIN pin.
+  - net: VCC
+    pins: [J1.VBUS, U1.VIN]
+
+  # Ground rail collects the connector ground and every passives terminal that
+  # returns to ground via the path-merge mechanism.
+  - net: GND
+    pins: [J1.GND, U1.GNDL, U1.GNDR]
+
+  # Power LED — onboard convention puts the status LED on D2.
+  - net: LED_PWR
+    path: [U1.D2, R_PWR.1, R_PWR.2, D_PWR.A, D_PWR.K, GND]
+
+  # Bluetooth status LED on D26.
+  - net: LED_BT
+    path: [U1.D26, R_BT.1, R_BT.2, D_BT.A, D_BT.K, GND]
+
+  # Select-state LEDs on D5/D18/D19.
+  - net: LED_SEL0
+    path: [U1.D5,  R_SEL0.1, R_SEL0.2, D_SEL0.A, D_SEL0.K, GND]
+  - net: LED_SEL1
+    path: [U1.D18, R_SEL1.1, R_SEL1.2, D_SEL1.A, D_SEL1.K, GND]
+  - net: LED_SEL2
+    path: [U1.D19, R_SEL2.1, R_SEL2.2, D_SEL2.A, D_SEL2.K, GND]
+
+  # Buttons — each pulls a GPIO to ground; firmware enables INPUT_PULLUP
+  # so the `pull: firmware` declaration is the ERC E1 source of truth.
+  - net: BTN_A
+    path: [U1.D13, SW_A.1, SW_A.2, GND]
+    pull: firmware
+  - net: BTN_B
+    path: [U1.D12, SW_B.1, SW_B.2, GND]
+    pull: firmware
+  - net: BTN_C
+    path: [U1.D27, SW_C.1, SW_C.2, GND]
+    pull: firmware
+  - net: BTN_D
+    path: [U1.D14, SW_D.1, SW_D.2, GND]
+    pull: firmware
+  - net: BTN_SELECT
+    path: [U1.D21, SW_SEL.1, SW_SEL.2, GND]
+    pull: firmware

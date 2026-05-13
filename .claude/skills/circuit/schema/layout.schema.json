@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://circuitsmith.dev/schemas/layout.schema.json",
+  "title": "Circuit layout (.layout.yml)",
+  "description": "Structural schema for the slot-based layout file emitted by the kernel. Slot vocabulary follows idea-001.layout-engine-concept.md §4. Each placement carries a topology-fingerprint (§8.4) so the CI staleness guard can detect drift before re-rendering.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "placements"],
+  "properties": {
+    "schema":      { "const": "layout/v1" },
+    "placements":  { "$ref": "#/$defs/placements" },
+    "capacity-overrides":      { "$ref": "#/$defs/capacityOverrides" },
+    "region-anchor-overrides": { "$ref": "#/$defs/regionAnchorOverrides" }
+  },
+
+  "$defs": {
+    "placements": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": { "$ref": "#/$defs/placement" }
+      },
+      "additionalProperties": false
+    },
+
+    "placement": {
+      "type": "object",
+      "required": ["region", "topology-fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "region":               { "$ref": "#/$defs/regionName" },
+        "row":                  { "type": "integer", "minimum": 0 },
+        "col":                  { "type": "integer", "minimum": 0 },
+        "position":             { "type": "number",  "minimum": 0, "maximum": 1 },
+        "step":                 { "type": "integer", "minimum": 0 },
+        "attached-to":          { "type": "string",  "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "attach-step":          { "type": "integer", "minimum": 1, "maximum": 2 },
+        "via-net":              { "type": "string",  "minLength": 1 },
+        "label":                { "enum": ["above", "below", "left", "right"] },
+        "label-budget":         { "type": "integer", "minimum": 1 },
+        "topology-fingerprint": { "type": "string",  "pattern": "^(sha1|sha256):[0-9a-f]{6,64}$" },
+        "gx":                   { "type": "integer" },
+        "gy":                   { "type": "integer" }
+      },
+      "allOf": [
+        {
+          "description": "Attached components must omit the anchor's index fields (§4.2 attach-index-redundant).",
+          "if":  { "required": ["attached-to"] },
+          "then": {
+            "not": {
+              "anyOf": [
+                { "required": ["row"] },
+                { "required": ["col"] },
+                { "required": ["position"] },
+                { "required": ["step"] }
+              ]
+            }
+          }
+        },
+        {
+          "description": "Free slot requires both gx and gy; everything else forbids them.",
+          "if":   { "properties": { "region": { "const": "free" } }, "required": ["region"] },
+          "then": { "required": ["gx", "gy"] },
+          "else": { "not": { "anyOf": [
+            { "required": ["gx"] },
+            { "required": ["gy"] }
+          ] } }
+        }
+      ]
+    },
+
+    "regionName": {
+      "anyOf": [
+        { "enum": [
+          "mcu-center",
+          "left-column",
+          "right-column",
+          "top-row",
+          "bottom-row",
+          "free"
+        ] },
+        { "type": "string", "pattern": "^path-of-[A-Za-z_][A-Za-z0-9_]*\\.[A-Za-z0-9_+\\-/]+(?:\\.[A-Za-z0-9_+\\-]+)?$" },
+        { "type": "string", "pattern": "^bus-[A-Za-z0-9_+\\-]+$" },
+        { "type": "string", "pattern": "^pin-symbol-[A-Za-z0-9_+\\-/]+$" }
+      ]
+    },
+
+    "capacityOverrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[A-Za-z][A-Za-z0-9_-]*$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rows": { "type": "integer", "minimum": 1 },
+            "cols": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+
+    "regionAnchorOverrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[A-Za-z][A-Za-z0-9_-]*$": {
+          "type": "object",
+          "required": ["dx", "dy"],
+          "additionalProperties": false,
+          "properties": {
+            "dx": { "type": "integer" },
+            "dy": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@
       "Bash(.venv/bin/pytest:*)",
       "Bash(.venv/bin/ruff:*)",
 
-      "Bash(python scripts/generate-schematic.py:*)",
+      "Bash(python scripts/check_phase2b_trigger.py:*)",
       "Bash(python scripts/housekeep.py:*)",
       "Bash(python scripts/portability_lint.py:*)",
       "Bash(python scripts/release_burnup.py:*)",

@@ -1,0 +1,19 @@
+schema: layout/v1
+placements:
+  D_BT: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:ad38e58bf440 }
+  D_PWR: { region: right-column, row: 1, label: right, topology-fingerprint: sha1:a0cac372d010 }
+  D_SEL0: { region: right-column, row: 2, label: right, topology-fingerprint: sha1:ebd1d6485153 }
+  D_SEL1: { region: right-column, row: 3, label: right, topology-fingerprint: sha1:b4901d54064b }
+  D_SEL2: { region: right-column, row: 4, label: right, topology-fingerprint: sha1:12aa2109e1ff }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  R_BT: { region: right-column, attached-to: D_BT, label: right, topology-fingerprint: sha1:59f80d85610e }
+  R_PWR: { region: right-column, attached-to: D_PWR, label: right, topology-fingerprint: sha1:17eb967326e9 }
+  R_SEL0: { region: right-column, attached-to: D_SEL0, label: right, topology-fingerprint: sha1:ab4868d57eb0 }
+  R_SEL1: { region: right-column, attached-to: D_SEL1, label: right, topology-fingerprint: sha1:88a53f3882e6 }
+  R_SEL2: { region: right-column, attached-to: D_SEL2, label: right, topology-fingerprint: sha1:956ecc35300b }
+  SW_A: { region: left-column, row: 0, label: left, topology-fingerprint: sha1:d5e2e7182781 }
+  SW_B: { region: left-column, row: 1, label: left, topology-fingerprint: sha1:4acfe85f454e }
+  SW_C: { region: left-column, row: 2, label: left, topology-fingerprint: sha1:b48f577052c8 }
+  SW_D: { region: left-column, row: 3, label: left, topology-fingerprint: sha1:a37b05543822 }
+  SW_SEL: { region: left-column, row: 4, label: left, topology-fingerprint: sha1:6c8e3bdf940f }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://circuitsmith.dev/schemas/meta.schema.json",
+  "title": "Renderer meta sidecar (.meta.yml)",
+  "description": "Provenance + rubric metrics sidecar emitted by the renderer alongside every .svg. Format follows idea-001.layout-engine-concept.md §11; the escalations array (TASK-057) is the corpus the Phase 2b trigger reads.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "sources", "layout", "rubric", "provenance"],
+  "properties": {
+    "schema":     { "const": "circuit-meta/v1" },
+    "sources":    { "$ref": "#/$defs/sources" },
+    "layout":     { "$ref": "#/$defs/layoutBlock" },
+    "rubric":     { "$ref": "#/$defs/rubricBlock" },
+    "provenance": { "$ref": "#/$defs/provenanceBlock" },
+    "reviewed":   { "$ref": "#/$defs/reviewedBlock" }
+  },
+
+  "$defs": {
+    "sources": {
+      "type": "object",
+      "required": ["circuit", "layout"],
+      "additionalProperties": false,
+      "properties": {
+        "circuit": { "type": "string", "minLength": 1 },
+        "layout":  { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "layoutBlock": {
+      "type": "object",
+      "required": ["state", "placed", "total"],
+      "additionalProperties": false,
+      "properties": {
+        "state":  { "enum": ["complete", "incomplete"] },
+        "placed": { "type": "integer", "minimum": 0 },
+        "total":  { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "rubricBlock": {
+      "type": "object",
+      "additionalProperties": true
+    },
+
+    "provenanceBlock": {
+      "type": "object",
+      "required": ["tool", "skill", "ai_invoked", "iterations", "escalations"],
+      "additionalProperties": false,
+      "properties": {
+        "tool":           { "type": "string", "minLength": 1 },
+        "skill":          { "type": "string", "minLength": 1 },
+        "ai_invoked":     { "type": "boolean" },
+        "iterations":     { "type": "integer", "minimum": 0 },
+        "ai_invocations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/aiInvocation" }
+        },
+        "escalations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/escalation" }
+        },
+        "generated_at": { "type": "string" }
+      }
+    },
+
+    "aiInvocation": {
+      "type": "object",
+      "required": ["reason", "iterations"],
+      "additionalProperties": true,
+      "properties": {
+        "reason":        { "$ref": "#/$defs/aiReason" },
+        "iterations":    { "type": "integer", "minimum": 0 },
+        "input_tokens":  { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 },
+        "components":    { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "aiReason": {
+      "enum": [
+        "converged",
+        "ai-cap-exceeded",
+        "ai-output-invalid",
+        "ai-frozen-violation",
+        "ai-unknown-region",
+        "ai-missing-component",
+        "ai-token-cap-exceeded"
+      ]
+    },
+
+    "escalation": {
+      "type": "object",
+      "required": ["category"],
+      "additionalProperties": true,
+      "properties": {
+        "category": {
+          "enum": [
+            "no-canonical-rule",
+            "no-profile",
+            "slot-overflow",
+            "bus-saturated",
+            "router-stall",
+            "kernel-bug",
+            "rubric-fail-overlaps",
+            "rubric-fail-labels-fit",
+            "rubric-fail-wire-crossings",
+            "rubric-fail-min-label-distance",
+            "rubric-fail-density",
+            "ai-placer-ai-cap-exceeded",
+            "ai-placer-ai-output-invalid",
+            "ai-placer-ai-frozen-violation",
+            "ai-placer-ai-unknown-region",
+            "ai-placer-ai-missing-component",
+            "ai-placer-ai-token-cap-exceeded"
+          ]
+        },
+        "component":      { "type": "string" },
+        "circuit":        { "type": "string" },
+        "slot_requested": { "type": "string" },
+        "detail":         { "type": "string" }
+      }
+    },
+
+    "reviewedBlock": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
