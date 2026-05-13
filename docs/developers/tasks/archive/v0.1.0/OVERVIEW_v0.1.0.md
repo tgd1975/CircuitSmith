@@ -10,13 +10,9 @@
 
 <!-- END HEADER -->
 
-<!-- BURNUP:START -->
 <a id="burn-up"></a>
 
 _No git tag found yet — burn-up chart needs a release tag to anchor on._
-<!-- BURNUP:END -->
-
-<!-- GENERATED -->
 
 ## Active Tasks
 
@@ -117,8 +113,3 @@ _No paused tasks._
 | [TASK-079](closed/task-079-repo-docs-sweep-and-changelog.md) | Repo docs sweep and CHANGELOG bullet for circuitsmith refactor | Small (&lt;2h) |
 | [TASK-081](closed/task-081-author-release-workflow-scaffolding.md) | Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep) | Medium (2-8h) |
 | [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
-
-## Archived Releases
-
-- [v0.1.0](archive/v0.1.0/OVERVIEW.md)
-<!-- END GENERATED -->

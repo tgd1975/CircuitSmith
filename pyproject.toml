@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "circuitsmith"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Generate KiCad-compatible schematics from declarative YAML, validate against electrical rules, export BOM and netlist — driven by a Claude Code skill."
 readme = "README.md"
 requires-python = ">=3.11"

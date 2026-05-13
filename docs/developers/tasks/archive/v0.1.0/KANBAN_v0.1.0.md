@@ -1,0 +1,25 @@
+# Kanban Board
+
+**Epics:** [circuit-skill-packaging](#circuit-skill-packaging)
+
+## circuit-skill-packaging
+
+_⚪ 2 open · 🔵 0 active · 🟡 0 paused · 🟢 8 closed · ████████░░ 80%_
+
+```mermaid
+kanban
+  Open
+    TASK_041["Run the five Phase 6 acceptance tests"]
+    TASK_080["Publish circuitsmith package to PyPI (first real 0.1.0)"]
+  Active
+  Paused
+  Closed
+    TASK_039["Write .claude/skills/circuit/SKILL.md with full system prompt"]
+    TASK_040["Register circuit skill in .vibe/config.toml enabled_skills"]
+    TASK_042["Finalise all .claude/skills/circuit/docs/ files"]
+    TASK_043["Create circuit-skill standalone GitHub repository"]
+    TASK_044["Extract skill commit history via git subtree split; push as main"]
+    TASK_045["Replace skill dir with pinned copy; update doc links; write RELEASING.md and README"]
+    TASK_081["Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep)"]
+    TASK_082["Author /release skill and register in .vibe/config.toml"]
+```
