@@ -1,0 +1,16 @@
+schema: layout/v1
+placements:
+  # Pedagogical re-order: put PWR at row 0 (top), then BT, then ERR.
+  # The kernel's default ordering is alphabetical-on-fingerprint; this
+  # override lets the author choose the reading order that matches the
+  # declaration order in the .circuit.yml. The fingerprints are copied
+  # from the kernel-generated layout in 03-sub-blocks.layout.yml — the
+  # layout-schema validator requires them on every placement.
+  D_PWR: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:f00c873219b8 }
+  D_BT:  { region: right-column, row: 1, label: right, topology-fingerprint: sha1:f8a7ab172451 }
+  D_ERR: { region: right-column, row: 2, label: right, topology-fingerprint: sha1:85e031452084 }
+  R_PWR: { region: right-column, attached-to: D_PWR, label: right, topology-fingerprint: sha1:17eb967326e9 }
+  R_BT:  { region: right-column, attached-to: D_BT,  label: right, topology-fingerprint: sha1:59f80d85610e }
+  R_ERR: { region: right-column, attached-to: D_ERR, label: right, topology-fingerprint: sha1:9a2292b134b0 }
+  U1:    { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }
+  J1:    { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }

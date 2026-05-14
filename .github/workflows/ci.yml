@@ -76,6 +76,16 @@ jobs:
         shell: bash
         run: python scripts/check_exporters.py
 
+      - name: Tutorial + gallery regression gate (TASK-101)
+        # Re-renders every committed `.circuit.yml` under
+        # docs/users/{tutorial,examples}/ and diffs the SVG / sidecars
+        # against the committed artefacts. Skips circuits without a
+        # committed SVG (the EPIC-012 gallery entries blocked on
+        # IDEA-008 / IDEA-009).
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_gallery_regression.py
+
       - name: Catalog validation (offline)
         # Format + enforced_by + heuristic disclaimer + category-lint.
         # Online URL reachability runs nightly via the separate

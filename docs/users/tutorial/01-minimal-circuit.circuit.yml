@@ -1,0 +1,19 @@
+meta:
+  title: Tutorial step 1 — minimal circuit
+  target: esp32
+
+components:
+  U1:    { type: mcu/esp32,            label: ESP32 }
+  J1:    { type: connectors/usb_c,     label: Power }
+  R1:    { type: passives/resistor,    value: 220 }
+  D1:    { type: passives/led,         color: red, label: STATUS }
+
+connections:
+  - net: VCC
+    pins: [J1.VBUS, U1.VIN]
+
+  - net: GND
+    pins: [J1.GND, U1.GNDL, U1.GNDR]
+
+  - net: LED_STATUS
+    path: [U1.D2, R1.1, R1.2, D1.A, D1.K, GND]

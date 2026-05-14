@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: docs/users/tutorial/01-minimal-circuit.circuit.yml
+  layout:  /home/tobias/Dokumente/Projekte/CircuitSmith/cs-gallery-check-pxmyxtir/out.layout.yml
+layout:
+  state: complete
+  placed: 4
+  total:  4
+rubric:
+  density: 0.1143
+  intra_component_intersections: 1
+  labels_fit: true
+  min_label_distance: 1
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

@@ -1,0 +1,9 @@
+Reference,Type,Value,Footprint,Datasheet,Manufacturer
+U1,mcu/esp32,,,https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf,Espressif (Joy-IT SBC-NodeMCU-ESP32 board)
+J1,connectors/usb_c,,,,
+R_PWR,passives/resistor,220,,,
+D_PWR,passives/led,blue,,,
+R_BT,passives/resistor,220,,,
+D_BT,passives/led,green,,,
+R_ERR,passives/resistor,220,,,
+D_ERR,passives/led,red,,,

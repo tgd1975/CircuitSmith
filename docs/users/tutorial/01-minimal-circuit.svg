@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 320 256" width="320" height="256" data-skill="circuit-skill@0.4.0">
+<title>Tutorial step 1 — minimal circuit</title>
+<g class="wires" stroke="black" stroke-width="2" fill="none">
+<path d="M 0,128 L 0,128 L 0,0" data-net="GND" data-from="J1.GND" data-to="U1.GNDL" />
+<path d="M 0,0 L 0,0" data-net="GND" data-from="U1.GNDL" data-to="U1.GNDR" />
+<path d="M 0,0 L 192,0 L 192,0" data-net="GND" data-from="U1.GNDR" data-to="D1.K" />
+<path d="M 0,0 L 160,0 L 160,0" data-net="LED_STATUS" data-from="U1.D2" data-to="R1.1" />
+<path d="M 160,0 L 192,0 L 192,0" data-net="LED_STATUS__R1_2__D1_A" data-from="R1.2" data-to="D1.A" />
+<path d="M 0,128 L 0,128 L 0,0" data-net="VCC" data-from="J1.VBUS" data-to="U1.VIN" />
+</g>
+<g class="components">
+<g class="component" data-ref="D1" data-region="right-column"><rect x="176" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="192" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">D1</text></g>
+<g class="component" data-ref="J1" data-region="bottom-row"><rect x="-16" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J1</text></g>
+<g class="component" data-ref="R1" data-region="right-column"><rect x="144" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="160" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">R1</text></g>
+<g class="component" data-ref="U1" data-region="mcu-center"><rect x="-16" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">U1</text></g>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-256 -64 320 256" width="320" height="256" data-skill="circuit-skill@0.4.0">
+<title>Tutorial step 4 — broken circuit (deliberately floating button input)</title>
+<g class="wires" stroke="black" stroke-width="2" fill="none">
+<path d="M 0,0 L -192,0 L -192,0" data-net="BTN_USER" data-from="U1.D13" data-to="SW1.1" />
+<path d="M 0,128 L 0,128 L 0,0" data-net="GND" data-from="J1.GND" data-to="U1.GNDL" />
+<path d="M 0,0 L 0,0" data-net="GND" data-from="U1.GNDL" data-to="U1.GNDR" />
+<path d="M 0,0 L -192,0 L -192,0" data-net="GND" data-from="U1.GNDR" data-to="SW1.2" />
+<path d="M 0,128 L 0,128 L 0,0" data-net="VCC" data-from="J1.VBUS" data-to="U1.VIN" />
+</g>
+<g class="components">
+<g class="component" data-ref="J1" data-region="bottom-row"><rect x="-16" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J1</text></g>
+<g class="component" data-ref="SW1" data-region="left-column"><rect x="-208" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="-192" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">SW1</text></g>
+<g class="component" data-ref="U1" data-region="mcu-center"><rect x="-16" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">U1</text></g>
+</g>
+</svg>

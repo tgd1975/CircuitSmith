@@ -1,0 +1,8 @@
+schema: layout/v1
+placements:
+  D1: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:f00c873219b8 }
+  D2: { region: right-column, row: 1, label: right, topology-fingerprint: sha1:f8a7ab172451 }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  R1: { region: right-column, attached-to: D1, label: right, topology-fingerprint: sha1:4937ca3095fe }
+  R2: { region: right-column, attached-to: D2, label: right, topology-fingerprint: sha1:27548a27b74b }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

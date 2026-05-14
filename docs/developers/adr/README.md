@@ -64,6 +64,7 @@ the original reasoning stays as historical record.
 | [0011](0011-content-identity-not-byte-identity.md) | SVG regression test uses content-identity (matplotlib non-determinism normalised), not literal byte-identity | TASK-006 |
 | [0012](0012-library-as-installable-package.md) | Library is an installable package; skill folder is the agent-facing surface | `idea-002-consolidate-skill-python-into-central-module.md` |
 | [0013](0013-build-guide-include-via-link.md) | Build-guide BOM embed is a link, not a literal include — until MkDocs lands | `idea-001.exporters.md §BOM Exporter` |
+| [0014](0014-docs-users-sibling-folder.md) | User-facing docs live at `docs/users/`, a sibling of `developers/` and `builders/` | TASK-092 |
 
 ### Superseded
 

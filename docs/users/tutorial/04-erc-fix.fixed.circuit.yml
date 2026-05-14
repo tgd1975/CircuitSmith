@@ -1,0 +1,21 @@
+meta:
+  title: Tutorial step 4 — fixed circuit (pull declared)
+  target: esp32
+
+components:
+  U1:    { type: mcu/esp32,            label: ESP32 }
+  J1:    { type: connectors/usb_c,     label: Power }
+  SW1:   { type: passives/pushbutton,  label: BTN_USER }
+
+connections:
+  - net: VCC
+    pins: [J1.VBUS, U1.VIN]
+
+  - net: GND
+    pins: [J1.GND, U1.GNDL, U1.GNDR]
+
+  # Fixed: declare the firmware-side pull on the button net. ERC E1
+  # now sees a defined idle level and is satisfied.
+  - net: BTN_USER
+    path: [U1.D13, SW1.1, SW1.2, GND]
+    pull: firmware

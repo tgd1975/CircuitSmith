@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: docs/users/tutorial/04-erc-fix.fixed.circuit.yml
+  layout:  docs/users/tutorial/04-erc-fix.fixed.layout.yml
+layout:
+  state: complete
+  placed: 3
+  total:  3
+rubric:
+  density: 0.08571
+  intra_component_intersections: 0
+  labels_fit: true
+  min_label_distance: inf
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

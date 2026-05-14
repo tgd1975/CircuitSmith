@@ -9,11 +9,49 @@ first tag is cut.
 
 ## [Unreleased]
 
+### Added
+
+- **EPIC-012 — tutorial and example gallery (scaffold).** User-docs
+  home at `docs/users/` chosen via ADR-0014 and pointed at from the
+  repo `README.md` (TASK-092). Tutorial scaffold under
+  `docs/users/tutorial/` (six-step index + six placeholder step
+  files) and gallery scaffold under `docs/users/examples/` (five
+  placeholder example subdirectories with the index table) landed
+  empty, ready for TASK-094..101 to fill (TASK-093).
+- **Tutorial steps 1-3** (TASK-094) — minimal circuit, fan-out
+  branch, and repeated R+LED sub-blocks. Each step's `.circuit.yml`
+  is committed alongside its rendered SVG + sidecars. Prose
+  references the committed YAML, never pastes it.
+- **Tutorial steps 4-6** (TASK-095) — ERC E1 round-trip
+  (deliberate floating input, broken/fixed pair committed), BOM
+  export via the library API (no dedicated CLI yet) with the
+  PartsLedger round-trip documented as manual, and layout
+  iteration via `--layout` override on top of the kernel's output.
+- **Gallery scaffolding** — five gallery entries land with the
+  six-section README template (TASK-096..100). Only the voltage
+  divider's `circuit.yml` is committed; all five rendered artefact
+  sets are deferred until the v0.1 kernel and component-library
+  follow-ups land. Each README carries an honest "blocked-on" note
+  pointing at IDEA-008 / IDEA-009.
+- **Tutorial + gallery regression-diff CI gate** (TASK-101).
+  `scripts/check_gallery_regression.py` re-renders every committed
+  `.circuit.yml` under `docs/users/{tutorial,examples}/`, diffs
+  against committed artefacts, supports `--rebaseline`. Wired into
+  `ci.yml`, allow-listed in `.claude/settings.json`, tests in
+  `tests/test_check_gallery_regression.py`.
+- **EPIC-012 closed** — all 10 tasks closed in one branch; see the
+  [epic file](docs/developers/tasks/closed/epic-012-tutorial-and-examples.md).
+
 ### Tooling
 
 - Elevated IDEA-003, IDEA-004, IDEA-007 to EPIC-011 (test plan + coverage
   matrix, 9 tasks), EPIC-012 (tutorial + example gallery, 10 tasks), and
   EPIC-013 (post-EPIC-006 documentation audit, 8 tasks).
+- Filed IDEA-008 (first-class sub-block authoring + kernel
+  canonical rules for non-LED passive groupings) and IDEA-009
+  (active-device component profiles + multi-page renderer support)
+  as the unblocking follow-ups for the EPIC-012 gallery's deferred
+  rendered artefacts.
 
 ## [v0.1.0] — 2026-05-13
 

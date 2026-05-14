@@ -33,6 +33,7 @@ Steps, in order:
 | Markdown lint | `markdownlint-cli2 "**/*.md" "#node_modules" "#.claude/security-review-latest.md"`. Mirror of the local pre-commit step. | A `.md` file violates the configured ruleset. Reproduce locally with the same command. |
 | Portability lint | `python scripts/portability_lint.py src/circuitsmith`. No-op on missing dir, so safe pre-package-scaffold. | A path or import in `src/circuitsmith/` is OS-specific. |
 | Pytest | `pytest`. Picks up both test roots (`tests`, `scripts/tests`) per [`pyproject.toml`](../../pyproject.toml). | A test failed. Reproduce locally per [`TESTING.md`](TESTING.md). |
+| Tutorial + gallery regression gate (TASK-101) | `python scripts/check_gallery_regression.py`. Re-renders every committed `.circuit.yml` under `docs/users/{tutorial,examples}/` and diffs the SVG / sidecars against the committed artefacts. Skips circuits without a committed SVG (the EPIC-012 gallery entries blocked on IDEA-008 / IDEA-009). | A tutorial step or gallery example's committed artefact drifted from the renderer's current output. Reproduce locally with the same command; rebase with `--rebaseline` if the drift is intentional. |
 
 ## Local mirror — the pre-commit hook
 

@@ -14,6 +14,7 @@
       "Bash(python scripts/check_circuit_schema.py:*)",
       "Bash(python scripts/check_erc_reports.py:*)",
       "Bash(python scripts/check_exporters.py:*)",
+      "Bash(python scripts/check_gallery_regression.py:*)",
       "Bash(python scripts/check_phase2b_trigger.py:*)",
       "Bash(python scripts/housekeep.py:*)",
       "Bash(python scripts/portability_lint.py:*)",

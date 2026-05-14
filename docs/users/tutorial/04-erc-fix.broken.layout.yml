@@ -1,0 +1,5 @@
+schema: layout/v1
+placements:
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  SW1: { region: left-column, row: 0, label: left, topology-fingerprint: sha1:501815913929 }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

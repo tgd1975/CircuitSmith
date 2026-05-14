@@ -122,6 +122,14 @@ ships first and stays in production until concrete escalations justify the
 AI placer. See the [phase plan](docs/developers/ideas/archived/idea-001-circuit-skill.md#phase-plan)
 for prerequisites and acceptance criteria.
 
+## Documentation
+
+| Audience | Where |
+|---|---|
+| Users — tutorial and example gallery | [`docs/users/`](docs/users/) |
+| Builders — per-target wiring artefacts (BOM, netlist, SVG) | [`docs/builders/`](docs/builders/) |
+| Developers — architecture, ADRs, task system, ERC internals | [`docs/developers/`](docs/developers/) |
+
 ## Deep-dive docs
 
 Each module has its own companion specification:
