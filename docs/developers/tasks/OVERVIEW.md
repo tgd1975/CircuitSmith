@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 42** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 91** | **Total: 133** | ███████░░░ 68%
+⚪ **Open: 18** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 115** | **Total: 133** | █████████░ 86%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -22,7 +22,7 @@
 xychart-beta
     title "Cumulative tasks closed"
     x-axis ["05-13", "05-14"]
-    line [1, 11]
+    line [1, 34]
 ```
 
 </td><td>
@@ -40,8 +40,8 @@ xychart-beta
 xychart-beta
     title "Cumulative effort hours — green: estimate, blue: actual"
     x-axis ["05-13", "05-14"]
-    line [5, 43]
-    line [5, 27]
+    line [5, 151.25]
+    line [5, 47.5]
 ```
 
 </td></tr></table>
@@ -51,7 +51,7 @@ _Legend: green line = estimate (midpoint hours from `effort:`); blue line = actu
 | Date | Tasks closed | Cum. tasks | Est. h | Cum. est. h | Actual h | Cum. actual h | Epics closed | Cum. epics |
 |------|-------------:|-----------:|-------:|------------:|---------:|--------------:|-------------:|-----------:|
 | 2026-05-13 | 1 | 1 | 5 | 5 | 5 | 5 | 0 | 0 |
-| 2026-05-14 | 10 | 11 | 38 | 43 | 22 | 27 | 1 | 1 |
+| 2026-05-14 | 33 | 34 | 146.2 | 151.2 | 42.5 | 47.5 | 1 | 1 |
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -86,30 +86,6 @@ _No paused tasks._
 | [TASK-107](open/task-107-test-plan-alignment-with-epic-011.md) | Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-108](open/task-108-annotate-idea-001-dossier.md) | Annotate the archived IDEA-001 dossier with what shipped vs what didn't | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-109](open/task-109-final-pass-readme-and-entry-points.md) | Final pass on README.md and top-level entry-point docs | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-110](open/task-110-freeze-open-question-defaults.md) | Freeze open-question defaults for EPIC-014 | XS (&lt;30m) | Junior | ⚪ open |
-| [TASK-111](open/task-111-kernel-rule-rc-low-pass.md) | Kernel canonical rule — R + C low-pass | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-112](open/task-112-kernel-rule-rc-high-pass.md) | Kernel canonical rule — R + C high-pass | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-113](open/task-113-kernel-rule-cc-decoupling-pair.md) | Kernel canonical rule — C + C decoupling pair | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-114](open/task-114-kernel-rule-rr-voltage-divider.md) | Kernel canonical rule — R + R voltage divider with discriminator | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-115](open/task-115-schema-sub-blocks-instances-ports.md) | Schema extension — sub-blocks, instances, ports | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-116](open/task-116-netgraph-flattener-for-sub-block-instances.md) | Netgraph flattener for sub-block instances | Large (8-24h) | Senior | ⚪ open |
-| [TASK-117](open/task-117-sub-block-erc-rules.md) | Sub-block ERC rules (4 rules) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-118](open/task-118-renderer-inline-box-mode.md) | Renderer — inline-box mode for sub-block instances | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-119](open/task-119-tutorial-step-3-rewrite-and-sub-block-docs.md) | Tutorial step 3 rewrite + sub-block docs | Medium (2-8h) | Junior | ⚪ open |
-| [TASK-120](open/task-120-component-profile-bjt-npn-and-pnp.md) | Component profile — bjt_npn and bjt_pnp | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-121](open/task-121-component-profile-ic-555.md) | Component profile — ic/555 | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-122](open/task-122-component-profile-ic-opamp-dual-supply.md) | Component profile — ic/opamp_dual_supply | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-123](open/task-123-active-device-erc-rules.md) | Active-device ERC rules (BJT, op-amp, 555) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-124](open/task-124-schema-and-layout-engine-pages-partition.md) | Schema + layout-engine — pages partition | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-125](open/task-125-renderer-multi-page-driver.md) | Renderer — multi-page driver | Large (8-24h) | Senior | ⚪ open |
-| [TASK-126](open/task-126-renderer-cross-page-net-labels.md) | Renderer — cross-page net labels | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-127](open/task-127-cross-page-erc-rules.md) | Cross-page ERC rules (4 rules) | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-128](open/task-128-gallery-reattempt-voltage-divider.md) | Gallery re-attempt — voltage divider (supersedes TASK-096) | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-129](open/task-129-gallery-reattempt-common-emitter-amplifier.md) | Gallery re-attempt — common-emitter amplifier (supersedes TASK-097) | Small (&lt;2h) | Senior | ⚪ open |
-| [TASK-130](open/task-130-gallery-reattempt-555-monostable.md) | Gallery re-attempt — 555 monostable (supersedes TASK-098) | Small (&lt;2h) | Senior | ⚪ open |
-| [TASK-131](open/task-131-gallery-reattempt-opamp-non-inverting-buffer.md) | Gallery re-attempt — op-amp non-inverting buffer (supersedes TASK-099) | Small (&lt;2h) | Senior | ⚪ open |
-| [TASK-132](open/task-132-gallery-reattempt-multi-page-split.md) | Gallery re-attempt — multi-page split (supersedes TASK-100) | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-133](open/task-133-component-skill-docs-final-pass.md) | Component-skill docs final pass | Small (&lt;2h) | Junior | ⚪ open |
 
 ## Closed Tasks
 
@@ -206,6 +182,30 @@ _No paused tasks._
 | [TASK-099](closed/task-099-example-opamp-non-inverting-buffer.md) | Example gallery — op-amp non-inverting buffer | Medium (2-8h) |
 | [TASK-100](closed/task-100-example-multi-page-split.md) | Example gallery — multi-page split (stresses renderer page-break) | Medium (2-8h) |
 | [TASK-101](closed/task-101-ci-regression-diff-for-gallery.md) | CI regression diff — regenerate the tutorial and gallery, fail on drift | Medium (2-8h) |
+| [TASK-110](closed/task-110-freeze-open-question-defaults.md) | Freeze open-question defaults for EPIC-014 | XS (&lt;30m) |
+| [TASK-111](closed/task-111-kernel-rule-rc-low-pass.md) | Kernel canonical rule — R + C low-pass | Medium (2-8h) |
+| [TASK-112](closed/task-112-kernel-rule-rc-high-pass.md) | Kernel canonical rule — R + C high-pass | Medium (2-8h) |
+| [TASK-113](closed/task-113-kernel-rule-cc-decoupling-pair.md) | Kernel canonical rule — C + C decoupling pair | Medium (2-8h) |
+| [TASK-114](closed/task-114-kernel-rule-rr-voltage-divider.md) | Kernel canonical rule — R + R voltage divider with discriminator | Medium (2-8h) |
+| [TASK-115](closed/task-115-schema-sub-blocks-instances-ports.md) | Schema extension — sub-blocks, instances, ports | Medium (2-8h) |
+| [TASK-116](closed/task-116-netgraph-flattener-for-sub-block-instances.md) | Netgraph flattener for sub-block instances | Large (8-24h) |
+| [TASK-117](closed/task-117-sub-block-erc-rules.md) | Sub-block ERC rules (4 rules) | Medium (2-8h) |
+| [TASK-118](closed/task-118-renderer-inline-box-mode.md) | Renderer — inline-box mode for sub-block instances | Medium (2-8h) |
+| [TASK-119](closed/task-119-tutorial-step-3-rewrite-and-sub-block-docs.md) | Tutorial step 3 rewrite + sub-block docs | Medium (2-8h) |
+| [TASK-120](closed/task-120-component-profile-bjt-npn-and-pnp.md) | Component profile — bjt_npn and bjt_pnp | Medium (2-8h) |
+| [TASK-121](closed/task-121-component-profile-ic-555.md) | Component profile — ic/555 | Small (&lt;2h) |
+| [TASK-122](closed/task-122-component-profile-ic-opamp-dual-supply.md) | Component profile — ic/opamp_dual_supply | Small (&lt;2h) |
+| [TASK-123](closed/task-123-active-device-erc-rules.md) | Active-device ERC rules (BJT, op-amp, 555) | Medium (2-8h) |
+| [TASK-124](closed/task-124-schema-and-layout-engine-pages-partition.md) | Schema + layout-engine — pages partition | Medium (2-8h) |
+| [TASK-125](closed/task-125-renderer-multi-page-driver.md) | Renderer — multi-page driver | Large (8-24h) |
+| [TASK-126](closed/task-126-renderer-cross-page-net-labels.md) | Renderer — cross-page net labels | Medium (2-8h) |
+| [TASK-127](closed/task-127-cross-page-erc-rules.md) | Cross-page ERC rules (4 rules) | Medium (2-8h) |
+| [TASK-128](closed/task-128-gallery-reattempt-voltage-divider.md) | Gallery re-attempt — voltage divider (supersedes TASK-096) | Small (&lt;2h) |
+| [TASK-129](closed/task-129-gallery-reattempt-common-emitter-amplifier.md) | Gallery re-attempt — common-emitter amplifier (supersedes TASK-097) | Small (&lt;2h) |
+| [TASK-130](closed/task-130-gallery-reattempt-555-monostable.md) | Gallery re-attempt — 555 monostable (supersedes TASK-098) | Small (&lt;2h) |
+| [TASK-131](closed/task-131-gallery-reattempt-opamp-non-inverting-buffer.md) | Gallery re-attempt — op-amp non-inverting buffer (supersedes TASK-099) | Small (&lt;2h) |
+| [TASK-132](closed/task-132-gallery-reattempt-multi-page-split.md) | Gallery re-attempt — multi-page split (supersedes TASK-100) | Medium (2-8h) |
+| [TASK-133](closed/task-133-component-skill-docs-final-pass.md) | Component-skill docs final pass | Small (&lt;2h) |
 
 ## Archived Releases
 

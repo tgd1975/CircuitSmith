@@ -1,0 +1,52 @@
+meta:
+  title: Common-emitter amplifier
+  target: esp32
+
+# Single-rail NPN common-emitter audio-band amplifier.
+# Design point: VCC = 5 V, Ic ≈ 1 mA, Vc ≈ ½VCC = 2.5 V, Av ≈ Rc/Re ≈ 10.
+# Emitter degeneration is left unbypassed on purpose — the gain stays
+# predictable across temperature at the cost of magnitude.
+
+components:
+  U1: { type: mcu/esp32,          label: ESP32 }
+  J1: { type: connectors/usb_c,   label: 5V in }
+  Q1: { type: actives/bjt_npn,    label: AMP }
+  # Base-bias divider sets Vb ≈ 1 V (Vbe + Ie·Re).
+  R_B1: { type: passives/resistor, value: 47000, role: divider }
+  R_B2: { type: passives/resistor, value: 10000, role: divider }
+  # Collector load and emitter degeneration set Av and bias point.
+  R_C:  { type: passives/resistor, value: 2700 }
+  R_E:  { type: passives/resistor, value: 270 }
+  # Coupling caps: block DC at signal input/output.
+  C_IN:  { type: passives/capacitor, value: 10e-6 }
+  C_OUT: { type: passives/capacitor, value: 10e-6 }
+  # Mono 1/4" jacks for the signal in / signal out path.
+  J_IN:  { type: connectors/mono_jack_6_35mm, label: Signal in }
+  J_OUT: { type: connectors/mono_jack_6_35mm, label: Signal out }
+
+connections:
+  - net: VCC
+    pins: [J1.VBUS, U1.VIN, R_B1.1, R_C.1]
+
+  - net: GND
+    pins: [J1.GND, U1.GNDL, U1.GNDR, R_B2.2, R_E.2, J_IN.SLEEVE, J_OUT.SLEEVE]
+
+  # Signal input → DC-blocking cap → base-bias node.
+  - net: SIG_IN
+    pins: [J_IN.TIP, C_IN.1]
+
+  # Base-bias node: dividers + coupled-in signal + transistor base.
+  - net: BASE
+    pins: [R_B1.2, R_B2.1, Q1.B, C_IN.2]
+
+  # Collector node: amplified, DC-coupled to output cap.
+  - net: COLL
+    pins: [R_C.2, Q1.C, C_OUT.1]
+
+  # Emitter degeneration node.
+  - net: EMIT
+    pins: [Q1.E, R_E.1]
+
+  # Output cap blocks the collector's DC bias from the load.
+  - net: SIG_OUT
+    pins: [C_OUT.2, J_OUT.TIP]

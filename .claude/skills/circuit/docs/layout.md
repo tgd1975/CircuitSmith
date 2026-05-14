@@ -65,19 +65,32 @@ The kernel dispatches every component to a canonical slot using a small
 table. The full §5.3 spec lives in the concept doc; the v0.1 implementation
 covers the rows below.
 
-| Component category | Canonical placement |
-|---|---|
-| MCU / primary IC (`type: mcu/*`) | `mcu-center` |
-| LED (anode → MCU pin P, cathode → GND) | `side-column(P)`, `row: next-free` |
-| Resistor in series with an LED | inherited region, `attached-to: <LED>` |
-| Resistor on a power → MCU path (pull-up) | `path-of-<MCU.PIN>`, `step: 0` |
-| Button (one terminal → MCU pin, other → GND) | `side-column(P)`, `row: next-free` |
-| Decoupling capacitor (between VCC and GND) | `bus-<power-net>`, `position: next-free` |
-| I²C sensor | `left-column` or `right-column` by dominant pin side |
-| Multi-pin header / jack | `top-row` or `bottom-row` |
+| ID | Component shape | Canonical placement |
+|----|-----------------|---------------------|
+| —  | MCU / primary IC (`type: mcu/*`) | `mcu-center` |
+| 1  | LED (anode → MCU pin P, cathode → GND) | `side-column(P)`, `row: next-free` |
+| 2  | Resistor in series with an LED | inherited region, `attached-to: <LED>` |
+| 3  | Resistor on a power → MCU path (pull-up, ADR-0017 widened to IC `SIGNAL_INPUT` anchors) | `path-of-<anchor.ref>.<pin>`, `step: 0` |
+| 4  | Button (one terminal → MCU pin, other → GND) | `side-column(P)`, `row: next-free` |
+| 5  | Decoupling capacitor (between VCC and GND) | `bus-<power-net>`, `position: next-free` |
+| 6  | I²C sensor | `left-column` or `right-column` by dominant pin side |
+| 7  | Multi-pin header / jack | `top-row` or `bottom-row` |
+| 11 | RC low-pass (R in-path, C-to-GND from junction) | `rc-low-pass-<R>-<C>`, rows 0/1 (synthetic region) |
+| 12 | RC high-pass (C in series, R-to-GND from junction) | `rc-high-pass-<C>-<R>`, rows 0/1 (synthetic region) |
+| 13 | C+C decoupling pair (both caps between the same rail and GND) | `cc-decoupling-<C1>-<C2>`, rows 0/1 (synthetic region) |
+| 14 | R+R voltage divider (rail → R1 → tap → R2 → GND; tap-net hinted via `/^(V?REF\|SENSE\|ADC\|DIV\|TAP)/i` or `role: divider`) | `divider-<tap_net>`, rows 0/1 (synthetic region) |
+| 15 | BJT canonical slot (ADR-0015) | `right-column`, `row: next-free` |
+| 16 | Resistor on the BJT base path (ADR-0015) | inherited region, `attached-to: <BJT>` |
+| 17 | Generic IC (`ic_timer` / `ic_opamp` — 555, op-amp) | `left-column` or `right-column` by dominant pin side |
+| 18 | BJT collector load (rail → R → Q.C, ADR-0016) | `bjt-load-<BJT>`, row 0 (synthetic region) |
+| 19 | BJT emitter degeneration (Q.E → R → GND, ADR-0016) | `bjt-degen-<BJT>`, row 0 (synthetic region) |
 
 `side-column(P)` resolves to `left-column` when pin P has
-`side: left` and `right-column` when it has `side: right`.
+`side: left` and `right-column` when it has `side: right`. **Synthetic
+regions** (rows 11–14, 18–19) are uncoordinatised in the v0.1
+router — the kernel records the placement and the BOM / ERC see
+the components, but the SVG omits the symbol. Coordinatising
+synthetic regions for the renderer is a planned follow-up.
 
 A component that matches no row raises a `no-canonical-rule`
 escalation (see below) and the renderer aborts. The fix is either to
@@ -110,6 +123,94 @@ layout produces **exactly one new line** in `layout.yml` and zero
 changes to other lines. The kernel's `next-free` row/col bookkeeping is
 what makes this true; rung 2 of the overflow ladder (neighbour-nudge)
 breaks it deliberately by shifting an entire region.
+
+## Sub-block instances (inline-box mode)
+
+When a `.circuit.yml` declares `sub-blocks:` / `instances:` (see
+[`circuit-yaml.md`](circuit-yaml.md#sub-blocks-and-instances)),
+the renderer flattens every instance before the kernel runs.
+The placer sees ordinary flat refdes (`R_PWR`, `D_PWR`, …); the
+canonical-slot table doesn't know — or care — that the components
+came from a sub-block.
+
+The renderer preserves the instance grouping in two places:
+
+- The placements in `layout.yml` group naturally because every
+  member of an instance shares the same canonical rule. Three
+  instances of an `R+LED` sub-block produce three adjacent rows
+  in `right-column`, each with the resistor `attached-to:` its
+  LED.
+- The `meta.yml` sidecar carries an `instances:` block that
+  names each instance, its sub-block, and its flat refdes
+  constituents:
+
+  ```yaml
+  instances:
+    PWR:
+      sub-block: led_indicator
+      label: "PWR: led_indicator"
+      constituents: [D_PWR, R_PWR]
+  ```
+
+  Downstream tools (BOM grouping, the planned inline-box SVG
+  annotator) read this map instead of re-running the flattener.
+
+v0.1 ships **inline-box mode** — the constituents of an instance
+appear in the SVG exactly where the canonical-slot rules would
+place them, with no enclosing rectangle, no explicit hierarchy
+glyph. The grouping survives via the `meta.yml.instances` map
+above and via the shared `attached-to:` chains in `layout.yml`.
+
+**Hierarchical-port mode** — a Schemdraw bounding-box rectangle
+around each instance's constituents plus labelled hierarchical
+ports on the box's edges — is the planned alternative for when
+sub-block contents grow past two or three components. The
+hierarchical-port renderer is gated on EPIC-014's multi-page
+work; until that phase lands, the renderer always falls through
+to inline-box mode.
+
+## Pages partition (multi-page layouts)
+
+EPIC-014 / TASK-124 — opt-in. A `.layout.yml` can declare a list
+of named pages and tag each placement with the page it belongs
+to. The kernel does not derive pages from circuit topology;
+pages are a *rendering* concern. Slot assignment happens within
+a page's region/slot vocabulary (per
+[ADR-0001](../../../docs/developers/adr/0001-slots-not-coordinates.md)),
+so a `right-column` slot on `p1` is independent of a
+`right-column` slot on `p2`.
+
+```yaml
+schema: layout/v1
+pages:
+  - { name: p1, title: Power and clock }
+  - { name: p2, title: Signal chain }
+placements:
+  U1:  { region: mcu-center, page: p1, topology-fingerprint: sha1:... }
+  D1:  { region: left-column, row: 0, label: left, page: p2, topology-fingerprint: sha1:... }
+```
+
+Validator invariants (`layout-pages-duplicate-name`,
+`layout-page-undeclared`):
+
+- `pages[*].name` is unique within the document.
+- Every `placements.<ref>.page` must name a declared page.
+- A `.layout.yml` with **no** `pages:` block continues to render
+  as today (one SVG, no `-p1` suffix). Pages are strictly
+  additive; existing v0.1 fixtures are byte-identical.
+
+Attached-to components inherit the anchor's page (so a current-
+limit resistor never separates from its LED, a base-drive
+resistor never separates from its BJT). The user can override
+by setting `page:` on the attached entry explicitly; the
+previous-layout parse honours that.
+
+The renderer driver (TASK-125), cross-page net labels
+(TASK-126) and cross-page ERC rules (TASK-127) are the
+consumers of this schema field. TASK-124 lands the schema and
+the kernel propagation only — without TASK-125, a `pages:`
+block is parsed, validated, and round-tripped, but the renderer
+ignores it (defensible intermediate state).
 
 ## Manhattan router
 

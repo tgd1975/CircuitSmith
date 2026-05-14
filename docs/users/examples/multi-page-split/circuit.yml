@@ -1,0 +1,51 @@
+meta:
+  title: Multi-page split — audio CE-amp chain
+  target: esp32
+
+# Single-rail BJT common-emitter audio amp, split across two
+# pages: input section (signal jack, coupling cap, base-bias
+# divider) on p1; active section (transistor, collector load,
+# emitter degeneration, output coupling cap, output jack) on p2.
+# The signal crosses the page boundary on the BASE net — that's
+# the cross-page net label the renderer draws on both pages
+# (TASK-126). Power rails (VCC, GND) also span both pages by
+# necessity; together with BASE, three nets cross the boundary
+# — comfortably below TASK-127's six-net threshold.
+
+components:
+  U1: { type: mcu/esp32,          label: ESP32 }
+  J1: { type: connectors/usb_c,   label: 5V in }
+  Q1: { type: actives/bjt_npn,    label: AMP }
+  R_B1: { type: passives/resistor, value: 47000, role: divider }
+  R_B2: { type: passives/resistor, value: 10000, role: divider }
+  R_C:  { type: passives/resistor, value: 2700 }
+  R_E:  { type: passives/resistor, value: 270 }
+  C_IN:  { type: passives/capacitor, value: 10e-6 }
+  C_OUT: { type: passives/capacitor, value: 10e-6 }
+  J_IN:  { type: connectors/mono_jack_6_35mm, label: Signal in }
+  J_OUT: { type: connectors/mono_jack_6_35mm, label: Signal out }
+
+connections:
+  - net: VCC
+    pins: [J1.VBUS, U1.VIN, R_B1.1, R_C.1]
+
+  - net: GND
+    pins: [J1.GND, U1.GNDL, U1.GNDR, R_B2.2, R_E.2, J_IN.SLEEVE, J_OUT.SLEEVE]
+
+  - net: SIG_IN
+    pins: [J_IN.TIP, C_IN.1]
+
+  # BASE — the cross-page net. R_B1/R_B2 and C_IN sit on p1;
+  # Q1.B sits on p2. The renderer emits the cross-page label
+  # glyph on both pages with text `BASE ▶ p2` / `BASE ◀ p1`.
+  - net: BASE
+    pins: [R_B1.2, R_B2.1, Q1.B, C_IN.2]
+
+  - net: COLL
+    pins: [R_C.2, Q1.C, C_OUT.1]
+
+  - net: EMIT
+    pins: [Q1.E, R_E.1]
+
+  - net: SIG_OUT
+    pins: [C_OUT.2, J_OUT.TIP]

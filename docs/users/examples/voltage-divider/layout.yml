@@ -1,0 +1,6 @@
+schema: layout/v1
+placements:
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  R1: { region: divider-ADC_IN, row: 0, label: divider, topology-fingerprint: sha1:fab5b736cb2f }
+  R2: { region: divider-ADC_IN, row: 1, label: divider, topology-fingerprint: sha1:aaa4a433c1ef }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

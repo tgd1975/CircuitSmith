@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-256 -64 512 256" width="512" height="256" data-skill="circuit-skill@0.4.0">
+<title>555 monostable</title>
+<g class="wires" stroke="black" stroke-width="2" fill="none">
+<path d="M 0,128 L 192,128 L 192,0" data-net="GND" data-from="J1.GND" data-to="U1.1" />
+<path d="M -192,0 L -192,0 L -192,64" data-net="GND" data-from="BTN.2" data-to="LED1.K" />
+<path d="M 192,0 L -160,0 L -160,64" data-net="PULSE" data-from="U1.3" data-to="R_LED.1" />
+<path d="M -160,64 L -192,64 L -192,64" data-net="PULSE__R_LED_2__LED1_A" data-from="R_LED.2" data-to="LED1.A" />
+<path d="M 192,0 L 192,0" data-net="TIMING" data-from="U1.7" data-to="U1.6" />
+<path d="M 0,128 L 192,128 L 192,0" data-net="VCC" data-from="J1.VBUS" data-to="U1.8" />
+<path d="M 192,0 L 192,0" data-net="VCC" data-from="U1.8" data-to="U1.4" />
+</g>
+<g class="components">
+<g class="component" data-ref="BTN" data-region="left-column"><rect x="-208" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="-192" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">BTN</text></g>
+<g class="component" data-ref="J1" data-region="bottom-row"><rect x="-16" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J1</text></g>
+<g class="component" data-ref="LED1" data-region="left-column"><rect x="-208" y="48" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="-192" y="68" text-anchor="middle" font-family="DejaVu Sans" font-size="12">LED1</text></g>
+<g class="component" data-ref="R_LED" data-region="left-column"><rect x="-176" y="48" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="-160" y="68" text-anchor="middle" font-family="DejaVu Sans" font-size="12">R_LED</text></g>
+<g class="component" data-ref="U1" data-region="right-column"><rect x="176" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="192" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">U1</text></g>
+</g>
+</svg>

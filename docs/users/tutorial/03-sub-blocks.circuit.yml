@@ -1,33 +1,40 @@
 meta:
-  title: Tutorial step 3 — repeated LED sub-blocks
+  title: Tutorial step 3 — sub-block instances
   target: esp32
 
 components:
-  U1:    { type: mcu/esp32,            label: ESP32 }
-  J1:    { type: connectors/usb_c,     label: Power }
+  U1: { type: mcu/esp32,        label: ESP32 }
+  J1: { type: connectors/usb_c, label: Power }
 
-  # Three copies of the same R+LED sub-block. The kernel recognises this
-  # as a repeated canonical pattern and stacks all three copies in the
-  # right-column region, each resistor attached-to its LED.
-  R_PWR: { type: passives/resistor,    value: 220 }
-  D_PWR: { type: passives/led,         color: blue,  label: PWR }
-  R_BT:  { type: passives/resistor,    value: 220 }
-  D_BT:  { type: passives/led,         color: green, label: BLUETOOTH }
-  R_ERR: { type: passives/resistor,    value: 220 }
-  D_ERR: { type: passives/led,         color: red,   label: ERROR }
+sub-blocks:
+  led_indicator:
+    components:
+      R: { type: passives/resistor, value: 220 }
+      D: { type: passives/led }
+    ports:
+      drive: R.1
+      gnd:   D.K
+    connections:
+      - net: anode
+        path: [R.2, D.A]
+
+instances:
+  PWR: { sub-block: led_indicator }
+  BT:  { sub-block: led_indicator }
+  ERR: { sub-block: led_indicator }
 
 connections:
   - net: VCC
     pins: [J1.VBUS, U1.VIN]
 
   - net: GND
-    pins: [J1.GND, U1.GNDL, U1.GNDR]
+    pins: [J1.GND, U1.GNDL, U1.GNDR, PWR.gnd, BT.gnd, ERR.gnd]
 
   - net: LED_PWR
-    path: [U1.D2, R_PWR.1, R_PWR.2, D_PWR.A, D_PWR.K, GND]
+    pins: [U1.D2, PWR.drive]
 
   - net: LED_BT
-    path: [U1.D4, R_BT.1, R_BT.2, D_BT.A, D_BT.K, GND]
+    pins: [U1.D4, BT.drive]
 
   - net: LED_ERR
-    path: [U1.D5, R_ERR.1, R_ERR.2, D_ERR.A, D_ERR.K, GND]
+    pins: [U1.D5, ERR.drive]

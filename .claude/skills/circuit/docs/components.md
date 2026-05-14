@@ -100,6 +100,40 @@ Data-line pins on `i2c-sensor` profiles use `type: I2C` with
 `func: ["I2C_SDA" | "I2C_SCL"]`. Both halves are schema-required so
 ERC E7 (I²C pull-up check) activates.
 
+### `actives.py`
+
+| Profile    | Category     | Notes |
+|---|---|---|
+| `bjt_npn`  | `transistor` | Small-signal NPN (2N3904 / BC547 family). Pins `B` / `C` / `E` with per-pin `role:` (`base` / `collector` / `emitter`) per the EPIC-014 frozen-decisions table. Schemdraw symbol `Bjt`. Canonical slot per [ADR-0015](../../../../docs/developers/adr/0015-transistor-canonical-slot-right-column.md): `right-column` next-free, base-drive resistor `attached-to:` the BJT. |
+| `bjt_pnp`  | `transistor` | Mirror of `bjt_npn` for PNP devices (2N3906 / BC557 family). Same pin convention; schemdraw symbol `BjtPnp`. |
+
+Only the base-drive resistor (the one on a `path:` segment from
+the MCU GPIO terminating at the BJT's `B` pin) attaches to the
+BJT. Collector / emitter resistors fall through to the pull-up
+rule or escalate; multi-resistor topologies (push-pull,
+differential pair) escalate to the AI placer.
+
+FET / Darlington / multi-emitter / op-amp profiles are separate
+follow-ups under EPIC-014; the op-amp ships under TASK-122.
+
+### `ics.py`
+
+| Profile  | Category    | Notes |
+|---|---|---|
+| `ic/555` | `ic_timer`  | NE555 / LM555 timer. Pin keys are silkscreen `"1".."8"` per ADR-0010 with silicon names in `alt:` (`pins["1"].alt: ["GND"]`, `pins["8"].alt: ["VCC"]`, etc.). Connections can reference either form (`T1.1` or `T1.GND`); the silicon-name form is canonical at the schematic level but rendered identically. Generic-IC kernel rule places it in `left-column` / `right-column` by dominant pin side. Schemdraw symbol `Ic`. |
+| `ic/opamp_dual_supply` | `ic_opamp` | Generic dual-supply op-amp (TL072 / LM358 / LM324 family — pin-compatible single-channel surface). Pin keys are **symbolic** — `IN+`, `IN-`, `OUT`, `V+`, `V-` — without silkscreen-pin aliases, because the triangle schematic symbol does not show pin numbers (ADR-0010 does not bite). `V+` and `V-` are unconditionally `direction: in` so the op-amp power-pin-floating ERC rule (TASK-123) can fire deterministically. Schemdraw symbol `Opamp`. Single-supply (rail-to-GND) op-amps are out of scope per IDEA-009. |
+
+Pin `5` (CTRL) is normally left floating or tied to GND through a
+small bypass capacitor; both forms validate. The dedicated
+"pin-naming-drift" ERC rule (TASK-123) catches `.circuit.yml`
+files that mix both forms inconsistently — accepting both at the
+parser is deliberate; consistency is a style call.
+
+The registry's `metadata.type:` override is what lets
+`ics.py:ic_555` register as `ic/555` (singular). The mechanism is
+documented in the file's module docstring; future ICs that don't
+map cleanly via `<file_stem>/<attr_name>` use the same override.
+
 ## Authoring a new profile
 
 The schema auto-discovers profiles at validation time —

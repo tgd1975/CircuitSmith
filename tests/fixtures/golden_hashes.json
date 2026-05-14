@@ -1,6 +1,6 @@
 {
   "_comment": "Golden NetGraph canonical_hash values for the shipped circuits. Regenerated via `python scripts/update_netgraph_golden.py --bump-schema-version`. See TASK-053 / tests/test_netgraph_golden.py.",
-  "schema_version": "693d253b34c6a1e5cff986242bc1c59a1f43b47c94b305384d0a917c2b91247f",
+  "schema_version": "48e90eba0e4eb113c79980f8813ba6d99ad5ee68007e60aa0ab5ffee4de02f13",
   "schema_version_source": "sha256(src/circuitsmith/schema/circuit.schema.json)",
   "circuits": {
     "esp32": {

@@ -65,7 +65,12 @@ def load_profiles(components_dir: Path | None = None) -> dict[str, Profile]:
             value = getattr(module, attr_name)
             if not _is_profile(value):
                 continue
-            type_string = f"{prefix}/{attr_name.lower()}"
+            # EPIC-014 / TASK-121 — a profile may pin its registry name via
+            # `metadata.type:` when the Python attribute name doesn't map
+            # cleanly (e.g. `ic_555` → `ic/555`). The auto-derived
+            # `<file_stem>/<attr_name.lower()>` is the fallback.
+            override = (value.get("metadata") or {}).get("type")
+            type_string = override or f"{prefix}/{attr_name.lower()}"
             profiles[type_string] = Profile(
                 type=type_string,
                 file=py_file.stem,

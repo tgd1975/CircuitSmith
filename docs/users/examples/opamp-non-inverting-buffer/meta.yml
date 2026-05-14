@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: docs/users/examples/opamp-non-inverting-buffer/circuit.yml
+  layout:  docs/users/examples/opamp-non-inverting-buffer/layout.yml
+layout:
+  state: complete
+  placed: 8
+  total:  8
+rubric:
+  density: 0.09231
+  intra_component_intersections: 3
+  labels_fit: true
+  min_label_distance: inf
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

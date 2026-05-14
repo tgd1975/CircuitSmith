@@ -11,7 +11,7 @@ catalog at
 This document mirrors those for human reading; if a divergence
 appears, the code and catalog win and this doc gets a correcting PR.
 
-Public-contract reminder: the check IDs `S1–S5` and `E1–E10` are
+Public-contract reminder: the check IDs `S1–S7` and `E1–E22` are
 **stable**. Adding a check reserves a new ID; deprecating retires one
 without renumbering. The skill, CI gate, and catalog entries all key
 on these IDs.
@@ -128,6 +128,28 @@ profile dict in `src/circuitsmith/components/` to see the valid pin
 names; the `alt:` field on each pin holds the silicon-level name.
 
 **Catalog.** [`rules.json` → S5](../../../../src/circuitsmith/knowledge/rules.json).
+
+---
+
+## S6 / S7 — Sub-block schema validation (EPIC-014, TASK-117)
+
+**Trigger.** S6 fires when a `.circuit.yml` references a
+`sub-block:` that is not declared in the file's top-level
+`sub-blocks:` map. S7 fires when an `instances:` entry omits a
+required named-port mapping (a port the sub-block declares is
+missing from the instantiation).
+
+**Meaning.** S6 catches typos in instance declarations
+(`sub-block: led_indictator` vs `led_indicator`). S7 catches
+under-wired instances — every named port the sub-block exposes
+must map to a parent-circuit net. Both fire at the schema layer,
+before flatten / NetGraph construction.
+
+**Severity.** ERROR by default. Not suppressible.
+
+**Catalog.** [`rules.json` → S6, S7](../../../../src/circuitsmith/knowledge/rules.json).
+The full sub-block grammar is documented in
+[`circuit-yaml.md`](circuit-yaml.md#sub-blocks-and-instances).
 
 ---
 
@@ -413,3 +435,161 @@ signal sharing two roles):
 ```
 
 **Catalog.** [`rules.json` → E10](../../../../src/circuitsmith/knowledge/rules.json).
+
+---
+
+## E11..E15 — Sub-block and divider rules (EPIC-014)
+
+E11..E14 cover the sub-block contract — port-wiring, double-driven
+instances, refdes collisions after flatten. E15 fires when an R+R
+rail-to-GND topology can't be classified as a voltage divider
+without a hint (tap-name regex or `role: divider`). Each rule's
+trigger, severity, and suppression recipe lives in the catalog:
+[`rules.json`](../../../../src/circuitsmith/knowledge/rules.json).
+
+---
+
+## E16 — BJT pin role unset (EPIC-014, TASK-123)
+
+**Trigger.** A component whose profile category is `transistor`
+has one or more pins in `pins_detail` without a `role:`
+annotation.
+
+**Meaning.** The direction-sensitive kernel rule (ADR-0015) reads
+`role:` to identify base / collector / emitter; an unset role
+leaves the device unplaceable. Fails fast at ERC rather than
+producing a confusing kernel escalation.
+
+**Severity.** ERROR by default. The v1 `bjt_npn` and `bjt_pnp`
+profiles ship with `role:` on every pin, so the check is silent
+on existing fixtures.
+
+**Suppression.** Add `role: "base" | "collector" | "emitter"` to
+every pin in the profile's `pins.X` dict. Per the EPIC-014
+frozen-decisions table the role enum is closed in v1; FET /
+Darlington follow-ups extend it.
+
+**Catalog.** [`rules.json` → E16](../../../../src/circuitsmith/knowledge/rules.json).
+
+---
+
+## E17 — Op-amp power pin floating (EPIC-014, TASK-123)
+
+**Trigger.** A component whose `metadata.kind == "opamp"` has a
+`POWER_INPUT`-typed pin that is not a member of any declared net.
+
+**Meaning.** Op-amp supply pins have no safe floating defaults —
+an unconnected `V+` or `V-` is a silicon-damage trap that the
+schematic must surface before render. The check reads the
+profile's pin-type tag, not the literal pin name, so single-
+supply op-amp profiles (future work) inherit the rule for free.
+
+**Severity.** ERROR by default.
+
+**Suppression.** Wire both supply pins to the appropriate rails.
+A `meta.erc: { E17: off }` global suppression is reserved for
+experimental fixtures and should never ship.
+
+**Catalog.** [`rules.json` → E17](../../../../src/circuitsmith/knowledge/rules.json).
+
+---
+
+## E18 — 555 pin-naming drift (EPIC-014, TASK-123)
+
+**Trigger.** A connection on a component whose `metadata.kind ==
+"timer"` references a silicon-name alias (`T1.GND`) rather than
+the silkscreen-pin form (`T1.1`).
+
+**Meaning.** Both forms resolve to the same electrical pin
+(TASK-121's S5 extension accepts aliases). The warning encourages
+the silkscreen-pin form as canonical per ADR-0010 — style-only,
+the underlying netlist is identical. The warning message names
+the silkscreen-pin replacement (`T1.GND` → `T1.1`).
+
+**Severity.** WARNING by default. Suppressing is fine when the
+team prefers the silicon-name form.
+
+**Suppression.** Either replace each silicon-name reference with
+the silkscreen-pin form the warning names, or set
+`meta.erc: { E18: off }` globally to prefer the silicon-name form
+across the file.
+
+**Catalog.** [`rules.json` → E18](../../../../src/circuitsmith/knowledge/rules.json).
+
+## E19 — Page declared but empty (EPIC-014, TASK-127)
+
+**Trigger.** A page name appears in the layout's top-level
+`pages:` block, but no placement carries that name in its `page:`
+field.
+
+**Meaning.** Pages partition the slot vocabulary
+(see [layout.md / Pages partition](layout.md)); a declared page
+commits the renderer to emitting a blank `<stem>-pN.svg`. An
+empty page is almost always a leftover from a placement-tag typo
+or an in-progress edit.
+
+**Severity.** WARNING.
+
+**Suppression.** Delete the empty page from `pages:`, or fix the
+placement-tag typo that should have populated it. For
+intentional placeholder pages, `meta.erc: { E19: off }`.
+
+**Catalog.** [`rules.json` → E19](../../../../src/circuitsmith/knowledge/rules.json).
+
+## E20 — Page referenced but undeclared (EPIC-014, TASK-127)
+
+**Trigger.** A placement carries `page: pX` where `pX` is not in
+the top-level `pages:` block.
+
+**Meaning.** Schema-level cross-validation catches the same drift
+(`layout-page-undeclared`); E20 is the ERC mirror so a stale
+`.layout.yml` surfaces in the ERC report alongside any layout-
+schema findings.
+
+**Severity.** ERROR.
+
+**Suppression.** Either add the missing page to `pages:` or
+correct the placement's `page:` value.
+
+**Catalog.** [`rules.json` → E20](../../../../src/circuitsmith/knowledge/rules.json).
+
+## E21 — Cross-page net invisible on one side (EPIC-014, TASK-127)
+
+**Trigger.** A net's pins span ≥ 2 pages, but at least one local
+endpoint's placement has no resolvable region (missing
+`region:`, broken `attached-to` chain).
+
+**Meaning.** Cross-page labels (TASK-126) are the only on-sheet
+trace of a net continuation. When the renderer can't compute the
+local-side anchor, the label is dropped silently and a reader
+has no way to know the net continues on another page. E21 makes
+the silent drop loud.
+
+**Severity.** ERROR.
+
+**Suppression.** Resolve the kernel escalation on the local-side
+ref — typically by hand-authoring a `free`-slot entry in
+`.layout.yml`, or by adding a missing component profile. For
+intentionally unrouted pins, `meta.erc: { <NET>: { E21: off } }`.
+
+**Catalog.** [`rules.json` → E21](../../../../src/circuitsmith/knowledge/rules.json).
+
+## E22 — Excessive cross-page net count (EPIC-014, TASK-127)
+
+**Trigger.** More than the configured threshold of distinct nets
+cross a single page-pair boundary (default 6; override via
+`meta.erc.cross-page-threshold`).
+
+**Meaning.** Heuristic. Many cross-page nets between the same two
+pages usually means a logical block was split across sheet
+boundaries by accident; the cognitive cost of following many
+labels exceeds the benefit of the split.
+
+**Severity.** WARNING.
+
+**Suppression.** Re-partition the offending placements so the
+heavily-connected block lives on one page, or raise the
+threshold via `meta.erc.cross-page-threshold`, or
+`meta.erc: { E22: off }`.
+
+**Catalog.** [`rules.json` → E22](../../../../src/circuitsmith/knowledge/rules.json).

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 320 256" width="320" height="256" data-skill="circuit-skill@0.4.0">
-<title>Tutorial step 3 — repeated LED sub-blocks</title>
+<title>Tutorial step 3 — sub-block instances</title>
 <g class="wires" stroke="black" stroke-width="2" fill="none">
+<path d="M 160,0 L 192,0 L 192,0" data-net="BT__anode" data-from="R_BT.2" data-to="D_BT.A" />
+<path d="M 160,64 L 192,64 L 192,64" data-net="ERR__anode" data-from="R_ERR.2" data-to="D_ERR.A" />
 <path d="M 0,128 L 0,128 L 0,0" data-net="GND" data-from="J1.GND" data-to="U1.GNDL" />
 <path d="M 0,0 L 0,0" data-net="GND" data-from="U1.GNDL" data-to="U1.GNDR" />
 <path d="M 0,0 L 192,0 L 192,128" data-net="GND" data-from="U1.GNDR" data-to="D_PWR.K" />
 <path d="M 192,128 L 192,128 L 192,0" data-net="GND" data-from="D_PWR.K" data-to="D_BT.K" />
 <path d="M 192,0 L 192,0 L 192,64" data-net="GND" data-from="D_BT.K" data-to="D_ERR.K" />
 <path d="M 0,0 L 160,0 L 160,0" data-net="LED_BT" data-from="U1.D4" data-to="R_BT.1" />
-<path d="M 160,0 L 192,0 L 192,0" data-net="LED_BT__R_BT_2__D_BT_A" data-from="R_BT.2" data-to="D_BT.A" />
 <path d="M 0,0 L 160,0 L 160,64" data-net="LED_ERR" data-from="U1.D5" data-to="R_ERR.1" />
-<path d="M 160,64 L 192,64 L 192,64" data-net="LED_ERR__R_ERR_2__D_ERR_A" data-from="R_ERR.2" data-to="D_ERR.A" />
 <path d="M 0,0 L 160,0 L 160,128" data-net="LED_PWR" data-from="U1.D2" data-to="R_PWR.1" />
-<path d="M 160,128 L 192,128 L 192,128" data-net="LED_PWR__R_PWR_2__D_PWR_A" data-from="R_PWR.2" data-to="D_PWR.A" />
+<path d="M 160,128 L 192,128 L 192,128" data-net="PWR__anode" data-from="R_PWR.2" data-to="D_PWR.A" />
 <path d="M 0,128 L 0,128 L 0,0" data-net="VCC" data-from="J1.VBUS" data-to="U1.VIN" />
 </g>
 <g class="components">

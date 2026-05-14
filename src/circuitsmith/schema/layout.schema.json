@@ -9,6 +9,7 @@
   "properties": {
     "schema":      { "const": "layout/v1" },
     "placements":  { "$ref": "#/$defs/placements" },
+    "pages":       { "$ref": "#/$defs/pages" },
     "capacity-overrides":      { "$ref": "#/$defs/capacityOverrides" },
     "region-anchor-overrides": { "$ref": "#/$defs/regionAnchorOverrides" }
   },
@@ -36,11 +37,12 @@
         "attached-to":          { "type": "string",  "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
         "attach-step":          { "type": "integer", "minimum": 1, "maximum": 2 },
         "via-net":              { "type": "string",  "minLength": 1 },
-        "label":                { "enum": ["above", "below", "left", "right"] },
+        "label":                { "type": "string", "minLength": 1 },
         "label-budget":         { "type": "integer", "minimum": 1 },
         "topology-fingerprint": { "type": "string",  "pattern": "^(sha1|sha256):[0-9a-f]{6,64}$" },
         "gx":                   { "type": "integer" },
-        "gy":                   { "type": "integer" }
+        "gy":                   { "type": "integer" },
+        "page":                 { "type": "string",  "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" }
       },
       "allOf": [
         {
@@ -69,6 +71,20 @@
       ]
     },
 
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name":  { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+          "title": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+
     "regionName": {
       "anyOf": [
         { "enum": [
@@ -81,7 +97,12 @@
         ] },
         { "type": "string", "pattern": "^path-of-[A-Za-z_][A-Za-z0-9_]*\\.[A-Za-z0-9_+\\-/]+(?:\\.[A-Za-z0-9_+\\-]+)?$" },
         { "type": "string", "pattern": "^bus-[A-Za-z0-9_+\\-]+$" },
-        { "type": "string", "pattern": "^pin-symbol-[A-Za-z0-9_+\\-/]+$" }
+        { "type": "string", "pattern": "^pin-symbol-[A-Za-z0-9_+\\-/]+$" },
+        { "type": "string", "pattern": "^rc-(low|high)-pass-[A-Za-z0-9_\\-]+$" },
+        { "type": "string", "pattern": "^cc-decoupling-[A-Za-z0-9_\\-]+$" },
+        { "type": "string", "pattern": "^divider-[A-Za-z0-9_]+$" },
+        { "type": "string", "pattern": "^bjt-load-[A-Za-z_][A-Za-z0-9_]*$" },
+        { "type": "string", "pattern": "^bjt-degen-[A-Za-z_][A-Za-z0-9_]*$" }
       ]
     },
 

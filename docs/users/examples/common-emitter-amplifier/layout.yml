@@ -1,0 +1,13 @@
+schema: layout/v1
+placements:
+  C_IN: { region: rc-high-pass-C_IN-R_B2, row: 0, label: rc-high-pass, topology-fingerprint: sha1:68805d42b0a8 }
+  C_OUT: { region: bus-V33, position: 0.5, topology-fingerprint: sha1:3817d84ad7b1 }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  J_IN: { region: bottom-row, col: 1, topology-fingerprint: sha1:fbcdc3183d08 }
+  J_OUT: { region: bottom-row, col: 2, topology-fingerprint: sha1:fbcdc3183d08 }
+  Q1: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:596c172523bf }
+  R_B1: { region: divider-BASE, row: 0, label: divider, topology-fingerprint: sha1:2a2a322c9db7 }
+  R_B2: { region: divider-BASE, row: 1, label: divider, topology-fingerprint: sha1:7ec189df7445 }
+  R_C: { region: bjt-load-Q1, row: 0, label: bjt-load, topology-fingerprint: sha1:59eec713cb25 }
+  R_E: { region: bjt-degen-Q1, row: 0, label: bjt-degeneration, topology-fingerprint: sha1:9eaaa304cdaf }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

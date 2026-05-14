@@ -65,6 +65,9 @@ the original reasoning stays as historical record.
 | [0012](0012-library-as-installable-package.md) | Library is an installable package; skill folder is the agent-facing surface | `idea-002-consolidate-skill-python-into-central-module.md` |
 | [0013](0013-build-guide-include-via-link.md) | Build-guide BOM embed is a link, not a literal include — until MkDocs lands | `idea-001.exporters.md §BOM Exporter` |
 | [0014](0014-docs-users-sibling-folder.md) | User-facing docs live at `docs/users/`, a sibling of `developers/` and `builders/` | TASK-092 |
+| [0015](0015-transistor-canonical-slot-right-column.md) | BJT canonical slot is `right-column` next-free, base resistor attached | TASK-120 |
+| [0016](0016-bjt-load-and-degeneration-resistors.md) | Collector-load and emitter-degeneration resistors land in synthetic per-BJT regions | TASK-129 |
+| [0017](0017-pull-up-anchor-widened-to-ic-inputs.md) | Pull-up resistor anchor widened to IC SIGNAL_INPUT pins | TASK-130 |
 
 ### Superseded
 

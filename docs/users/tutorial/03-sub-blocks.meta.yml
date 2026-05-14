@@ -1,7 +1,7 @@
 schema: circuit-meta/v1
 sources:
   circuit: docs/users/tutorial/03-sub-blocks.circuit.yml
-  layout:  docs/users/tutorial/03-sub-blocks.layout.yml
+  layout:  /home/tobias/Dokumente/Projekte/CircuitSmith/cs-gallery-check-kv5g536u/out.layout.yml
 layout:
   state: complete
   placed: 8
@@ -13,6 +13,19 @@ rubric:
   min_label_distance: 1
   overlaps: 0
   wire_crossings: 0
+instances:
+  BT:
+    sub-block: led_indicator
+    label: "BT: led_indicator"
+    constituents: [D_BT, R_BT]
+  ERR:
+    sub-block: led_indicator
+    label: "ERR: led_indicator"
+    constituents: [D_ERR, R_ERR]
+  PWR:
+    sub-block: led_indicator
+    label: "PWR: led_indicator"
+    constituents: [D_PWR, R_PWR]
 provenance:
   tool:       circuit-renderer
   skill:      circuit-skill@0.4.0

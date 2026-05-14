@@ -42,10 +42,16 @@ def _codes(findings: list[Finding]) -> list[str]:
 # ── CHECK_TABLE contract ───────────────────────────────────────────────────
 
 
-def test_check_table_has_all_15_codes() -> None:
+def test_check_table_has_all_27_codes() -> None:
     expected = {"S1", "S2", "S3", "S4", "S5",
                 "E1", "E2", "E3", "E4", "E5",
-                "E6", "E7", "E8", "E9", "E10"}
+                "E6", "E7", "E8", "E9", "E10",
+                # EPIC-014 additions: 4 sub-block rules + divider-ambiguity.
+                "E11", "E12", "E13", "E14", "E15",
+                # EPIC-014 active-device rules (TASK-123).
+                "E16", "E17", "E18",
+                # EPIC-014 cross-page rules (TASK-127).
+                "E19", "E20", "E21", "E22"}
     assert set(CHECK_TABLE) == expected
 
 

@@ -180,6 +180,108 @@ promote to a map keyed by `REF.PIN`:
     U1.D21: bidir
 ```
 
+## Sub-blocks and instances
+
+A `.circuit.yml` may declare reusable mini-circuits in a top-level
+`sub-blocks:` map and instantiate them in `instances:`. The
+flattener (`flatten_sub_blocks()` in `netgraph.py`) inlines every
+instance before the rest of the pipeline runs, so the kernel, ERC,
+BOM, and KiCad netlist all see one flat circuit.
+
+```yaml
+sub-blocks:
+  led_indicator:
+    components:
+      R: { type: passives/resistor, value: 220 }
+      D: { type: passives/led }
+    ports:
+      drive: R.1
+      gnd:   D.K
+    connections:
+      - net: anode
+        path: [R.2, D.A]
+
+instances:
+  PWR: { sub-block: led_indicator }
+  BT:  { sub-block: led_indicator }
+  ERR: { sub-block: led_indicator }
+
+connections:
+  - net: LED_PWR
+    pins: [U1.D2, PWR.drive]
+  - net: GND
+    pins: [U1.GNDL, PWR.gnd, BT.gnd, ERR.gnd]
+```
+
+### `sub-blocks:` keys
+
+| Key | Required | Meaning |
+|---|---|---|
+| `components` | yes | Local component map; same shape as the top-level `components:` |
+| `ports` | yes | Map of `port-name → <local-refdes>.<pin>`. Surface area of the sub-block |
+| `connections` | no | Internal nets; same three forms as top-level (`pins`, `path`, `bus`) |
+
+### `instances:` keys
+
+| Key | Required | Meaning |
+|---|---|---|
+| `sub-block` | yes | Name of an entry in the top-level `sub-blocks:` map |
+
+The schema rejects any other key on an instance entry — there are
+no per-instance overrides for component values, labels, or
+metadata in v1. Differentiation lives entirely in how the
+surrounding top-level `connections:` wire each instance's ports.
+
+### Flattening contract
+
+Per the [EPIC-014 frozen-decisions table](../../../../docs/developers/tasks/active/epic-014-circuit-library-and-renderer-v2.md#frozen-decisions-task-110):
+
+- **Refdes scheme.** Each local component `<local-refdes>` in an
+  instance becomes `<local-refdes>_<instance>` in the flat circuit
+  (e.g. `R_PWR`, `D_PWR`). The BOM groups by component class.
+- **Port references.** Top-level `connections:` use
+  `<instance>.<port-name>` as if the instance were a single
+  component with the declared ports as pins.
+- **Internal nets.** A net defined inside the sub-block as `anode`
+  is minted globally as `<instance>__anode` after flattening so
+  nets stay unique across instances.
+- **Nested sub-blocks are not allowed in v1.** A sub-block whose
+  `components.*.type` references another sub-block is rejected
+  by S6 (or by the JSON Schema type pattern, which requires the
+  `<file>/<name>` form a profile name has).
+
+### Sub-block-aware ERC checks
+
+| Check | Triggers when |
+|---|---|
+| `S6` | A sub-block's `components.*.type` resolves to another sub-block name |
+| `S7` | An `<instance>.<port>` reference in top-level `connections:` names an undeclared instance or port |
+| `E11..E14` | Sub-block contract violations the JSON Schema can't catch (e.g. port maps that reference non-existent local pins) |
+| `E15` | Reserved by the kernel's voltage-divider detector for ambiguous `R+R` placements — fires when neither the tap-net regex nor a `role: divider` annotation disambiguates |
+
+See [`erc-checks.md`](erc-checks.md) for the full check catalogue.
+
+### Choosing flat vs sub-block authoring
+
+A sub-block earns its keep when the same shape repeats two or more
+times **and** the repetition is structural (LEDs on a status panel,
+identical RC filters on each input). A one-off shape stays flat;
+sub-block syntax adds two layers of indirection (`ports:` and
+`<instance>.<port>` lookups) that don't pay back on a singleton.
+
+Two non-obvious constraints worth designing around:
+
+- The kernel's R+LED rule (and the EPIC-014 RC / CC / RR rules)
+  match topology only after flattening, so an `R + LED` chain
+  inside a sub-block must use `path:` form for the kernel to
+  recognise the pair. `pins:` form skips the R+LED pair detector.
+- Every instance is electrically identical — so a sub-block
+  exposing per-LED colour is, today, three nearly-identical
+  sub-blocks (`led_indicator_blue`, `led_indicator_green`,
+  `led_indicator_red`) rather than one sub-block with a colour
+  parameter. Parameterised sub-blocks are an explicit non-goal
+  for v1.
+
 ## Schema validation
 
 Every `.circuit.yml` runs through two-phase validation before the

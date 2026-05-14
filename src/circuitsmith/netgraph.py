@@ -193,7 +193,17 @@ class NetGraph:
         dict. The caller is responsible for running schema validation
         first; this constructor assumes structural validity and raises
         on unrecoverable shape problems.
+
+        EPIC-014 / TASK-116: if the circuit declares `sub-blocks:` and/or
+        `instances:`, the constructor flattens them transparently — every
+        downstream consumer (kernel, ERC, exporters) sees one flat
+        component map with refdes minted as `<local>_<instance>` and one
+        connections list with port references resolved to global pins.
+        Flat-form circuits pass through unchanged.
         """
+        if circuit.get("sub-blocks") or circuit.get("instances"):
+            circuit = flatten_sub_blocks(circuit)
+
         nets: dict[str, list[PinRef]] = {}
         net_meta: dict[str, NetMeta] = {}
         path_segments: dict[str, tuple[str, ...]] = {}
@@ -440,4 +450,187 @@ def _meta_from_entry(
     )
 
 
-__all__ = ["PinRef", "NetMeta", "NetGraph"]
+# ── EPIC-014 / TASK-116 — sub-block flattener ─────────────────────────────
+
+
+class SubBlockFlattenError(ValueError):
+    """Raised when sub-block expansion cannot produce a coherent flat circuit."""
+
+
+def flatten_sub_blocks(circuit: dict[str, Any]) -> dict[str, Any]:
+    """Expand `sub-blocks:` / `instances:` into a flat circuit dict.
+
+    The returned dict has the same shape as a flat-form ``.circuit.yml``
+    (no ``sub-blocks`` / ``instances`` keys). Each instance contributes
+    components with refdes ``<local>_<instance>`` per the EPIC-014 frozen
+    decision (e.g. ``R_FILT_A``, ``C_FILT_A``) — this grouping keeps the
+    BOM ordered by component class. Each instance's internal connections
+    are appended to the top-level ``connections:`` list with net names
+    prefixed by the instance (``<instance>.<localnet>`` → global name
+    ``<instance>__<localnet>``). Top-level ``connections:`` entries that
+    reference ``<instance>.<port>`` are rewritten to point at the
+    sub-block-internal pin the port maps to.
+
+    A circuit with no ``sub-blocks`` / ``instances`` keys is returned
+    unchanged (modulo a shallow copy at the top level).
+
+    Raises ``SubBlockFlattenError`` on:
+      - Empty sub-block (``components: {}``).
+      - Refdes collision after minting (two instances of the same
+        sub-block would have produced the same global refdes — should
+        not happen given the deterministic minting scheme, but the
+        flattener checks defensively).
+      - An ``<instance>.<port>`` reference where the instance is not
+        declared or the port is not on the sub-block. The schema
+        validator's S7 check already catches these; the flattener
+        re-checks because callers may bypass the validator (e.g. tests).
+    """
+    sub_blocks: dict[str, dict[str, Any]] | None = circuit.get("sub-blocks")
+    instances: dict[str, dict[str, Any]] | None = circuit.get("instances")
+    if not sub_blocks and not instances:
+        return circuit
+    sub_blocks = sub_blocks or {}
+    instances = instances or {}
+
+    flat: dict[str, Any] = {
+        "meta": circuit.get("meta", {}),
+        "components": dict(circuit.get("components") or {}),
+        "connections": [],
+    }
+
+    # Pre-compute per-instance port → local-pin map and refdes-rewrite
+    # table (local refdes inside sub-block → global refdes).
+    instance_port_to_pin: dict[str, dict[str, str]] = {}
+    instance_refdes_map: dict[str, dict[str, str]] = {}
+
+    for inst_name, inst_body in instances.items():
+        sub_name = (inst_body or {}).get("sub-block")
+        if sub_name is None or sub_name not in sub_blocks:
+            raise SubBlockFlattenError(
+                f"instances.{inst_name}: sub-block {sub_name!r} is not declared"
+            )
+        sb = sub_blocks[sub_name]
+        sb_components: dict[str, dict[str, Any]] = sb.get("components") or {}
+        if not sb_components:
+            raise SubBlockFlattenError(
+                f"sub-blocks.{sub_name}: components map is empty; "
+                f"an instance ({inst_name}) cannot expand an empty sub-block"
+            )
+        # Mint global refdes for each constituent.
+        refdes_map: dict[str, str] = {}
+        for local_ref, local_entry in sb_components.items():
+            global_ref = f"{local_ref}_{inst_name}"
+            if global_ref in flat["components"]:
+                raise SubBlockFlattenError(
+                    f"sub-block flatten: minted refdes {global_ref!r} collides "
+                    f"with an existing component (instance={inst_name}, "
+                    f"sub-block={sub_name}, local={local_ref})"
+                )
+            flat["components"][global_ref] = dict(local_entry)
+            refdes_map[local_ref] = global_ref
+        instance_refdes_map[inst_name] = refdes_map
+
+        # Build the port-to-pin map (resolved to global refdes).
+        ports: dict[str, str] = sb.get("ports") or {}
+        port_map: dict[str, str] = {}
+        for port_name, local_pin_token in ports.items():
+            local_ref, _, pin = local_pin_token.partition(".")
+            if local_ref not in refdes_map:
+                raise SubBlockFlattenError(
+                    f"sub-blocks.{sub_name}.ports.{port_name}: references "
+                    f"undeclared local refdes {local_ref!r}"
+                )
+            port_map[port_name] = f"{refdes_map[local_ref]}.{pin}"
+        instance_port_to_pin[inst_name] = port_map
+
+        # Expand the sub-block's internal connections with refdes rewrites
+        # and net-name prefixing.
+        for entry in sb.get("connections") or []:
+            rewritten = _rewrite_sub_block_connection(entry, inst_name, refdes_map)
+            flat["connections"].append(rewritten)
+
+    # Rewrite top-level connections: any pin token of the form
+    # `<instance>.<port>` is replaced with the resolved global pin.
+    for entry in circuit.get("connections") or []:
+        flat["connections"].append(
+            _rewrite_top_level_connection(entry, instance_port_to_pin)
+        )
+
+    return flat
+
+
+def _rewrite_sub_block_connection(
+    entry: dict[str, Any],
+    inst_name: str,
+    refdes_map: dict[str, str],
+) -> dict[str, Any]:
+    """Rewrite one sub-block connection entry for flat-circuit consumption."""
+    new_entry: dict[str, Any] = dict(entry)
+    # Prefix the net name with the instance so sibling instances don't
+    # collide on net names.
+    net = entry.get("net")
+    if isinstance(net, str):
+        new_entry["net"] = f"{inst_name}__{net}"
+    for key in ("pins", "path", "backbone", "taps"):
+        if key in entry:
+            new_entry[key] = [
+                _rewrite_local_pin(tok, refdes_map) for tok in entry[key]
+            ]
+    return new_entry
+
+
+def _rewrite_local_pin(token: str, refdes_map: dict[str, str]) -> str:
+    """Map a sub-block-local pin token (REF.PIN) to its global form.
+
+    Bare net-name tokens in a path (no ``.``) are returned unchanged —
+    a sub-block-internal path may reference a bare net name and the
+    flattener leaves those alone (callers that want the prefixed name
+    must use the ``net`` form).
+    """
+    if "." not in token:
+        return token
+    ref, _, pin = token.partition(".")
+    if ref in refdes_map:
+        return f"{refdes_map[ref]}.{pin}"
+    return token  # not a sub-block-local refdes; leave as-is
+
+
+def _rewrite_top_level_connection(
+    entry: dict[str, Any],
+    instance_port_to_pin: dict[str, dict[str, str]],
+) -> dict[str, Any]:
+    new_entry: dict[str, Any] = dict(entry)
+    for key in ("pins", "path", "backbone", "taps"):
+        if key in entry:
+            new_entry[key] = [
+                _resolve_port_reference(tok, instance_port_to_pin)
+                for tok in entry[key]
+            ]
+    return new_entry
+
+
+def _resolve_port_reference(
+    token: str,
+    instance_port_to_pin: dict[str, dict[str, str]],
+) -> str:
+    if "." not in token:
+        return token
+    ref, _, pin = token.partition(".")
+    if ref in instance_port_to_pin:
+        port_map = instance_port_to_pin[ref]
+        if pin not in port_map:
+            raise SubBlockFlattenError(
+                f"connections token {token!r}: instance {ref!r} has no port "
+                f"{pin!r}; declared ports: {sorted(port_map)}"
+            )
+        return port_map[pin]
+    return token
+
+
+__all__ = [
+    "PinRef",
+    "NetMeta",
+    "NetGraph",
+    "SubBlockFlattenError",
+    "flatten_sub_blocks",
+]

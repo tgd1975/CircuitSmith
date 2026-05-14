@@ -9,7 +9,9 @@
   "properties": {
     "meta":        { "$ref": "#/$defs/meta" },
     "components":  { "$ref": "#/$defs/components" },
-    "connections": { "$ref": "#/$defs/connections" }
+    "connections": { "$ref": "#/$defs/connections" },
+    "sub-blocks":  { "$ref": "#/$defs/subBlocks" },
+    "instances":   { "$ref": "#/$defs/instances" }
   },
 
   "$defs": {
@@ -149,6 +151,59 @@
           "additionalProperties": false
         }
       ]
+    },
+
+    "subBlocks": {
+      "type": "object",
+      "comment": "EPIC-014 / TASK-115. Map of sub-block definitions. Each entry is reusable inside `instances:` (one or more times). Sub-blocks compose components + an internal connections grammar identical to the top-level form; their ports surface to top-level as named-port references (`<instance>.<port>`). Nested sub-blocks are rejected by the post-schema validator (S6); JSON Schema does not express the cross-reference itself.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": { "$ref": "#/$defs/subBlock" }
+      },
+      "additionalProperties": false
+    },
+
+    "subBlock": {
+      "type": "object",
+      "required": ["components", "ports"],
+      "additionalProperties": false,
+      "properties": {
+        "components":  { "$ref": "#/$defs/components" },
+        "ports":       { "$ref": "#/$defs/ports" },
+        "connections": { "$ref": "#/$defs/connections" }
+      }
+    },
+
+    "ports": {
+      "type": "object",
+      "comment": "Named-port map per EPIC-014 frozen decision: ports: { signal_in: R.1, gnd: C.2 }. Each value is a sub-block-internal REF.PIN reference.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*\\.[A-Za-z0-9_+\\-/]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "instances": {
+      "type": "object",
+      "comment": "EPIC-014 / TASK-115. Map of sub-block instantiations. Each entry names a sub-block by key; the post-schema validator (S7) rejects entries whose `sub-block:` does not exist in the top-level `sub-blocks:` map.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": { "$ref": "#/$defs/instance" }
+      },
+      "additionalProperties": false
+    },
+
+    "instance": {
+      "type": "object",
+      "required": ["sub-block"],
+      "additionalProperties": false,
+      "properties": {
+        "sub-block": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" }
+      }
     }
   }
 }

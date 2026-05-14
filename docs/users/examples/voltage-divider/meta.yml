@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: docs/users/examples/voltage-divider/circuit.yml
+  layout:  /home/tobias/Dokumente/Projekte/CircuitSmith/cs-gallery-check-omalgqp2/out.layout.yml
+layout:
+  state: complete
+  placed: 4
+  total:  4
+rubric:
+  density: 0.4
+  intra_component_intersections: 0
+  labels_fit: true
+  min_label_distance: inf
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

@@ -4,6 +4,15 @@ the dynamic checks that depend on the component-library state:
 
   S4 — unknown component-type reference (`components[*].type`)
   S5 — unknown pin reference (`REF.PIN` in any connection form)
+  S6 — nested sub-block reference (EPIC-014 / TASK-115; a sub-block
+       definition's `components.*.type` names another sub-block key,
+       which is disallowed in v1)
+  S7 — undeclared sub-block instance (EPIC-014 / TASK-115; an
+       `instances.<name>.sub-block:` value names a sub-block that
+       does not exist) or undeclared instance-port reference
+       (a top-level `connections` entry references
+       `<instance>.<port>` where `port` is not in the instance's
+       sub-block `ports:` map)
 
 Output: a list of `Finding` records. Empty list = valid. JSON Schema
 errors arrive as findings with check code `schema` and severity `error`.
@@ -26,7 +35,7 @@ SCHEMA_PATH = Path(__file__).resolve().parent / "circuit.schema.json"
 class Finding:
     """One validation finding."""
 
-    check: str           # "schema" | "S4" | "S5"
+    check: str           # "schema" | "S4" | "S5" | "S6" | "S7"
     severity: str        # "error" | "warning"
     message: str
     location: str        # JSON-pointer-ish dotted path into the circuit dict
@@ -83,23 +92,79 @@ def validate(
         else:
             ref_to_profile[ref] = profile
 
-    # S5: every REF.PIN reference must point at a real pin on the profile.
+    # ── EPIC-014 / TASK-115: sub-block + instance cross-checks ──────────
+    sub_blocks: dict[str, dict[str, Any]] = circuit.get("sub-blocks") or {}
+    instances: dict[str, dict[str, Any]] = circuit.get("instances") or {}
+
+    # S6: nested-sub-block rejection. Each sub-block's components.*.type
+    # must not name another sub-block key. (The check is structural — it
+    # only fires when sub-blocks names overlap with the component-type
+    # namespace, but the rejection is unambiguous when it does.)
+    sub_block_names = set(sub_blocks)
+    for sb_name, sb_body in sub_blocks.items():
+        sb_components = (sb_body or {}).get("components") or {}
+        for inner_ref, inner_entry in sb_components.items():
+            inner_type = (inner_entry or {}).get("type", "")
+            if inner_type in sub_block_names:
+                findings.append(Finding(
+                    check="S6",
+                    severity="error",
+                    message=(
+                        f"sub-blocks.{sb_name}.components.{inner_ref}.type "
+                        f"references sub-block '{inner_type}' — nested sub-blocks "
+                        f"are disallowed in v1 (EPIC-014 frozen decision)."
+                    ),
+                    location=f"sub-blocks.{sb_name}.components.{inner_ref}.type",
+                ))
+
+    # S7a: every instance's `sub-block:` value must exist in `sub-blocks:`.
+    instance_to_sub: dict[str, str] = {}
+    for inst_name, inst_body in instances.items():
+        sub_name = (inst_body or {}).get("sub-block")
+        if sub_name is None:
+            continue  # JSON Schema already required this — defensive
+        if sub_name not in sub_block_names:
+            findings.append(Finding(
+                check="S7",
+                severity="error",
+                message=(
+                    f"instances.{inst_name}.sub-block: references "
+                    f"undeclared sub-block '{sub_name}'. "
+                    f"Declared sub-blocks: {sorted(sub_block_names)}."
+                ),
+                location=f"instances.{inst_name}.sub-block",
+            ))
+        else:
+            instance_to_sub[inst_name] = sub_name
+
+    # Build instance-port lookup: instance_name → set of port-names.
+    instance_ports: dict[str, set[str]] = {}
+    for inst_name, sub_name in instance_to_sub.items():
+        ports_map = (sub_blocks.get(sub_name) or {}).get("ports") or {}
+        instance_ports[inst_name] = set(ports_map)
+
+    # S5: every REF.PIN reference must point at a real pin on the profile,
+    # OR at a declared instance + port pair.
     for index, net in enumerate(circuit["connections"]):
         net_name = net["net"]
         if "pins" in net:
             _check_pin_tokens(net["pins"], ref_to_profile, findings,
-                              f"connections[{index}].pins", net_name)
+                              f"connections[{index}].pins", net_name,
+                              instance_ports=instance_ports)
         if "path" in net:
             _check_path_tokens(net["path"], ref_to_profile, findings,
                                f"connections[{index}].path", net_name,
-                               declared_nets={n["net"] for n in circuit["connections"]})
+                               declared_nets={n["net"] for n in circuit["connections"]},
+                               instance_ports=instance_ports)
         if net.get("bus") is True:
             if "backbone" in net:
                 _check_pin_tokens(net["backbone"], ref_to_profile, findings,
-                                  f"connections[{index}].backbone", net_name)
+                                  f"connections[{index}].backbone", net_name,
+                                  instance_ports=instance_ports)
             if "taps" in net:
                 _check_pin_tokens(net["taps"], ref_to_profile, findings,
-                                  f"connections[{index}].taps", net_name)
+                                  f"connections[{index}].taps", net_name,
+                                  instance_ports=instance_ports)
 
     return findings
 
@@ -121,6 +186,8 @@ def _check_pin_tokens(
     findings: list[Finding],
     location: str,
     net_name: str,
+    *,
+    instance_ports: dict[str, set[str]] | None = None,
 ) -> None:
     """Each token must be REF.PIN with REF declared and PIN on its profile."""
     for token in tokens:
@@ -129,7 +196,8 @@ def _check_pin_tokens(
             # Schema already rejected this; defensive guard for the future
             # if the schema pattern is ever loosened.
             continue
-        _check_ref_pin(ref, pin, ref_to_profile, findings, location, net_name, token)
+        _check_ref_pin(ref, pin, ref_to_profile, findings, location, net_name, token,
+                       instance_ports=instance_ports)
 
 
 def _check_path_tokens(
@@ -139,12 +207,15 @@ def _check_path_tokens(
     location: str,
     net_name: str,
     declared_nets: set[str],
+    *,
+    instance_ports: dict[str, set[str]] | None = None,
 ) -> None:
     """Path tokens are either REF.PIN pin references or bare net names."""
     for token in tokens:
         if "." in token:
             ref, _, pin = token.partition(".")
-            _check_ref_pin(ref, pin, ref_to_profile, findings, location, net_name, token)
+            _check_ref_pin(ref, pin, ref_to_profile, findings, location, net_name, token,
+                           instance_ports=instance_ports)
         # Bare-token resolution (net name vs unknown identifier) is the
         # post-schema validator's job per yaml-format §"Cross-cutting
         # decisions" #3. Not enforced here in this first cut; comes with
@@ -159,9 +230,29 @@ def _check_ref_pin(
     location: str,
     net_name: str,
     token: str,
+    *,
+    instance_ports: dict[str, set[str]] | None = None,
 ) -> None:
     profile = ref_to_profile.get(ref)
     if profile is None:
+        # EPIC-014 / TASK-115: maybe this is a sub-block instance reference
+        # (e.g. `FILT_A.signal_in`). The instance is declared in
+        # `instances:`, not `components:`, so it's absent from
+        # `ref_to_profile`. Look it up by instance name; the pin token is
+        # the port name.
+        if instance_ports is not None and ref in instance_ports:
+            if pin not in instance_ports[ref]:
+                findings.append(Finding(
+                    check="S7",
+                    severity="error",
+                    message=(
+                        f"net {net_name!r} at {location}: instance '{ref}' "
+                        f"has no port '{pin}'. Declared ports: "
+                        f"{sorted(instance_ports[ref])}."
+                    ),
+                    location=location,
+                ))
+            return
         findings.append(Finding(
             check="S4",
             severity="error",
@@ -172,7 +263,7 @@ def _check_ref_pin(
             location=location,
         ))
         return
-    if pin not in profile.pins:
+    if pin not in profile.pins and not _pin_is_alt(pin, profile):
         findings.append(Finding(
             check="S5",
             severity="error",
@@ -183,6 +274,19 @@ def _check_ref_pin(
             ),
             location=location,
         ))
+
+
+def _pin_is_alt(pin: str, profile: Profile) -> bool:
+    """EPIC-014 / TASK-121 — accept silicon-name pin aliases (e.g.
+    `U1.GND` resolving to `U1.1` on a 555). Walks `pins_detail[*].alt`
+    looking for an exact match; case-insensitive comparison would be a
+    follow-up policy call, not a v1 default."""
+    detail = profile.pins_detail or {}
+    for attrs in detail.values():
+        for alt in (attrs or {}).get("alt", []) or []:
+            if alt == pin:
+                return True
+    return False
 
 
 def _path_to_location(path) -> str:

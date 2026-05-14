@@ -10,11 +10,11 @@ example worth studying.
 
 | Example | What it demonstrates | Source |
 |---|---|---|
-| [Voltage divider](voltage-divider/) | The smallest practical circuit; reference for two-component net basics. | [TASK-096](../../developers/tasks/open/task-096-example-voltage-divider.md) |
-| [Common-emitter amplifier](common-emitter-amplifier/) | A small-signal BJT amplifier — biasing, coupling, and gain. | [TASK-097](../../developers/tasks/open/task-097-example-common-emitter-amplifier.md) |
-| [555 monostable](555-monostable/) | One-shot timer using the 555 in monostable mode; introduces IC profiles. | [TASK-098](../../developers/tasks/open/task-098-example-555-monostable.md) |
-| [Op-amp non-inverting buffer](opamp-non-inverting-buffer/) | Unity-gain buffer with feedback path; introduces op-amp pin conventions. | [TASK-099](../../developers/tasks/open/task-099-example-opamp-non-inverting-buffer.md) |
-| [Multi-page split](multi-page-split/) | A circuit large enough to span multiple sheet pages — exercises the renderer's page-break logic. | [TASK-100](../../developers/tasks/open/task-100-example-multi-page-split.md) |
+| [Voltage divider](voltage-divider/) | The smallest practical circuit; reference for two-component net basics. | [TASK-128](../../developers/tasks/closed/task-128-gallery-reattempt-voltage-divider.md) |
+| [Common-emitter amplifier](common-emitter-amplifier/) | A small-signal BJT amplifier — biasing, coupling, and gain. | [TASK-129](../../developers/tasks/closed/task-129-gallery-reattempt-common-emitter-amplifier.md) |
+| [555 monostable](555-monostable/) | One-shot timer using the 555 in monostable mode; introduces multi-pin IC profiles. | [TASK-130](../../developers/tasks/closed/task-130-gallery-reattempt-555-monostable.md) |
+| [Op-amp non-inverting buffer](opamp-non-inverting-buffer/) | Unity-gain buffer with feedback path; introduces op-amp pin conventions and dual-rail supply. | [TASK-131](../../developers/tasks/closed/task-131-gallery-reattempt-opamp-non-inverting-buffer.md) |
+| [Multi-page split](multi-page-split/) | A circuit partitioned across two sheet pages — exercises the renderer's page-break logic and cross-page net-label glyphs. | [TASK-132](../../developers/tasks/closed/task-132-gallery-reattempt-multi-page-split.md) |
 
 ## How to use the gallery
 
@@ -40,12 +40,11 @@ python scripts/check_gallery_regression.py            # check-only
 python scripts/check_gallery_regression.py --rebaseline   # overwrite committed artefacts
 ```
 
-Gallery entries that ship without a committed SVG (the entries
-whose rendering is scheduled under
-[EPIC-014](../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
-— seeded by IDEA-008 and IDEA-009) are skipped with a one-line
-note; the guard activates for each example as soon as its EPIC-014
-task closes and an SVG is committed.
+All five gallery entries ship with committed SVGs as of EPIC-014's
+close. The guard checks every committed `<dirname>/<dirname>.svg`
+(or `<dirname>/<dirname>-p<N>.svg` for multi-page entries) for
+byte-identical regeneration; any drift fails CI. Entries without a
+committed SVG (none today) would be silently skipped.
 
 ## See also
 
@@ -53,7 +52,3 @@ task closes and an SVG is committed.
   than a finished circuit to read.
 - [`circuit-yaml.md`](../../developers/circuit-yaml.md) —
   authoritative format reference.
-
-> Status: example content is filled in across TASK-096 through
-> TASK-100 of EPIC-012. Until those land, the example
-> sub-directories are placeholders.

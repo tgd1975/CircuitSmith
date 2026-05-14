@@ -1,4 +1,4 @@
-# ERC Report — Tutorial step 1 — minimal circuit — 2026-05-13
+# ERC Report — Tutorial step 1 — minimal circuit — 2026-05-14
 
 | Severity | Ref | Pin | Check | Net | Message |
 |---|---|---|---|---|---|

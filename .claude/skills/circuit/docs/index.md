@@ -14,12 +14,17 @@ host project; it is not duplicated here.
 ## Status
 
 The full `/circuit` skill workflow is wired up: declarative
-`.circuit.yml` authoring, deterministic layout (kernel + Manhattan
-router, optional AI-placer escape hatch), ERC against a 15-rule
-catalog, SVG render, BOM, KiCad netlist, and Markdown ` ```circuit `
-block rewriting. Phase 7 of EPIC-006 cuts the first PyPI release of
-the `circuitsmith` package; until that tag lands the install path
-is the pinned-copy shape below.
+`.circuit.yml` authoring (including `sub-blocks:` / `instances:`
+for repeated-fragment authoring), deterministic layout (kernel +
+Manhattan router with twelve canonical-slot rules covering the
+day-one library plus the EPIC-014 RC / CC / RR / BJT / generic-IC
+shapes, optional AI-placer escape hatch), multi-page rendering
+with cross-page net-label glyphs, ERC against a 27-rule catalog
+(S1–S7 + E1–E22, including active-device and cross-page rules),
+SVG render, BOM, KiCad netlist, and Markdown ` ```circuit ` block
+rewriting. Phase 7 of EPIC-006 cuts the first PyPI release of the
+`circuitsmith` package; until that tag lands the install path is
+the pinned-copy shape below.
 
 ## Install
 
@@ -259,12 +264,16 @@ emission order.
 ## ERC reference
 
 When ERC fires on a PR, [`docs/erc-checks.md`](erc-checks.md) is the
-contributor-facing reference for each of the 15 check codes
-(S1–S5 + E1–E10): what the trigger is, what hardware failure it
+contributor-facing reference for each of the 27 check codes
+(S1–S7 + E1–E22): what the trigger is, what hardware failure it
 prevents, severity defaults, and how to suppress per-net /
 per-component / per-circuit. Cross-references to the catalog entries
 in `circuitsmith.knowledge.rules.json` carry the
 Why / Senior's tip / Source content the report writer embeds.
+EPIC-014 added 12 new codes — S6/S7 (sub-block validation), E11–E15
+(sub-block flatten / port-net ERC), E16–E18 (active-device ERC: BJT
+role, op-amp power floating, 555 pin-naming drift), E19–E22
+(cross-page ERC).
 
 ## Markdown ` ```circuit ` blocks
 

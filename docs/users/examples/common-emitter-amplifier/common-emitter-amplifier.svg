@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-64 -64 320 256" width="320" height="256" data-skill="circuit-skill@0.4.0">
+<title>Common-emitter amplifier</title>
+<g class="wires" stroke="black" stroke-width="2" fill="none">
+<path d="M 0,128 L 0,128 L 0,0" data-net="GND" data-from="J1.GND" data-to="U1.GNDL" />
+<path d="M 0,0 L 0,0" data-net="GND" data-from="U1.GNDL" data-to="U1.GNDR" />
+<path d="M 64,128 L 128,128 L 128,128" data-net="GND" data-from="J_IN.SLEEVE" data-to="J_OUT.SLEEVE" />
+<path d="M 0,128 L 0,128 L 0,0" data-net="VCC" data-from="J1.VBUS" data-to="U1.VIN" />
+</g>
+<g class="components">
+<g class="component" data-ref="J1" data-region="bottom-row"><rect x="-16" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J1</text></g>
+<g class="component" data-ref="J_IN" data-region="bottom-row"><rect x="48" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="64" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J_IN</text></g>
+<g class="component" data-ref="J_OUT" data-region="bottom-row"><rect x="112" y="112" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="128" y="132" text-anchor="middle" font-family="DejaVu Sans" font-size="12">J_OUT</text></g>
+<g class="component" data-ref="Q1" data-region="right-column"><rect x="176" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="192" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">Q1</text></g>
+<g class="component" data-ref="U1" data-region="mcu-center"><rect x="-16" y="-16" width="32" height="32" fill="white" stroke="black" stroke-width="2" /><text x="0" y="4" text-anchor="middle" font-family="DejaVu Sans" font-size="12">U1</text></g>
+</g>
+</svg>

@@ -71,7 +71,7 @@ def _gather_circuits() -> list[Path]:
     return paths
 
 
-def _artefact_paths(circuit_path: Path) -> dict[str, Path]:
+def _artefact_paths(circuit_path: Path) -> dict[str, Path | list[Path]]:
     """Return the {kind: path} mapping for a circuit's artefacts.
 
     Tutorial form (`<base>.circuit.yml`):
@@ -80,13 +80,21 @@ def _artefact_paths(circuit_path: Path) -> dict[str, Path]:
     Gallery form (`<dir>/circuit.yml`):
         <dir>/<dirname>.svg, <dir>/layout.yml, <dir>/meta.yml,
         <dir>/erc-report.md
+
+    Multi-page outputs (TASK-125/132) commit one SVG per page as
+    `<base>-p<N>.svg` instead of a single `<base>.svg`. When the
+    base-form SVG is absent but multi-page SVGs exist, the `svg`
+    key carries the sorted list of per-page paths; the regression
+    check diffs each page independently.
     """
     if circuit_path.name == "circuit.yml":
         # Gallery form.
         d = circuit_path.parent
         stem = d.name
+        single = d / f"{stem}.svg"
+        multi = sorted(d.glob(f"{stem}-p*.svg"))
         return {
-            "svg":    d / f"{stem}.svg",
+            "svg":    single if single.exists() else (multi if multi else single),
             "layout": d / "layout.yml",
             "meta":   d / "meta.yml",
             "erc":    d / "erc-report.md",
@@ -159,7 +167,18 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
     paths = _artefact_paths(circuit_path)
     rel_circuit = circuit_path.relative_to(REPO_ROOT)
 
-    if not paths["svg"].exists():
+    # Multi-page circuits expose `paths["svg"]` as a list of per-page
+    # paths; single-page circuits as a single Path. Normalise to a
+    # list of (kind-label, dst-path) entries for SVG comparison and
+    # track whether the gallery committed any SVG at all.
+    svg_value = paths["svg"]
+    if isinstance(svg_value, list):
+        svg_dsts = svg_value
+        any_svg = bool(svg_dsts)
+    else:
+        svg_dsts = [svg_value]
+        any_svg = svg_value.exists()
+    if not any_svg:
         return True, f"skip {rel_circuit} (no committed SVG)"
 
     with tempfile.TemporaryDirectory(prefix="cs-gallery-check-", dir=REPO_ROOT) as tmpdir:
@@ -190,8 +209,23 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
             return False, f"FAIL {rel_circuit}: renderer aborted at {exc.stage} — {exc.summary}"
 
         diffs: list[str] = []
-        for kind, dst in paths.items():
-            regen = out_paths[kind]
+        # Build the {dst, regen} pair list. SVGs need special handling
+        # for multi-page outputs (one regen per page); the other three
+        # kinds are always singletons.
+        pairs: list[tuple[Path, Path]] = []
+        if isinstance(paths["svg"], list):
+            # Multi-page: regen paths are `<out_svg-stem>-p<N>.svg`
+            # produced by `_emit_pages_or_single`. Pair them positionally
+            # with the committed `<base>-p<N>.svg` entries.
+            base = out_paths["svg"]
+            regen_svgs = sorted(base.parent.glob(f"{base.stem}-p*{base.suffix}"))
+            for committed_svg, regen_svg in zip(paths["svg"], regen_svgs):
+                pairs.append((committed_svg, regen_svg))
+        else:
+            pairs.append((paths["svg"], out_paths["svg"]))
+        for kind in ("layout", "meta", "erc"):
+            pairs.append((paths[kind], out_paths[kind]))
+        for dst, regen in pairs:
             if not regen.exists():
                 continue
             regen_bytes = regen.read_bytes()
@@ -199,7 +233,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 dst.write_bytes(regen_bytes)
                 continue
             if not dst.exists():
-                diffs.append(f"missing committed {kind}: {dst.relative_to(REPO_ROOT)}")
+                diffs.append(f"missing committed: {dst.relative_to(REPO_ROOT)}")
                 continue
             committed_bytes = dst.read_bytes()
             if committed_bytes == regen_bytes:
@@ -214,7 +248,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                     f"(committed {len(committed_bytes)} B, regenerated {len(regen_bytes)} B)"
                 )
                 continue
-            if kind == "meta":
+            if dst.name == "meta.yml" or dst.name.endswith(".meta.yml"):
                 # See `_normalise_meta`: the `sources:` block records
                 # invocation paths that drift per-runner without
                 # changing the circuit content.

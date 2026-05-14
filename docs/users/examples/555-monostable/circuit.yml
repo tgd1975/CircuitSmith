@@ -1,0 +1,52 @@
+meta:
+  title: 555 monostable
+  target: esp32
+
+# Single-rail NE555 / LM555 wired as a one-shot. Pulse width
+# t = 1.1 * R_T * C_T = 1.1 * 100k * 10uF = 1.1 s — long enough to
+# read on a single LED blink without a scope. Silkscreen-pin form
+# (U1.1 .. U1.8) is used throughout per TASK-123's pin-naming-drift
+# ERC rule; the silicon-name aliases (GND/TRIG/OUT/RESET/CTRL/THRES/
+# DISCH/VCC) are documented in the README prose.
+
+components:
+  U1: { type: ic/555,             label: TIMER }
+  J1: { type: connectors/usb_c,   label: 5V in }
+  # Timing network: R_T from VCC to U1.7 (DISCH), shorted to U1.6
+  # (THRES); C_T from U1.6 (THRES) to GND.
+  R_T: { type: passives/resistor,  value: 100000 }
+  C_T: { type: passives/capacitor, value: 10e-6 }
+  # CTRL (U1.5) decoupled to GND with a small ceramic cap.
+  C_CTRL: { type: passives/capacitor, value: 10e-9 }
+  # TRIG (U1.2) pulled high; pushbutton briefly grounds it to fire.
+  R_TRIG: { type: passives/resistor, value: 10000 }
+  BTN:    { type: passives/pushbutton, label: TRIGGER }
+  # OUT (U1.3) drives an indicator LED through a series resistor.
+  R_LED: { type: passives/resistor, value: 330 }
+  LED1:  { type: passives/led, color: red, label: PULSE }
+
+connections:
+  - net: VCC
+    pins: [J1.VBUS, U1.8, U1.4, R_TRIG.1, R_T.1]
+
+  - net: GND
+    pins: [J1.GND, U1.1, C_T.2, C_CTRL.2, BTN.2]
+
+  # Timing node: DISCH (pin 7) sees the discharge transistor; THRES
+  # (pin 6) watches the cap voltage. Tying them together with R_T to
+  # VCC and C_T to GND is the canonical monostable RC.
+  - net: TIMING
+    pins: [R_T.2, U1.7, U1.6, C_T.1]
+
+  # CTRL (pin 5) bypass cap to GND — leaves the internal 2/3 VCC
+  # reference clean; standard practice for noisy supplies.
+  - net: CTRL_BYPASS
+    pins: [U1.5, C_CTRL.1]
+
+  # TRIG (pin 2) pull-up + button-to-GND for one-shot triggering.
+  - net: TRIG
+    pins: [U1.2, R_TRIG.2, BTN.1]
+
+  # OUT (pin 3) → series resistor → LED → GND.
+  - net: PULSE
+    path: [U1.3, R_LED.1, R_LED.2, LED1.A, LED1.K, GND]

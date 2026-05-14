@@ -148,5 +148,125 @@
     "heuristic": "If multiple devices share a pin (e.g. an I2C bus), put them all in one net under a shared name. If you accidentally re-used a pin, pick a fresh GPIO from the MCU's `pins:` map. This is a starting point; for precision applications, calculate the exact value or consult the datasheet.",
     "source_of_truth": "https://www.elektronik-kompendium.de/sites/dig/0205171.htm",
     "enforced_by": "E10"
+  },
+  {
+    "id": "E11",
+    "category": "Structural",
+    "keywords": ["topic:sub-blocks"],
+    "rule": "Every declared port on a sub-block instance must appear in at least one top-level connection.",
+    "explanation": "A sub-block exposes ports — `signal_in`, `gnd`, etc. — so the surrounding circuit can wire to it. If you declare a port and never reference `<instance>.<port>` anywhere in the top-level `connections:`, the port is electrically floating; the sub-block's promise to its internals is broken. E11 catches this before the layout kernel runs.",
+    "heuristic": "Treat each port like a pin on a discrete component: it must connect to something. The fix is one of two things: wire the port to its intended destination, or remove the port from the sub-block definition if you didn't mean to expose it. This is a starting point; review the sub-block's intent before suppressing the warning.",
+    "source_of_truth": "EPIC-014 frozen decisions — named-ports map (IDEA-008 Half 2).",
+    "enforced_by": "E11"
+  },
+  {
+    "id": "E12",
+    "category": "Structural",
+    "keywords": ["topic:sub-blocks"],
+    "rule": "A sub-block defined in `sub-blocks:` should be referenced by at least one `instances:` entry.",
+    "explanation": "A sub-block definition with no instances is dead code — the YAML parses but nothing in the circuit uses it. It is almost always a typo (wrong sub-block name in `instances.X.sub-block:`) or leftover work-in-progress. E12 is a warning, not an error, because there are legitimate reasons (libraries shared across circuits) but the v0.1 schema does not ship that pattern.",
+    "heuristic": "Add an `instances:` entry referencing the sub-block, or remove the definition. Search the `instances:` block for the sub-block's key — the typo is usually a misspelling there. This is a starting point; if you keep the sub-block as a shared library template, suppress E12 via `meta.erc`.",
+    "source_of_truth": "EPIC-014 frozen decisions — single bundled epic for sub-blocks.",
+    "enforced_by": "E12"
+  },
+  {
+    "id": "E13",
+    "category": "Structural",
+    "keywords": ["topic:sub-blocks"],
+    "rule": "The flattener's minted refdes (`<local>_<instance>`) must not collide with any flat-form component refdes.",
+    "explanation": "EPIC-014 mints global refdes by suffixing the local refdes with the instance name (e.g. `R` inside `FILT_A` becomes `R_FILT_A`). If you also declare a top-level component named `R_FILT_A`, the flattener can't tell which one a BOM row refers to. E13 catches this collision before the netgraph is built.",
+    "heuristic": "Rename one of the colliding components. The minted refdes is a function of the sub-block + instance names, so renaming the instance (or the local refdes inside the sub-block) is usually simpler than renaming the flat component. This is a starting point; the underlying invariant (unique refdes across the flattened circuit) is non-negotiable.",
+    "source_of_truth": "EPIC-014 frozen decisions — `<local>_<instance>` refdes scheme.",
+    "enforced_by": "E13"
+  },
+  {
+    "id": "E14",
+    "category": "Structural",
+    "keywords": ["topic:sub-blocks"],
+    "rule": "Each `<instance>.<port>` reference must appear in exactly one top-level net.",
+    "explanation": "A sub-block port maps to a single internal pin. If two distinct top-level nets both reference `FILT_A.signal_in`, the flattener has to choose one and silently ignore the other — or worse, short-circuit two nets together. E14 catches this driver conflict before the netgraph hides it under one merged net.",
+    "heuristic": "Pick one top-level net to drive the port. If you genuinely want two sources to share a node, name a single net and put both sources on it. This is a starting point; review the schematic intent before merging nets.",
+    "source_of_truth": "EPIC-014 frozen decisions — named-ports map.",
+    "enforced_by": "E14"
+  },
+  {
+    "id": "E15",
+    "category": "Electrical",
+    "keywords": ["topic:layout", "topic:divider"],
+    "rule": "An R+R rail-to-GND topology with a tap is treated as a voltage divider only when the tap-net name matches `^(V?REF|SENSE|ADC|DIV|TAP)` or one of the resistors carries `role: divider`.",
+    "explanation": "Two resistors in series between a rail and ground look identical to a series-resistor on a current path with an incidental tap label. Without a hint, the layout kernel cannot tell whether you intended a divider (vertical stack, tap labelled) or a series chain (in-line placement). E15 surfaces the ambiguity as a warning; the kernel falls back to flat placement so nothing is mis-classified silently.",
+    "heuristic": "Rename the tap net to match the regex (e.g. `VREF`, `SENSE`, `ADC0`) — or add `role: divider` to one of the resistors. Either fixes the ambiguity. If the resistors aren't actually a divider, change the topology so they don't bridge rail to ground. This is a starting point; the kernel's flat-placement fallback is safe, so suppressing E15 is fine when the topology is intentional.",
+    "source_of_truth": "EPIC-014 frozen decisions — voltage-divider discriminator (IDEA-008 *Open questions*).",
+    "enforced_by": "E15"
+  },
+  {
+    "id": "E16",
+    "category": "Electrical",
+    "keywords": ["topic:active-devices", "topic:bjt"],
+    "rule": "Every pin on a `category: transistor` profile must carry a `role:` annotation (`base` / `collector` / `emitter` for BJTs).",
+    "explanation": "The direction-sensitive kernel rule (ADR-0015) reads `role:` to decide which canonical slot the transistor lands in; an unset role makes the device unplaceable. The check is a forward-looking guard for future BJT-family profiles authored without `role:` — the v1 NPN/PNP profiles ship complete.",
+    "heuristic": "Add `role: \"base\" | \"collector\" | \"emitter\"` to every pin in the profile's `pins.X` dict, alongside the existing `side` / `type` / `direction` keys. This is a starting point; the role enum is closed in v1, and FET / Darlington additions will extend it.",
+    "source_of_truth": "EPIC-014 frozen decisions — BJT terminal-role encoding.",
+    "enforced_by": "E16"
+  },
+  {
+    "id": "E17",
+    "category": "Electrical",
+    "keywords": ["topic:active-devices", "topic:opamp"],
+    "rule": "Every `category: ic_opamp` instance must connect each `POWER_INPUT`-typed pin to a declared net.",
+    "explanation": "Op-amp supply pins have no safe floating defaults — an unconnected `V+` or `V-` is a silicon-damage trap that the schematic must surface before render. The check reads the profile's pin-type tag, not the literal pin name, so single-supply op-amp profiles (future work) inherit the rule for free.",
+    "heuristic": "Add `V+` and `V-` (or whatever your op-amp profile names its supply pins) to the connections list — typically tied to the same `V_PLUS` / `V_MINUS` rails the rest of the analog stage uses. This is a starting point; suppress E17 only when you have a confirmed reason (e.g. an experimental fixture), never silently.",
+    "source_of_truth": "IDEA-009 *ERC — Half 1 (active devices)*.",
+    "enforced_by": "E17"
+  },
+  {
+    "id": "E18",
+    "category": "Electrical",
+    "keywords": ["topic:active-devices", "topic:style"],
+    "rule": "On a `category: ic_timer` instance, prefer the silkscreen-pin form (`T1.1`) over the silicon-name alias (`T1.GND`). Both forms render identically; the silkscreen form is canonical per ADR-0010.",
+    "explanation": "Mixing both forms in one circuit makes a connection list harder to scan — a reader has to flip between two mental models of the same pin. The validator accepts both forms so the user is never blocked, but the warning encourages a one-form discipline. Style-only; the underlying netlist is identical.",
+    "heuristic": "Replace each silicon-name reference with the silkscreen-pin form the warning names (`T1.GND` → `T1.1`). This is a starting point; if your team prefers the silicon-name form across the codebase, suppress E18 globally in `meta.erc: { E18: off }`.",
+    "source_of_truth": "ADR-0010 — MCU profile is dev-board shape.",
+    "enforced_by": "E18"
+  },
+  {
+    "id": "E19",
+    "category": "Structural",
+    "keywords": ["topic:multi-page", "topic:pages"],
+    "rule": "Every page declared in `pages:` should have at least one placement tagged onto it. A declared-but-empty page renders blank.",
+    "explanation": "Pages are a *partition* of the slot vocabulary — declaring a page commits the renderer to emitting a blank SVG for it (`<stem>-pN.svg`). A typo in the placement's `page:` tag (e.g. `p3` instead of `p2`) often surfaces as one over-declared and one empty page.",
+    "heuristic": "Either delete the unused page entry from `pages:` or grep your `.layout.yml` for typos in the `page:` field of placements. This is a starting point; in WIP circuits an empty page is sometimes intentional (placeholder for future work), in which case suppress E19 locally.",
+    "source_of_truth": "IDEA-009 Phase 3 — pages partition.",
+    "enforced_by": "E19"
+  },
+  {
+    "id": "E20",
+    "category": "Structural",
+    "keywords": ["topic:multi-page", "topic:pages"],
+    "rule": "Every per-placement `page:` value must name a page declared in the top-level `pages:` block.",
+    "explanation": "An undeclared page reference is almost always a typo or stale `.layout.yml` that wasn't updated after a `pages:` rename. Without the declaration the renderer has no anchor for the page and the placement falls through to default behaviour, but the schema-level cross-validation catches the same drift.",
+    "heuristic": "Compare the placement's `page:` value to the `pages:` block and either add the missing page declaration or fix the placement's tag. This is a starting point; the schema-validator's `layout-page-undeclared` check catches the same problem at validate time.",
+    "source_of_truth": "IDEA-009 Phase 3 — pages partition.",
+    "enforced_by": "E20"
+  },
+  {
+    "id": "E21",
+    "category": "Structural",
+    "keywords": ["topic:multi-page", "topic:labels", "topic:rendering"],
+    "rule": "Every cross-page net must have a renderable label anchor on every page it touches. If the kernel could not assign a region to the local-side placement, the off-sheet label is silently dropped and the cross-page reference becomes invisible.",
+    "explanation": "Cross-page labels (TASK-126) are the only on-sheet trace of a net continuation. When the renderer can't compute an anchor origin (no `region`, no `attached-to` chain), the label is omitted — silently — and a reader of the SVG has no way to know the net continues on another page.",
+    "heuristic": "Resolve the kernel escalation for the local-side ref (typically by hand-authoring a `free`-slot entry in `.layout.yml`, or by adding a missing component profile). This is a starting point; if the affected pin is intentionally unrouted, suppress E21 on the net via `meta.erc: { <NET>: { E21: off } }`.",
+    "source_of_truth": "IDEA-009 Phase 3 — cross-page label rendering.",
+    "enforced_by": "E21"
+  },
+  {
+    "id": "E22",
+    "category": "Structural",
+    "keywords": ["topic:multi-page", "topic:pages", "topic:heuristic"],
+    "rule": "Heuristic — more than the configured threshold (default 6) of distinct nets crossing any one page boundary suggests the page split is in the wrong place.",
+    "explanation": "Cross-page labels are useful but expensive cognitively: every label the reader follows is a context switch. Many cross-page nets between the same two pages usually means a logical block has been split across sheet boundaries by accident. The threshold is a heuristic and tunable.",
+    "heuristic": "Re-partition the offending placements so the heavily-connected logical block lives on one page. This is a starting point; if the split is intentional (e.g. front-panel vs main board with a known wide interconnect), raise the threshold via `meta.erc.cross-page-threshold` or suppress E22 globally.",
+    "source_of_truth": "IDEA-009 Phase 3 — multi-page heuristics.",
+    "enforced_by": "E22"
   }
 ]

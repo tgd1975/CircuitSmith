@@ -1,0 +1,53 @@
+meta:
+  title: Op-amp non-inverting buffer
+  target: esp32
+
+# Unity-gain buffer on a generic dual-supply op-amp. The non-
+# inverting input (IN+) takes the source signal; the output is
+# fed back to the inverting input (IN-) for unity gain. Two
+# decoupling caps on the supply rails (V+ and V-) exercise the
+# RULE_CC_DECOUPLING pair and quiet the power-pin-floating ERC
+# rule (E17). One MCU is in the schematic so the schema validator
+# has a target board to anchor the circuit on — the buffer
+# itself ignores it.
+
+components:
+  U1: { type: mcu/esp32,        label: ESP32 }
+  A1: { type: ic/opamp_dual_supply, label: BUFFER }
+  # Two power inlets, one per rail. The schematic doesn't model
+  # the user-supplied −5 V source's polarity — both jacks present
+  # as USB-C-shaped POWER inputs; the reader maps J2 to the
+  # negative rail by net name.
+  J1: { type: connectors/usb_c, label: +5V in }
+  J2: { type: connectors/usb_c, label: -5V in }
+  # Power-rail decoupling caps (one per supply, both to GND).
+  C_VCC: { type: passives/capacitor, value: 100e-9 }
+  C_VEE: { type: passives/capacitor, value: 100e-9 }
+  # Signal in/out via mono 1/4" jacks.
+  J_IN:  { type: connectors/mono_jack_6_35mm, label: Signal in }
+  J_OUT: { type: connectors/mono_jack_6_35mm, label: Signal out }
+
+connections:
+  # Positive rail (V+ ↔ +5V).
+  - net: V_PLUS
+    pins: [J1.VBUS, A1.V+, C_VCC.1]
+
+  # Negative rail (V- ↔ -5V). Note J2.VBUS carries the user-
+  # supplied negative voltage despite the USB-C profile's
+  # POWER-typed label.
+  - net: V_MINUS
+    pins: [J2.VBUS, A1.V-, C_VEE.1]
+
+  # Common ground — both supply returns, both decoupling-cap
+  # returns, both signal-jack sleeves, and the MCU's two GND pins.
+  - net: GND
+    pins: [J1.GND, J2.GND, U1.GNDL, U1.GNDR, C_VCC.2, C_VEE.2, J_IN.SLEEVE, J_OUT.SLEEVE]
+
+  # Non-inverting input — directly from the signal-in jack tip.
+  - net: SIG_IN
+    pins: [J_IN.TIP, A1.IN+]
+
+  # Unity-gain feedback: output ↔ inverting input ↔ output jack.
+  # Single net keeps the multi-net-pin ERC rule (E10) quiet.
+  - net: BUF_OUT
+    pins: [A1.OUT, A1.IN-, J_OUT.TIP]

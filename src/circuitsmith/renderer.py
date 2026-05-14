@@ -76,6 +76,11 @@ class RenderResult:
     meta_path: Path
     erc_findings: list[ERCFinding] = field(default_factory=list)
     erc_report_path: Path | None = None
+    # EPIC-014 / TASK-125 — list of every SVG written. For a single-page
+    # circuit this is `[svg_path]`; for a multi-page circuit it contains
+    # one entry per declared page (`<stem>-p1.svg`, …) and `svg_path`
+    # points to the first page for backwards compatibility.
+    svg_paths: list[Path] = field(default_factory=list)
 
 
 class RenderError(Exception):
@@ -145,12 +150,25 @@ def render(
     # The kernel accepts a flat dict; copy so we don't mutate the cached registry.
     profile_index: dict[str, Any] = dict(profiles)
 
+    # EPIC-014 / TASK-118 — when the circuit declares sub-block instances,
+    # the kernel needs the flat post-flatten dict (the NetGraph already
+    # auto-flattens via from_yaml_dict). The meta-yaml emit reads the
+    # un-flattened dict so the instance grouping survives into the
+    # sidecar; the kernel reads the flat shadow.
+    from circuitsmith.netgraph import flatten_sub_blocks as _flatten_sub_blocks
+    circuit_flat = _flatten_sub_blocks(circuit)
+
     # ── ERC ────────────────────────────────────────────────────────────────
     # Pre-layout, post-schema. ERROR-level findings abort the pipeline;
     # WARNINGs land in the result for the report writer but do not abort.
     # The ERC stage is wholly topology-driven — it neither reads nor
     # produces layout.yml.
-    erc_findings = run_erc(graph, circuit, profiles=profiles)
+    # EPIC-014 / TASK-127 — pass the user's input layout into ERC so the
+    # cross-page rules (E19..E22) can fire. Pre-layout ERC remains the
+    # default for circuits without a `.layout.yml` on disk (the layout
+    # argument is None and the cross-page rules are silent).
+    erc_findings = run_erc(graph, circuit, profiles=profiles,
+                           layout=previous_layout)
 
     # Persist the catalog-enriched erc-report.md whenever a destination is
     # named — regardless of whether ERC errored. CI's staleness guard
@@ -185,7 +203,7 @@ def render(
 
     try:
         layout = place(
-            circuit=circuit,
+            circuit=circuit_flat,
             graph=graph,
             profiles=profile_index,
             previous_layout=previous_layout,
@@ -313,8 +331,17 @@ def render(
         )
 
     out_svg.parent.mkdir(parents=True, exist_ok=True)
-    svg_bytes = _emit_svg(circuit, layout, router_result)
-    out_svg.write_bytes(svg_bytes)
+    # EPIC-014 / TASK-125 — multi-page render driver. When `pages:` is
+    # declared in the .layout.yml, emit one SVG per page with the auto-
+    # suffix `<stem>-p<n>.svg`. Single-page circuits keep the v0.1
+    # behaviour (`<stem>.svg`, no suffix). The .layout.yml and .meta.yml
+    # are singletons — they describe the whole circuit, not one sheet.
+    svg_paths = _emit_pages_or_single(
+        circuit=circuit,
+        layout=layout,
+        router_result=router_result,
+        out_svg=out_svg,
+    )
 
     layout_yaml = render_layout_yaml(layout)
     actual_out_layout.parent.mkdir(parents=True, exist_ok=True)
@@ -336,11 +363,12 @@ def render(
         layout=layout,
         router_result=router_result,
         rubric=rubric_result,
-        svg_path=out_svg,
+        svg_path=svg_paths[0],
         layout_path=actual_out_layout,
         meta_path=actual_out_meta,
         erc_findings=list(erc_findings),
         erc_report_path=actual_out_erc_report,
+        svg_paths=svg_paths,
     )
 
 
@@ -351,6 +379,7 @@ def _emit_svg(
     circuit: dict[str, Any],
     layout: LayoutResult,
     router_result: RouterResult,
+    cross_page_labels: list[dict[str, Any]] | None = None,
 ) -> bytes:
     """
     v0.1 SVG emit: structural-only.
@@ -378,6 +407,14 @@ def _emit_svg(
         for seg in wire.segments:
             xs.extend([seg.x1, seg.x2])
             ys.extend([seg.y1, seg.y2])
+    # EPIC-014 / TASK-126 — extend bbox so cross-page label glyphs sit
+    # inside the viewBox. Each label extends one grid cell past its
+    # anchor in the wire direction; the SVG-emit step below uses the
+    # same offset so bbox and glyph position stay in lockstep.
+    for label in cross_page_labels or []:
+        ax, ay = label["anchor_origin"]
+        xs.extend([ax - 2, ax + 2])
+        ys.append(ay)
     if not xs:
         xs, ys = [0], [0]
     x_min = min(xs) * grid_unit - margin
@@ -430,8 +467,205 @@ def _emit_svg(
             f"</g>"
         )
     elements.append("</g>")
+
+    # EPIC-014 / TASK-126 — cross-page net labels. Schemdraw arrow +
+    # text annotation per the IDEA-009 frozen-decisions table; we emit
+    # the SVG-primitive equivalent (a short stub line plus a `▶`/`◀`
+    # Unicode glyph and the net + other-page name). Direction key:
+    # `out` ⇒ this is the wire's `a` endpoint, arrow points away from
+    # the anchor toward the off-sheet page. `in` ⇒ this is `b`, arrow
+    # points back toward the anchor.
+    if cross_page_labels:
+        elements.append('<g class="cross-page-labels" font-family="DejaVu Sans" font-size="11">')
+        for label in cross_page_labels:
+            ax, ay = label["anchor_origin"]
+            net = label["net"]
+            other = label["other_page"]
+            direction = label["direction"]
+            cx = ax * grid_unit
+            cy = ay * grid_unit
+            if direction == "out":
+                # Arrow rightward from the anchor.
+                stub_x1 = cx + grid_unit // 2
+                stub_x2 = cx + grid_unit
+                glyph = "▶"
+                label_x = stub_x2 + 4
+                text = f"{net} {glyph} {other}"
+                text_anchor = "start"
+            else:
+                # Arrow inbound from the off-sheet page on the left.
+                stub_x1 = cx - grid_unit
+                stub_x2 = cx - grid_unit // 2
+                glyph = "◀"
+                label_x = stub_x1 - 4
+                text = f"{other} {glyph} {net}"
+                text_anchor = "end"
+            elements.append(
+                f'<g class="cross-page-label" '
+                f'data-net="{net}" data-other-page="{other}" '
+                f'data-direction="{direction}">'
+                f'<line x1="{stub_x1}" y1="{cy}" x2="{stub_x2}" y2="{cy}" '
+                f'stroke="black" stroke-width="2" />'
+                f'<text x="{label_x}" y="{cy + 4}" text-anchor="{text_anchor}">{text}</text>'
+                f'</g>'
+            )
+        elements.append("</g>")
+
     elements.append("</svg>")
     return ("\n".join(elements) + "\n").encode("utf-8")
+
+
+def _emit_pages_or_single(
+    *,
+    circuit: dict[str, Any],
+    layout: LayoutResult,
+    router_result: RouterResult,
+    out_svg: Path,
+) -> list[Path]:
+    """EPIC-014 / TASK-125 — multi-page render driver.
+
+    Returns the list of SVG paths written, in declaration order. Single-
+    page circuits (no `pages:` block, **or** one declared page) emit
+    `<stem>.svg` to preserve v0.1 behaviour. Multi-page circuits emit
+    `<stem>-p1.svg`, `<stem>-p2.svg`, … per declared page.
+
+    The single `.layout.yml` / `.meta.yml` describe the whole circuit
+    and are written by the caller, not by this function.
+
+    Cross-page nets (where the two endpoints' placements live on
+    different pages) are dropped from each per-page route list and
+    instead surface as arrow-glyph labels at each page's
+    net-attachment point — see TASK-126 / `_cross_page_labels_for`.
+    """
+    declared = [entry["name"] for entry in layout.pages
+                if isinstance(entry, dict) and "name" in entry]
+    if len(declared) <= 1:
+        # v0.1 path: one SVG, no suffix.
+        svg_bytes = _emit_svg(circuit, layout, router_result)
+        out_svg.write_bytes(svg_bytes)
+        return [out_svg]
+
+    written: list[Path] = []
+    for idx, page_name in enumerate(declared, start=1):
+        page_layout, page_router = _filter_to_page(layout, router_result, page_name)
+        labels = _cross_page_labels_for(page_name, layout, router_result)
+        page_svg = _emit_svg(circuit, page_layout, page_router,
+                             cross_page_labels=labels)
+        suffixed = out_svg.with_name(f"{out_svg.stem}-p{idx}{out_svg.suffix}")
+        suffixed.write_bytes(page_svg)
+        written.append(suffixed)
+    return written
+
+
+def _cross_page_labels_for(
+    page: str,
+    layout: LayoutResult,
+    router_result: RouterResult,
+) -> list[dict[str, Any]]:
+    """EPIC-014 / TASK-126 — compute cross-page label glyphs for `page`.
+
+    Walks the full route list and, for every route whose two endpoints
+    sit on different pages, emits a label dict at the *this-page* endpoint
+    naming the *other-page* the wire continues onto. Detection is purely
+    from `Placement.page` (per IDEA-009's frozen-decisions row
+    "cross-page net detection vs declaration: detection — no
+    user-authored cross-page-nets: block").
+
+    The dict shape `{net, anchor_ref, anchor_pin, anchor_origin,
+    other_page, direction}` is what `_emit_svg` consumes.
+    `direction` is `"out"` when the local endpoint is `wire.a` (the
+    arrow points toward the off-sheet page) and `"in"` for `wire.b`.
+    """
+    labels: list[dict[str, Any]] = []
+    placements = layout.placements
+    seen: set[tuple[str, str, str, str]] = set()  # de-dup per (net, ref, pin, other_page)
+    for wire in router_result.routes:
+        a_ref = wire.a.ref
+        b_ref = wire.b.ref
+        a_page = placements[a_ref].page if a_ref in placements else None
+        b_page = placements[b_ref].page if b_ref in placements else None
+        if a_page == b_page:
+            continue
+        # This wire spans a page boundary.
+        if a_page == page:
+            local_pin = wire.a
+            other_page = b_page
+            direction = "out"
+        elif b_page == page:
+            local_pin = wire.b
+            other_page = a_page
+            direction = "in"
+        else:
+            continue
+        if other_page is None:
+            # The off-page endpoint has no page assignment; nothing to
+            # name on the label. Skip silently.
+            continue
+        anchor_origin = _resolve_origin(placements[local_pin.ref], layout)
+        if anchor_origin is None:
+            continue
+        key = (wire.net, local_pin.ref, local_pin.pin, other_page)
+        if key in seen:
+            continue
+        seen.add(key)
+        labels.append({
+            "net": wire.net,
+            "anchor_ref": local_pin.ref,
+            "anchor_pin": local_pin.pin,
+            "anchor_origin": anchor_origin,
+            "other_page": other_page,
+            "direction": direction,
+        })
+    # Stable order for deterministic SVG output.
+    labels.sort(key=lambda d: (d["net"], d["anchor_ref"], d["anchor_pin"], d["other_page"]))
+    return labels
+
+
+def _filter_to_page(
+    layout: LayoutResult,
+    router_result: RouterResult,
+    page: str,
+) -> tuple[LayoutResult, RouterResult]:
+    """Build a LayoutResult + RouterResult containing only placements on `page`.
+
+    Routes are kept iff **both** endpoint refs live on the same page.
+    Cross-page routes are dropped here; TASK-126 adds the boundary
+    label rendering as a second pass.
+
+    Attached-to anchors are pulled in even if `attached_to`'s page
+    differs — the anchor is needed for `_resolve_origin` to compute the
+    attached glyph's coordinates. (In practice attached components
+    inherit their anchor's page via the kernel rewrite — see TASK-124 —
+    so this is defensive.)
+    """
+    kept_refs = {ref for ref, p in layout.placements.items() if p.page == page}
+    # Pull in anchors of any attached placement on this page.
+    extra: set[str] = set()
+    for ref in list(kept_refs):
+        anchor = layout.placements[ref].attached_to
+        if anchor is not None and anchor not in kept_refs:
+            extra.add(anchor)
+    kept_refs |= extra
+
+    page_placements = {ref: p for ref, p in layout.placements.items() if ref in kept_refs}
+
+    page_routes = [
+        wire for wire in router_result.routes
+        if wire.a.ref in kept_refs and wire.b.ref in kept_refs
+    ]
+
+    page_layout = LayoutResult(
+        placements=page_placements,
+        capacity_overrides=dict(layout.capacity_overrides),
+        unplaced=list(layout.unplaced),
+        pages=list(layout.pages),
+    )
+    page_router_result = RouterResult(
+        routes=page_routes,
+        crossings=0,  # per-page crossing counts re-derived only if asked
+        intra_component_intersections=0,
+    )
+    return page_layout, page_router_result
 
 
 def _resolve_origin(p, layout: LayoutResult) -> tuple[int, int] | None:
@@ -564,7 +798,12 @@ def _emit_meta_yaml(
     lines.append("layout:")
     lines.append(f"  state: {state}")
     lines.append(f"  placed: {len(layout.placements)}")
-    lines.append(f"  total:  {len(circuit['components'])}")
+    # EPIC-014 / TASK-118 — when the circuit declares sub-block instances, the
+    # placer sees the flat component set, so `total` must count flat refdes
+    # rather than the (smaller) un-flattened top-level entries.
+    from circuitsmith.netgraph import flatten_sub_blocks as _flatten_sub_blocks
+    _flat_total = len(_flatten_sub_blocks(circuit)["components"])
+    lines.append(f"  total:  {_flat_total}")
     lines.append("rubric:")
     for key in sorted(rubric.metrics):
         value = rubric.metrics[key]
@@ -574,6 +813,26 @@ def _emit_meta_yaml(
             lines.append(f"  {key}: {value:.4g}")
         else:
             lines.append(f"  {key}: {value}")
+    # EPIC-014 / TASK-118 — sub-block instance map. When the input circuit
+    # declares instances, surface the grouping so downstream tools (the
+    # in-progress inline-box SVG annotation, the BOM grouping inspector,
+    # and human reviewers) can see which flat refdes belong to which
+    # instance without re-running the flattener.
+    instances = (circuit.get("instances") or {})
+    sub_blocks = (circuit.get("sub-blocks") or {})
+    if instances:
+        lines.append("instances:")
+        for inst_name in sorted(instances):
+            inst = instances[inst_name] or {}
+            sub_name = inst.get("sub-block", "")
+            sb = sub_blocks.get(sub_name) or {}
+            constituents = sorted(
+                f"{local}_{inst_name}" for local in (sb.get("components") or {})
+            )
+            lines.append(f"  {inst_name}:")
+            lines.append(f"    sub-block: {sub_name}")
+            lines.append(f"    label: \"{inst_name}: {sub_name}\"")
+            lines.append(f"    constituents: [{', '.join(constituents)}]")
     lines.extend(_provenance_lines(escalations, ai_invocations or []))
     return "\n".join(lines) + "\n"
 
@@ -588,6 +847,8 @@ def _emit_meta_yaml_incomplete(
     ai_invocations: list[dict[str, Any]] | None = None,
 ) -> str:
     """meta.yml for kernel-escalation runs that never produced a placement."""
+    from circuitsmith.netgraph import flatten_sub_blocks as _flatten_sub_blocks
+    _flat_total = len(_flatten_sub_blocks(circuit)["components"])
     lines = [
         "schema: circuit-meta/v1",
         "sources:",
@@ -596,7 +857,7 @@ def _emit_meta_yaml_incomplete(
         "layout:",
         "  state: incomplete",
         f"  placed: {placed}",
-        f"  total:  {len(circuit['components'])}",
+        f"  total:  {_flat_total}",
         "rubric: {}",
     ]
     lines.extend(_provenance_lines(escalations, ai_invocations or []))
@@ -673,7 +934,15 @@ def _main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="circuit-skill renderer (v0.1)")
     parser.add_argument("--circuit", type=Path, required=True, help="input .circuit.yml")
     parser.add_argument("--layout",  type=Path, default=None, help="input .layout.yml (optional)")
-    parser.add_argument("--out",     type=Path, required=True, help="output .svg path")
+    parser.add_argument(
+        "--out", type=Path, required=True,
+        help=(
+            "output .svg path. For multi-page layouts (`pages:` block "
+            "declares ≥ 2 pages) the renderer auto-suffixes each "
+            "declared page: --out main.svg → main-p1.svg, main-p2.svg, … "
+            "Single-page layouts keep the bare path."
+        ),
+    )
     parser.add_argument("--out-layout", type=Path, default=None, help="output .layout.yml (default: input or <out>.layout.yml)")
     parser.add_argument("--out-meta",   type=Path, default=None, help="output .meta.yml (default: sibling of <out>)")
     parser.add_argument("--out-erc-report", type=Path, default=None,

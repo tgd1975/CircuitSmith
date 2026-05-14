@@ -1,0 +1,21 @@
+schema: circuit-meta/v1
+sources:
+  circuit: docs/users/examples/555-monostable/circuit.yml
+  layout:  docs/users/examples/555-monostable/layout.yml
+layout:
+  state: complete
+  placed: 9
+  total:  9
+rubric:
+  density: 0.07692
+  intra_component_intersections: 0
+  labels_fit: true
+  min_label_distance: 1
+  overlaps: 0
+  wire_crossings: 0
+provenance:
+  tool:       circuit-renderer
+  skill:      circuit-skill@0.4.0
+  ai_invoked: false
+  iterations: 0
+  escalations: []

@@ -343,6 +343,12 @@ Epic-sized; smaller than EPIC-012 (10 tasks, ~22h actual).
 
 ## Open questions
 
+All entries below are **Decided** (2026-05-14, EPIC-014 / TASK-110).
+The proposed defaults were confirmed verbatim and recorded in the
+[epic body's "Frozen decisions" section](../../tasks/active/epic-014-circuit-library-and-renderer-v2.md#frozen-decisions-task-110).
+This section is kept for traceability; downstream implementation
+tasks consume the epic body, not these entries.
+
 - **Refdes flattening for BOM / KiCad netlist.** A sub-block
   instance's constituent components need globally unique refdes
   downstream. Proposed scheme: `<local-refdes>_<instance>` (e.g.

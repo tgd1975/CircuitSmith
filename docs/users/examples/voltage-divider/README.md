@@ -1,6 +1,6 @@
 ---
 example: voltage-divider
-status: blocked-on-layout-kernel
+status: shipped
 ---
 
 # Voltage divider
@@ -45,27 +45,36 @@ re-typed.
 
 ## The output
 
-> **v0.1 layout-kernel limitation.** This example does **not** ship a
-> rendered SVG yet. The CircuitSmith v0.1 layout kernel's canonical
-> rule table covers `R + LED` (status indicator) and `R + pull-up`
-> (button pull) but does not yet cover bare `R + R` groupings such as
-> a voltage divider. Under `--no-ai` (the CI default per ADR-0002),
-> the kernel escalates with `no-canonical-rule` and refuses to place
-> the second resistor. Under `--ai`, an Anthropic SDK + API key are
-> required and the placer would consume credit per render — not
-> appropriate for a committed gallery fixture.
->
-> The missing capability is scheduled under
-> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
-> (seeded by IDEA-008). The SVG, layout sidecar, and meta sidecar
-> will land for this example when TASK-128 closes — the R+R
-> canonical rule (TASK-114) is the unblocker.
+![Voltage divider schematic](voltage-divider.svg)
 
-The ERC engine **does** accept the circuit standalone — running
-`.venv/bin/python -m circuitsmith.erc_engine --circuit circuit.yml`
-on the committed input produces one expected E9 pending-promotion
-warning and zero errors. The circuit is electrically sound; only
-the layout kernel does not know how to draw it deterministically.
+The renderer's structural emit places `U1` in `mcu-center`, the USB-C
+jack `J1` on `bottom-row`, and the two divider resistors (`R1`, `R2`)
+into a synthetic `divider-ADC_IN` region in rows 0 and 1 — the
+canonical-slot signature minted by `RULE_RR_VOLTAGE_DIVIDER`
+(TASK-114). The kernel discriminates a divider from a generic R+R
+pair via the tap-net-name regex `/^(V?REF|SENSE|ADC|DIV|TAP)/i`;
+`ADC_IN` matches the `ADC` prefix and the rule fires deterministically.
+
+The full layout sidecar lives at [`voltage-divider.layout.yml`](voltage-divider.layout.yml);
+ERC report at [`erc-report.md`](erc-report.md); provenance and
+rubric metrics at [`voltage-divider.meta.yml`](voltage-divider.meta.yml).
+
+## BOM
+
+| Ref | Type                | Value | Notes                  |
+|-----|---------------------|-------|------------------------|
+| U1  | `mcu/esp32`         | —     | ESP32 dev board        |
+| J1  | `connectors/usb_c`  | —     | USB-C power input      |
+| R1  | `passives/resistor` | 10 kΩ | Top half of the divider |
+| R2  | `passives/resistor` | 10 kΩ | Bottom half of the divider |
+
+For a divider that produces a midpoint between two arbitrary rails,
+keep the two resistors equal-valued (10 kΩ each here gives a 50:50
+midpoint that lands well inside the ADC's `0 V … VREF` range). For a
+non-50% midpoint, scale the bottom resistor's value:
+`V_tap = VCC × (R2 / (R1 + R2))`. This is a starting point; for
+precision ADC inputs you may want a series-output filter cap to GND
+(an RC low-pass — see tutorial step 1's RC filter sub-block).
 
 ## What makes it interesting
 
@@ -73,21 +82,17 @@ This entry serves two purposes simultaneously:
 
 1. It establishes the **gallery README template** every later
    example follows (the section headings, the
-   excerpted-from-disk YAML, the "what makes it interesting"
-   pattern).
-2. It surfaces the **first concrete v0.1 kernel limitation** a real
-   user hits — the voltage divider is, structurally, the
-   simplest-possible circuit *the kernel cannot render*. Future
-   readers landing here see the gap immediately and know where to
-   look for the follow-up (EPIC-014 / TASK-114).
-
-The CI regression diff (TASK-101) skips this entry until the SVG
-lands.
+   excerpted-from-disk YAML, the BOM block).
+2. It is the **first canonical-slot rule beyond v0.1's R+LED set**
+   that EPIC-014 added — TASK-114's `RULE_RR_VOLTAGE_DIVIDER`. The
+   tap-net hint discriminator (`/^(V?REF|SENSE|ADC|DIV|TAP)/i` or
+   `role: divider`) is what keeps a "lonely" R+R pair on a power rail
+   from being misclassified as a divider. The other branch — flat
+   fall-through with a `divider-ambiguous` warning — is covered by
+   E15 in the ERC catalogue.
 
 ## Next example
 
 [Common-emitter amplifier](../common-emitter-amplifier/) — first
 entry with an active device (transistor) and an analog signal-flow
-story. Also blocked on missing component profiles at v0.1; the
-gallery's "blocked-on" entries cluster at the front of the reading
-order so they are easy to skip past once they unblock.
+story. Unblocked by EPIC-014 / TASK-120 (BJT canonical slot).

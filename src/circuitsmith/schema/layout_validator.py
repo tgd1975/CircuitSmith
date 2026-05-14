@@ -49,6 +49,44 @@ def validate_layout(layout: dict[str, Any]) -> list[Finding]:
                 ),
                 location=f"placements.{ref}.attached-to",
             ))
+
+    # EPIC-014 / TASK-124 — pages-partition cross-references.
+    pages = layout.get("pages")
+    declared_pages: set[str] = set()
+    if isinstance(pages, list):
+        seen: set[str] = set()
+        for idx, entry in enumerate(pages):
+            if not isinstance(entry, dict):
+                continue
+            name = entry.get("name")
+            if not isinstance(name, str):
+                continue
+            if name in seen:
+                findings.append(Finding(
+                    check="layout-pages-duplicate-name",
+                    severity="error",
+                    message=f"pages[{idx}]: duplicate page name {name!r}",
+                    location=f"pages[{idx}].name",
+                ))
+            seen.add(name)
+        declared_pages = seen
+
+    for ref, slot in placements.items():
+        if not isinstance(slot, dict):
+            continue
+        page = slot.get("page")
+        if page is None:
+            continue
+        if page not in declared_pages:
+            findings.append(Finding(
+                check="layout-page-undeclared",
+                severity="error",
+                message=(
+                    f"placements.{ref}: page={page!r} is not declared in the "
+                    f"top-level `pages:` block"
+                ),
+                location=f"placements.{ref}.page",
+            ))
     return findings
 
 

@@ -271,7 +271,9 @@ def test_topology_fingerprint_invalidates_a_drifted_placement():
 
 def test_unknown_category_raises_escalation():
     profiles = _profiles_for_test()
-    profiles["passives/exotic"] = {"category": "transistor", "pins": {"1": {"side": "left"}}}
+    # `transistor` became a known category under EPIC-014 / TASK-120; use
+    # a category placeholder the kernel has no rule for.
+    profiles["passives/exotic"] = {"category": "unobtainium", "pins": {"1": {"side": "left"}}}
     circuit = {
         "meta": {"title": "exotic", "target": "esp32"},
         "components": {

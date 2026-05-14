@@ -1,0 +1,16 @@
+schema: layout/v1
+pages:
+  - { name: p1, title: Input section }
+  - { name: p2, title: Active section }
+placements:
+  C_IN: { region: rc-high-pass-C_IN-R_B2, row: 0, label: rc-high-pass, topology-fingerprint: sha1:68805d42b0a8, page: p1 }
+  C_OUT: { region: bus-V33, position: 0.5, topology-fingerprint: sha1:3817d84ad7b1, page: p2 }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08, page: p1 }
+  J_IN: { region: bottom-row, col: 1, topology-fingerprint: sha1:fbcdc3183d08, page: p1 }
+  J_OUT: { region: bottom-row, col: 2, topology-fingerprint: sha1:fbcdc3183d08, page: p2 }
+  Q1: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:596c172523bf, page: p2 }
+  R_B1: { region: divider-BASE, row: 0, label: divider, topology-fingerprint: sha1:2a2a322c9db7, page: p1 }
+  R_B2: { region: divider-BASE, row: 1, label: divider, topology-fingerprint: sha1:7ec189df7445, page: p1 }
+  R_C: { region: bjt-load-Q1, row: 0, label: bjt-load, topology-fingerprint: sha1:59eec713cb25, page: p2 }
+  R_E: { region: bjt-degen-Q1, row: 0, label: bjt-degeneration, topology-fingerprint: sha1:9eaaa304cdaf, page: p2 }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe, page: p1 }

@@ -444,6 +444,13 @@ contributor.
 
 ## Open questions
 
+All entries below are **Decided** (2026-05-14, EPIC-014 / TASK-110).
+The proposed defaults were confirmed verbatim (with bundle-vs-split
+overridden to *bundled* by EPIC-014's existence) and recorded in the
+[epic body's "Frozen decisions" section](../../tasks/active/epic-014-circuit-library-and-renderer-v2.md#frozen-decisions-task-110).
+This section is kept for traceability; downstream implementation
+tasks consume the epic body, not these entries.
+
 - **Bundle vs split into IDEA-009a / IDEA-009b.** The two halves
   are independent in code, schema, fixtures, and acceptance.
   Proposed default: **split**. IDEA-009a (active-device profiles)

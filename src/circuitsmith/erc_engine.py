@@ -108,6 +108,63 @@ CHECK_TABLE: dict[str, CheckSpec] = {
     "E10": CheckSpec("E10", "electrical", "error",
                      "Pin conflict",
                      "Any pin appearing in more than one net"),
+    # ── EPIC-014 sub-block rules (TASK-117) ───────────────────────────────
+    "E11": CheckSpec("E11", "structural", "error",
+                     "Sub-block port not wired",
+                     "Any sub-block instance with a declared port that no "
+                     "top-level connection references"),
+    "E12": CheckSpec("E12", "structural", "warning",
+                     "Sub-block declared but never instantiated",
+                     "A sub-block defined in sub-blocks: but absent from "
+                     "instances:"),
+    "E13": CheckSpec("E13", "structural", "error",
+                     "Refdes collision after flatten",
+                     "Internal invariant — fires from a flattener bug or a "
+                     "user-supplied refdes override that breaks uniqueness"),
+    "E14": CheckSpec("E14", "structural", "error",
+                     "Instance port double-driven",
+                     "Two top-level connections entries assign different "
+                     "nets to the same <instance>.<port>"),
+    # ── EPIC-014 divider-ambiguity rule (TASK-114) ────────────────────────
+    "E15": CheckSpec("E15", "electrical", "warning",
+                     "Voltage-divider ambiguous",
+                     "R+R rail-to-GND topology with no tap-name hint or "
+                     "`role: divider` annotation — kernel falls back to "
+                     "flat placement"),
+    # ── EPIC-014 active-device rules (TASK-123) ───────────────────────────
+    "E16": CheckSpec("E16", "electrical", "error",
+                     "BJT pin role unset",
+                     "Any BJT (category `transistor`) profile pin without a "
+                     "`role:` annotation; layout rules can't place the device"),
+    "E17": CheckSpec("E17", "electrical", "error",
+                     "Op-amp power pin floating",
+                     "Any `ic_opamp` instance whose `V+` or `V-` pin is "
+                     "absent from every declared net"),
+    "E18": CheckSpec("E18", "electrical", "warning",
+                     "555 pin-naming drift",
+                     "Connection on an `ic_timer` instance uses a silicon-"
+                     "name alias instead of the silkscreen-pin form "
+                     "(ADR-0010); style-only, both forms render identically"),
+    # ── EPIC-014 Phase 5 cross-page rules (TASK-127) ──────────────────────
+    "E19": CheckSpec("E19", "structural", "warning",
+                     "Page declared but empty",
+                     "Layout declares a `pages:` entry with no placements "
+                     "tagged onto it — the page renders blank"),
+    "E20": CheckSpec("E20", "structural", "error",
+                     "Page referenced but undeclared",
+                     "A placement carries `page: pX` but `pX` is not in the "
+                     "top-level `pages:` block"),
+    "E21": CheckSpec("E21", "structural", "error",
+                     "Cross-page net invisible on one side",
+                     "A net's pins live on ≥ 2 pages but the renderer can't "
+                     "resolve the label anchor on at least one of them — the "
+                     "off-sheet reference would not appear in the SVG"),
+    "E22": CheckSpec("E22", "structural", "warning",
+                     "Excessive cross-page net count",
+                     "More than the configured threshold of distinct nets "
+                     "cross a single page boundary — the split is probably "
+                     "in the wrong place (default 6, override via "
+                     "`meta.erc.cross-page-threshold`)"),
 }
 
 
@@ -195,6 +252,7 @@ def run(
     *,
     profiles: dict[str, Profile] | None = None,
     schema_findings: Iterable[Finding] | None = None,
+    layout: dict[str, Any] | None = None,
 ) -> list[Finding]:
     """
     Run the ERC against `graph`. Returns a list of findings, sorted into
@@ -204,11 +262,16 @@ def run(
     `schema_findings` lets the renderer-side pipeline feed S4/S5
     findings the schema validator produced earlier so they appear in
     the same emitted list under the same severity/order discipline.
+
+    `layout` is the parsed `.layout.yml` dict (EPIC-014 / TASK-127). When
+    provided **and** it carries a `pages:` block, the cross-page rules
+    E19..E22 fire. Pre-layout ERC runs (layout=None) skip them silently
+    — flat-form single-page circuits emit no cross-page findings.
     """
     if profiles is None:
         profiles = load_profiles()
 
-    ctx = _Context.build(graph=graph, circuit=circuit, profiles=profiles)
+    ctx = _Context.build(graph=graph, circuit=circuit, profiles=profiles, layout=layout)
 
     findings: list[Finding] = []
 
@@ -241,6 +304,25 @@ def run(
         findings.extend(_check_E8(ctx))
         findings.extend(_check_E9(ctx))
         findings.extend(_check_E10(ctx))
+        # EPIC-014 — sub-block rules + divider ambiguity. Each is gated on
+        # the presence of the relevant YAML keys; flat-form circuits emit
+        # no findings from them.
+        findings.extend(_check_E11(ctx))
+        findings.extend(_check_E12(ctx))
+        findings.extend(_check_E13(ctx))
+        findings.extend(_check_E14(ctx))
+        findings.extend(_check_E15(ctx))
+        # EPIC-014 Phase 4 — active-device rules.
+        findings.extend(_check_E16(ctx))
+        findings.extend(_check_E17(ctx))
+        findings.extend(_check_E18(ctx))
+        # EPIC-014 Phase 5 — cross-page rules. Gated on the presence of a
+        # `pages:` block in the layout; pre-layout ERC runs and flat-form
+        # single-page circuits emit no findings.
+        findings.extend(_check_E19(ctx))
+        findings.extend(_check_E20(ctx))
+        findings.extend(_check_E21(ctx))
+        findings.extend(_check_E22(ctx))
 
     # Drop suppressed findings ("off" severity is never reported).
     findings = [f for f in findings if f.severity != "off"]
@@ -277,6 +359,8 @@ class _Context:
     led_refs: list[str] = field(default_factory=list)
     # All MCU refs
     mcu_refs: list[str] = field(default_factory=list)
+    # EPIC-014 / TASK-127 — parsed `.layout.yml` dict for cross-page rules.
+    layout: dict[str, Any] | None = None
 
     @classmethod
     def build(
@@ -285,8 +369,9 @@ class _Context:
         graph: NetGraph,
         circuit: dict[str, Any],
         profiles: dict[str, Profile],
+        layout: dict[str, Any] | None = None,
     ) -> "_Context":
-        ctx = cls(graph=graph, circuit=circuit, profiles=profiles)
+        ctx = cls(graph=graph, circuit=circuit, profiles=profiles, layout=layout)
         ctx.declared_net_names = {entry["net"] for entry in circuit["connections"]}
         for ref, entry in circuit["components"].items():
             ctx.entry_by_ref[ref] = entry
@@ -877,6 +962,561 @@ def _check_E10(ctx: _Context) -> list[Finding]:
             message=f"pin {pin} appears in multiple nets: {', '.join(declared)}.",
         ))
     return findings
+
+
+# ── EPIC-014 sub-block + divider rules ────────────────────────────────────
+
+
+def _check_E11(ctx: _Context) -> list[Finding]:
+    """Sub-block port not wired.
+
+    Each instance's sub-block declares one or more ports. The top-level
+    `connections:` list must reference every port via `<instance>.<port>`
+    at least once, else the port is electrically floating. Error.
+    """
+    findings: list[Finding] = []
+    sub_blocks: dict[str, dict[str, Any]] = ctx.circuit.get("sub-blocks") or {}
+    instances: dict[str, dict[str, Any]] = ctx.circuit.get("instances") or {}
+    if not instances:
+        return findings
+    # Collect every `<instance>.<port>` token referenced in top-level
+    # connections (any of pins / path / backbone / taps).
+    referenced: set[tuple[str, str]] = set()
+    for entry in ctx.circuit.get("connections") or []:
+        for key in ("pins", "path", "backbone", "taps"):
+            for tok in entry.get(key) or []:
+                if isinstance(tok, str) and "." in tok:
+                    ref, _, pin = tok.partition(".")
+                    if ref in instances:
+                        referenced.add((ref, pin))
+    for inst_name, inst_body in instances.items():
+        sub_name = (inst_body or {}).get("sub-block")
+        sb = sub_blocks.get(sub_name) or {}
+        ports = sb.get("ports") or {}
+        for port_name in ports:
+            if (inst_name, port_name) not in referenced:
+                effective = ctx.severity_for("E11", None)
+                if effective == "off":
+                    continue
+                findings.append(Finding(
+                    check="E11", severity=effective,
+                    ref=inst_name, pin=port_name, net=EMPTY,
+                    message=(
+                        f"sub-block instance {inst_name!r} (sub-block "
+                        f"{sub_name!r}) declares port {port_name!r} but no "
+                        f"top-level connection references {inst_name}.{port_name}."
+                    ),
+                ))
+    return findings
+
+
+def _check_E12(ctx: _Context) -> list[Finding]:
+    """Sub-block declared but never instantiated. Warning."""
+    findings: list[Finding] = []
+    sub_blocks: dict[str, dict[str, Any]] = ctx.circuit.get("sub-blocks") or {}
+    instances: dict[str, dict[str, Any]] = ctx.circuit.get("instances") or {}
+    if not sub_blocks:
+        return findings
+    used = {(inst_body or {}).get("sub-block") for inst_body in instances.values()}
+    for sub_name in sub_blocks:
+        if sub_name not in used:
+            effective = ctx.severity_for("E12", None)
+            if effective == "off":
+                continue
+            findings.append(Finding(
+                check="E12", severity=effective,
+                ref=sub_name, pin=EMPTY, net=EMPTY,
+                message=(
+                    f"sub-block {sub_name!r} is declared but never instantiated; "
+                    f"add an `instances:` entry referencing it, or remove the "
+                    f"definition."
+                ),
+            ))
+    return findings
+
+
+def _check_E13(ctx: _Context) -> list[Finding]:
+    """Refdes collision after flatten.
+
+    The flattener mints `<local>_<instance>` globally; collisions can only
+    arise if a user-supplied flat component already occupies the minted
+    name. Walk the un-flattened circuit and look for clashes.
+    """
+    findings: list[Finding] = []
+    instances: dict[str, dict[str, Any]] = ctx.circuit.get("instances") or {}
+    sub_blocks: dict[str, dict[str, Any]] = ctx.circuit.get("sub-blocks") or {}
+    if not instances:
+        return findings
+    flat_components: dict[str, Any] = ctx.circuit.get("components") or {}
+    for inst_name, inst_body in instances.items():
+        sub_name = (inst_body or {}).get("sub-block")
+        sb = sub_blocks.get(sub_name) or {}
+        for local_ref in (sb.get("components") or {}):
+            minted = f"{local_ref}_{inst_name}"
+            if minted in flat_components:
+                effective = ctx.severity_for("E13", None)
+                if effective == "off":
+                    continue
+                findings.append(Finding(
+                    check="E13", severity=effective,
+                    ref=minted, pin=EMPTY, net=EMPTY,
+                    message=(
+                        f"refdes {minted!r} collides — the flattener will mint "
+                        f"this name for instance {inst_name!r}'s {local_ref!r}, "
+                        f"but it is already in use by a flat component."
+                    ),
+                ))
+    return findings
+
+
+def _check_E14(ctx: _Context) -> list[Finding]:
+    """Instance port double-driven.
+
+    Two top-level `connections:` entries assign different nets to the same
+    `<instance>.<port>`. The same net referenced multiple times is fine
+    (and common); two distinct nets is the error.
+    """
+    findings: list[Finding] = []
+    instances: dict[str, dict[str, Any]] = ctx.circuit.get("instances") or {}
+    if not instances:
+        return findings
+    port_to_nets: dict[tuple[str, str], set[str]] = {}
+    for entry in ctx.circuit.get("connections") or []:
+        net_name = entry.get("net", "")
+        for key in ("pins", "path", "backbone", "taps"):
+            for tok in entry.get(key) or []:
+                if isinstance(tok, str) and "." in tok:
+                    ref, _, pin = tok.partition(".")
+                    if ref in instances:
+                        port_to_nets.setdefault((ref, pin), set()).add(net_name)
+    for (ref, port), nets in port_to_nets.items():
+        if len(nets) > 1:
+            effective = ctx.severity_for("E14", None)
+            if effective == "off":
+                continue
+            findings.append(Finding(
+                check="E14", severity=effective,
+                ref=ref, pin=port, net=", ".join(sorted(nets)),
+                message=(
+                    f"instance port {ref}.{port} is driven by multiple nets: "
+                    f"{', '.join(sorted(nets))}. Each port may belong to at "
+                    f"most one top-level net."
+                ),
+            ))
+    return findings
+
+
+def _check_E15(ctx: _Context) -> list[Finding]:
+    """Voltage-divider ambiguous.
+
+    Two resistors form a rail-to-GND topology with a tap, but neither the
+    tap-net name matches the divider regex `^(V?REF|SENSE|ADC|DIV|TAP)`
+    nor any resistor carries `role: divider`. Warning — the kernel falls
+    back to flat placement; the user can disambiguate by renaming the
+    tap or adding `role: divider`.
+    """
+    findings: list[Finding] = []
+    # Use the kernel's existing detector to avoid duplicating logic.
+    from circuitsmith.layout.kernel import _detect_rr_voltage_divider_partner
+
+    # Build a kernel-shaped profiles registry: type-string → Profile plus
+    # the `_by_ref` index the kernel detectors consult.
+    profiles_registry: dict[str, Any] = dict(ctx.profiles)
+    profiles_registry["_by_ref"] = dict(ctx.profile_by_ref)
+
+    seen_pairs: set[tuple[str, str]] = set()
+    for ref, entry in (ctx.circuit.get("components") or {}).items():
+        profile = ctx.profile_by_ref.get(ref)
+        if profile is None:
+            continue
+        if _kind(profile) != "resistor":
+            continue
+        partner, tap, hinted = _detect_rr_voltage_divider_partner(
+            ref, ctx.circuit, ctx.graph, profiles_registry
+        )
+        if partner is None or hinted:
+            continue
+        pair_key = tuple(sorted((ref, partner)))
+        if pair_key in seen_pairs:
+            continue
+        seen_pairs.add(pair_key)
+        effective = ctx.severity_for("E15", tap)
+        if effective == "off":
+            continue
+        findings.append(Finding(
+            check="E15", severity=effective,
+            ref=f"{pair_key[0]}+{pair_key[1]}", pin=EMPTY, net=tap or EMPTY,
+            message=(
+                f"resistors {pair_key[0]!r} and {pair_key[1]!r} form an "
+                f"R+R rail-to-GND topology with tap net {tap!r}, but no "
+                f"divider hint is present (tap-name regex "
+                f"`^(V?REF|SENSE|ADC|DIV|TAP)/i` did not match and no "
+                f"`role: divider` annotation set). Layout falls back to "
+                f"flat placement. To accept the divider topology, rename "
+                f"the tap or add `role: divider` to one of the resistors."
+            ),
+        ))
+    return findings
+
+
+def _check_E16(ctx: _Context) -> list[Finding]:
+    """BJT pin role unset.
+
+    For each component whose profile category is `transistor`, every pin
+    must carry a `role:` annotation on its `pins_detail` entry. The
+    direction-sensitive layout rules (ADR-0015) read `role:` to identify
+    base / collector / emitter; an unset role makes the BJT unplaceable.
+
+    With the v1 BJT profiles (TASK-120) both shipping with `role:` on
+    every pin, this rule is a forward-looking guard against future BJT-
+    family profiles authored without `role:` — it fails fast at ERC
+    rather than producing a confusing kernel escalation.
+    """
+    findings: list[Finding] = []
+    for ref, profile in ctx.profile_by_ref.items():
+        if _kind(profile) != "transistor":
+            continue
+        if profile.pins_detail is None:
+            continue
+        missing = sorted(
+            pin for pin, attrs in profile.pins_detail.items()
+            if not (attrs or {}).get("role")
+        )
+        if not missing:
+            continue
+        effective = ctx.severity_for("E16", None)
+        if effective == "off":
+            continue
+        findings.append(Finding(
+            check="E16", severity=effective,
+            ref=ref, pin=",".join(missing), net=EMPTY,
+            message=(
+                f"BJT {ref!r} (profile {profile.type!r}) has pin(s) "
+                f"{missing} without a `role:` annotation. The "
+                f"direction-sensitive kernel rule (ADR-0015) needs "
+                f"`role: base|collector|emitter` on every pin to place "
+                f"the device. Add the role keys to the profile's "
+                f"`pins.X` dict."
+            ),
+        ))
+    return findings
+
+
+def _check_E17(ctx: _Context) -> list[Finding]:
+    """Op-amp power pin floating.
+
+    Each `ic_opamp` instance must connect its `V+` and `V-` pins to a
+    declared net. Op-amp supply pins have no safe floating defaults; an
+    omitted power connection is a silent silicon-damage trap.
+
+    Reads `pins_detail[pin].type == "POWER_INPUT"` so the rule survives
+    a future single-supply op-amp profile that uses different pin names
+    (e.g. `VCC` / `GND`) — the type tag is the contract, not the pin
+    name.
+    """
+    findings: list[Finding] = []
+    # Index pins-in-graph by ref for O(1) membership lookup.
+    pins_in_graph: dict[str, set[str]] = {}
+    for net_name in ctx.graph.nets:
+        for pin in ctx.graph.pins_on_net(net_name):
+            pins_in_graph.setdefault(pin.ref, set()).add(pin.pin)
+    for ref, profile in ctx.profile_by_ref.items():
+        if _kind(profile) != "opamp":
+            continue
+        if profile.pins_detail is None:
+            continue
+        power_pins = [
+            pin for pin, attrs in profile.pins_detail.items()
+            if (attrs or {}).get("type") == "POWER_INPUT"
+        ]
+        wired = pins_in_graph.get(ref, set())
+        for pin in sorted(power_pins):
+            if pin in wired:
+                continue
+            effective = ctx.severity_for("E17", None)
+            if effective == "off":
+                continue
+            findings.append(Finding(
+                check="E17", severity=effective,
+                ref=ref, pin=pin, net=EMPTY,
+                message=(
+                    f"op-amp {ref!r} (profile {profile.type!r}) power "
+                    f"pin {pin!r} is not connected to any net. Op-amp "
+                    f"supply pins have no safe floating default — wire "
+                    f"both `V+` and `V-` before rendering."
+                ),
+            ))
+    return findings
+
+
+def _check_E18(ctx: _Context) -> list[Finding]:
+    """555 pin-naming drift.
+
+    For each component whose profile category is `ic_timer`, walk every
+    declared connection and look for pin references that match a silicon-
+    name alias (`pins[N].alt`) rather than the silkscreen-pin form
+    (`pins[N]` key). Both forms resolve to the same electrical pin per
+    TASK-121's S5 extension; this rule is style-only and stays a
+    warning.
+
+    The message names the silkscreen-pin form to use instead.
+    """
+    findings: list[Finding] = []
+    timer_refs = [
+        ref for ref, profile in ctx.profile_by_ref.items()
+        if _kind(profile) == "timer"
+    ]
+    if not timer_refs:
+        return findings
+    # Build alt -> silkscreen-pin map per ref so the message can name the
+    # specific replacement.
+    alt_map_by_ref: dict[str, dict[str, str]] = {}
+    for ref in timer_refs:
+        profile = ctx.profile_by_ref[ref]
+        if profile.pins_detail is None:
+            continue
+        alt_to_pin: dict[str, str] = {}
+        for pin, attrs in profile.pins_detail.items():
+            for alt in (attrs or {}).get("alt", []) or []:
+                alt_to_pin[alt] = pin
+        alt_map_by_ref[ref] = alt_to_pin
+    # Walk the raw connections list to recover the surface tokens.
+    for entry in (ctx.circuit.get("connections") or []):
+        net_name = entry.get("net", "?")
+        for token in _connection_tokens(entry):
+            if "." not in token:
+                continue
+            ref, _, pin_token = token.partition(".")
+            if ref not in alt_map_by_ref:
+                continue
+            silkscreen = alt_map_by_ref[ref].get(pin_token)
+            if silkscreen is None:
+                continue
+            effective = ctx.severity_for("E18", net_name)
+            if effective == "off":
+                continue
+            findings.append(Finding(
+                check="E18", severity=effective,
+                ref=ref, pin=pin_token, net=net_name,
+                message=(
+                    f"connection on net {net_name!r} references {ref}."
+                    f"{pin_token} (silicon-name alias) — prefer the "
+                    f"silkscreen-pin form {ref}.{silkscreen} per "
+                    f"ADR-0010. Both forms render identically; the "
+                    f"silkscreen form is canonical."
+                ),
+            ))
+    return findings
+
+
+# ── EPIC-014 / TASK-127 — cross-page ERC rules ──────────────────────────────
+#
+# All four rules are gated on the presence of a `pages:` block in the
+# `.layout.yml`. Pre-layout ERC runs (ctx.layout is None) and flat-form
+# single-page circuits (no pages: block) emit no cross-page findings.
+
+def _cross_page_state(ctx: _Context) -> dict[str, Any] | None:
+    """Return the parsed pages context, or None when cross-page rules don't apply.
+
+    Shape: {
+        "declared":   list[str],  # page names in declaration order
+        "placements": dict[str, str | None],  # ref → page
+    }
+    """
+    if ctx.layout is None:
+        return None
+    pages = ctx.layout.get("pages")
+    if not isinstance(pages, list) or not pages:
+        return None
+    declared: list[str] = []
+    for entry in pages:
+        if isinstance(entry, dict):
+            name = entry.get("name")
+            if isinstance(name, str) and name:
+                declared.append(name)
+    if not declared:
+        return None
+    placements_raw = ctx.layout.get("placements") or {}
+    placements: dict[str, str | None] = {}
+    if isinstance(placements_raw, dict):
+        for ref, slot in placements_raw.items():
+            if isinstance(slot, dict):
+                page = slot.get("page")
+                placements[ref] = page if isinstance(page, str) else None
+    return {"declared": declared, "placements": placements}
+
+
+def _check_E19(ctx: _Context) -> list[Finding]:
+    """E19 — page declared but empty."""
+    state = _cross_page_state(ctx)
+    if state is None:
+        return []
+    placements: dict[str, str | None] = state["placements"]
+    populated = {p for p in placements.values() if p is not None}
+    findings: list[Finding] = []
+    for page_name in state["declared"]:
+        if page_name in populated:
+            continue
+        effective = ctx.severity_for("E19", None)
+        if effective == "off":
+            continue
+        findings.append(Finding(
+            check="E19", severity=effective,
+            ref=EMPTY, pin=EMPTY, net=EMPTY,
+            message=(
+                f"page {page_name!r} declared in `pages:` but no placement "
+                f"carries `page: {page_name}` — the page would render blank"
+            ),
+        ))
+    return findings
+
+
+def _check_E20(ctx: _Context) -> list[Finding]:
+    """E20 — page referenced but undeclared."""
+    state = _cross_page_state(ctx)
+    if state is None:
+        return []
+    declared = set(state["declared"])
+    findings: list[Finding] = []
+    seen: set[tuple[str, str]] = set()
+    for ref, page in state["placements"].items():
+        if page is None or page in declared:
+            continue
+        if (ref, page) in seen:
+            continue
+        seen.add((ref, page))
+        effective = ctx.severity_for("E20", None)
+        if effective == "off":
+            continue
+        findings.append(Finding(
+            check="E20", severity=effective,
+            ref=ref, pin=EMPTY, net=EMPTY,
+            message=(
+                f"placement {ref} carries `page: {page!r}` but the layout's "
+                f"top-level `pages:` block does not declare it"
+            ),
+        ))
+    return findings
+
+
+def _check_E21(ctx: _Context) -> list[Finding]:
+    """E21 — cross-page net invisible on one side.
+
+    Fires for any cross-page net whose label anchor on at least one side
+    cannot be resolved — typically because the local-side pin references
+    a component that the kernel could not place (no `region`). In that
+    case the renderer's `_cross_page_labels_for` skips the label silently
+    and the user has no on-sheet trace to follow.
+    """
+    state = _cross_page_state(ctx)
+    if state is None:
+        return []
+    placements_raw = (ctx.layout.get("placements") or {}) if ctx.layout else {}
+    pages_per_net: dict[str, set[str]] = {}
+    for net_name, pins in ctx.graph.nets.items():
+        if not isinstance(pins, list):
+            continue
+        pages_seen: set[str] = set()
+        for pin in pins:
+            page = state["placements"].get(pin.ref)
+            if page is not None:
+                pages_seen.add(page)
+        if len(pages_seen) >= 2:
+            pages_per_net[net_name] = pages_seen
+    findings: list[Finding] = []
+    for net_name, pages_seen in pages_per_net.items():
+        for pin in ctx.graph.nets.get(net_name, []):
+            page = state["placements"].get(pin.ref)
+            if page is None:
+                continue
+            slot = placements_raw.get(pin.ref) if isinstance(placements_raw, dict) else None
+            if not isinstance(slot, dict) or not slot.get("region"):
+                effective = ctx.severity_for("E21", net_name)
+                if effective == "off":
+                    continue
+                findings.append(Finding(
+                    check="E21", severity=effective,
+                    ref=pin.ref, pin=pin.pin, net=net_name,
+                    message=(
+                        f"net {net_name!r} crosses pages {sorted(pages_seen)!r} "
+                        f"but {pin.ref}.{pin.pin} on page {page!r} has no "
+                        f"resolvable region — the off-sheet label would not "
+                        f"render"
+                    ),
+                ))
+    return findings
+
+
+def _check_E22(ctx: _Context) -> list[Finding]:
+    """E22 — excessive cross-page net count (heuristic).
+
+    Threshold is read from `meta.erc.cross-page-threshold` (an integer),
+    defaulting to 6. The check counts, for each *ordered* page-pair
+    (a, b), the number of *distinct* nets that have at least one pin on
+    each side. The first pair whose count exceeds the threshold emits
+    one warning.
+    """
+    state = _cross_page_state(ctx)
+    if state is None:
+        return []
+    erc_overrides = (ctx.circuit.get("meta", {}) or {}).get("erc") or {}
+    raw_threshold = (
+        erc_overrides.get("cross-page-threshold")
+        if isinstance(erc_overrides, dict) else None
+    )
+    try:
+        threshold = int(raw_threshold) if raw_threshold is not None else 6
+    except (TypeError, ValueError):
+        threshold = 6
+
+    placements: dict[str, str | None] = state["placements"]
+    pair_counts: dict[tuple[str, str], set[str]] = {}
+    for net_name, pins in ctx.graph.nets.items():
+        if not isinstance(pins, list):
+            continue
+        pages_seen = {
+            placements.get(pin.ref)
+            for pin in pins
+            if placements.get(pin.ref) is not None
+        }
+        if len(pages_seen) < 2:
+            continue
+        sorted_pages = sorted(p for p in pages_seen if p is not None)
+        for i in range(len(sorted_pages)):
+            for j in range(i + 1, len(sorted_pages)):
+                pair = (sorted_pages[i], sorted_pages[j])
+                pair_counts.setdefault(pair, set()).add(net_name)
+
+    findings: list[Finding] = []
+    for pair in sorted(pair_counts):
+        count = len(pair_counts[pair])
+        if count <= threshold:
+            continue
+        effective = ctx.severity_for("E22", None)
+        if effective == "off":
+            continue
+        findings.append(Finding(
+            check="E22", severity=effective,
+            ref=EMPTY, pin=EMPTY, net=EMPTY,
+            message=(
+                f"{count} distinct nets cross the {pair[0]} ↔ {pair[1]} "
+                f"page boundary (threshold {threshold}); reconsider the "
+                f"page split or raise `meta.erc.cross-page-threshold`"
+            ),
+        ))
+    return findings
+
+
+def _connection_tokens(entry: dict[str, Any]) -> list[str]:
+    """Flatten the pin tokens of one connections-list entry across the
+    three connection forms (`pins`, `path`, `bus.backbone`/`bus.taps`).
+    Bare net names (no `.`) are returned unchanged; the caller filters."""
+    out: list[str] = []
+    out.extend(entry.get("pins") or [])
+    out.extend(entry.get("path") or [])
+    out.extend((entry.get("backbone") or []))
+    out.extend((entry.get("taps") or []))
+    return out
 
 
 # ── Predicate helpers ──────────────────────────────────────────────────────

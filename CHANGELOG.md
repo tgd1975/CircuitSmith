@@ -11,68 +11,167 @@ first tag is cut.
 
 ### Added
 
-- **EPIC-012 — tutorial and example gallery (scaffold).** User-docs
-  home at `docs/users/` chosen via ADR-0014 and pointed at from the
-  repo `README.md` (TASK-092). Tutorial scaffold under
-  `docs/users/tutorial/` (six-step index + six placeholder step
-  files) and gallery scaffold under `docs/users/examples/` (five
-  placeholder example subdirectories with the index table) landed
-  empty, ready for TASK-094..101 to fill (TASK-093).
-- **Tutorial steps 1-3** (TASK-094) — minimal circuit, fan-out
-  branch, and repeated R+LED sub-blocks. Each step's `.circuit.yml`
-  is committed alongside its rendered SVG + sidecars. Prose
-  references the committed YAML, never pastes it.
-- **Tutorial steps 4-6** (TASK-095) — ERC E1 round-trip
-  (deliberate floating input, broken/fixed pair committed), BOM
-  export via the library API (no dedicated CLI yet) with the
-  PartsLedger round-trip documented as manual, and layout
-  iteration via `--layout` override on top of the kernel's output.
-- **Gallery scaffolding** — five gallery entries land with the
-  six-section README template (TASK-096..100). Only the voltage
-  divider's `circuit.yml` is committed; all five rendered artefact
-  sets are deferred until the v0.1 kernel and component-library
-  follow-ups land. Each README carries an honest "blocked-on" note
-  pointing at IDEA-008 / IDEA-009.
-- **Tutorial + gallery regression-diff CI gate** (TASK-101).
-  `scripts/check_gallery_regression.py` re-renders every committed
-  `.circuit.yml` under `docs/users/{tutorial,examples}/`, diffs
-  against committed artefacts, supports `--rebaseline`. Wired into
-  `ci.yml`, allow-listed in `.claude/settings.json`, tests in
-  `tests/test_check_gallery_regression.py`.
-- **EPIC-012 closed** — all 10 tasks closed in one branch; see the
-  [epic file](docs/developers/tasks/closed/epic-012-tutorial-and-examples.md).
+- **EPIC-012 — tutorial and example gallery** closed (10 tasks).
+  User-docs home at `docs/users/` (ADR-0014); six tutorial steps
+  with committed `.circuit.yml` + rendered SVG sidecars (TASK-092..095);
+  five gallery entries scaffolded with blocked-on notes pointing at
+  EPIC-014 (TASK-096..100); regression-diff CI gate via
+  `scripts/check_gallery_regression.py` with `--rebaseline` support
+  (TASK-101).
+- **EPIC-014 Phase 0 — frozen decisions** (TASK-110). IDEA-008/009
+  open-question defaults accepted verbatim into the epic body's
+  *Frozen decisions* table; bundle-vs-split overridden to bundled.
+- **EPIC-014 Phase 1 — non-LED kernel rules** (TASK-111..114).
+  `RULE_RC_LOW_PASS`, `RULE_RC_HIGH_PASS`, `RULE_CC_DECOUPLING`,
+  `RULE_RR_VOLTAGE_DIVIDER` in the layout kernel. Voltage-divider
+  rule gated on `/^(V?REF|SENSE|ADC|DIV|TAP)/i` tap-net regex or
+  `role: divider` annotation.
+- **EPIC-014 Phase 2 — sub-block authoring end-to-end** (TASK-115..118).
+  Schema gains `sub-blocks:` + `instances:` with named-port maps;
+  validator gains S6/S7. `NetGraph.from_yaml_dict` auto-flattens via
+  `flatten_sub_blocks()`. ERC adds E11..E15. Renderer writes
+  un-flattened instance grouping into meta sidecar. CHECK_TABLE
+  grew 15 → 20.
+- **EPIC-014 Phase 2 docs — tutorial step 3 rewritten + skill docs
+  updated** (TASK-119). Tutorial step 3 ([`docs/users/tutorial/03-sub-blocks.md`](docs/users/tutorial/03-sub-blocks.md))
+  swaps the "repeated R+LED workaround" prose for a first-class
+  `led_indicator` sub-block instantiated three times.
+  `circuit-yaml.md` gains a *Sub-blocks and instances* section
+  with the frozen-decisions contract; `layout.md` gains an
+  *inline-box mode* section. Fixed a counting regression in the
+  renderer's meta sidecar: `layout.total` now reports flat-
+  component count instead of pre-flatten top-level entries.
+- **EPIC-014 Phase 4 — BJT NPN/PNP profiles + canonical kernel
+  rule** (TASK-120, ADR-0015). New
+  [`actives.py`](src/circuitsmith/components/actives.py) ships
+  `actives/bjt_npn` and `actives/bjt_pnp` with `B`/`C`/`E` pin
+  keys and per-pin `role:` annotations. Kernel gains
+  `RULE_BJT_TO_GND` (id 15) and `RULE_RESISTOR_WITH_BJT` (id 16)
+  — only the base-drive resistor attaches to the BJT.
+- **EPIC-014 Phase 4 — `ic/555` profile + generic-IC kernel rule**
+  (TASK-121). New [`ics.py`](src/circuitsmith/components/ics.py)
+  ships `ic/555` with silkscreen-pin keys `"1".."8"` per ADR-0010
+  and silicon names in `pins.X.alt:`. Registry gains a
+  `metadata.type:` override mechanism so `ics.py:ic_555`
+  registers as `ic/555` (singular). Validator's S5 check accepts
+  pin-name aliases. Kernel gains `RULE_GENERIC_IC` (id 17) for
+  multi-pin ICs.
+- **EPIC-014 Phase 4 — `ic/opamp_dual_supply` profile** (TASK-122).
+  Extends `ics.py` with the dual-supply op-amp. Symbolic pin keys
+  (`IN+`, `IN-`, `OUT`, `V+`, `V-`) per the EPIC-014 frozen-decisions
+  table — ADR-0010 doesn't apply because the triangle symbol shows
+  no pin numbers. Shares `RULE_GENERIC_IC` with the 555.
+- **EPIC-014 Phase 4 — active-device ERC rules** (TASK-123). Three
+  new ERC rules: E16 (BJT pin role unset — error), E17 (op-amp
+  power pin floating — error), E18 (555 pin-naming drift —
+  warning). Catalogue entries in `rules.json`; CHECK_TABLE grew
+  20 → 23. The op-amp / 555 profiles' `metadata.kind` was refined
+  to `"opamp"` / `"timer"` so ERC checks discriminate via `kind:`
+  per the project's category-lint contract.
+- **EPIC-014 Phase 5 — `pages:` partition schema** (TASK-124).
+  `.layout.yml` gains an opt-in top-level `pages:` array and a
+  per-placement `page:` field; cross-validation as
+  `layout-pages-duplicate-name` / `layout-page-undeclared`.
+  `Placement.page` round-trips through the kernel; attached-to
+  components inherit the anchor's page so RWL/RWB pairs never
+  split across pages. v0.1 layouts (no `pages:` block) render
+  byte-identical. Foundation for TASK-125..127.
+- **EPIC-014 Phase 5 — multi-page render driver** (TASK-125).
+  `.layout.yml` with ≥ 2 declared pages now emits one SVG per
+  page (`<stem>-p1.svg`, `<stem>-p2.svg`, …) via
+  `_emit_pages_or_single` + `_filter_to_page`. Single-page
+  output keeps `<stem>.svg`. `.layout.yml`/`.meta.yml` stay
+  singletons. Cross-page wires are dropped per-page; TASK-126
+  adds the boundary label rendering.
+- **EPIC-014 Phase 5 — cross-page net labels** (TASK-126). Each
+  per-page SVG now annotates the cut wires with a `▶`/`◀`
+  arrow glyph + `<net> ▶ <other_page>` text label, paired at
+  both ends of every cross-page wire. Detection from
+  `Placement.page` per IDEA-009's frozen-decisions table — no
+  user-authored `cross-page-nets:` block.
+- **EPIC-014 Phase 5 — cross-page ERC rules** (TASK-127). Four
+  new rules: E19 (page declared but empty — warning), E20 (page
+  referenced but undeclared — error), E21 (cross-page net
+  invisible on one side — error), E22 (excessive cross-page
+  net count, threshold-tunable via `meta.erc.cross-page-threshold`
+  — warning). ERC `run()` grows a `layout=` kwarg; CHECK_TABLE
+  grew 23 → 27.
+- **EPIC-014 Phase 6 — voltage-divider gallery rendered**
+  (TASK-128). `docs/users/examples/voltage-divider/` now ships
+  the rendered SVG, layout sidecar, meta sidecar, and ERC
+  report unblocked by TASK-114's R+R canonical rule. Layout
+  schema broadened: `placement.label` enum → free-form string;
+  `regionName` gains patterns for `rc-(low|high)-pass-*`,
+  `cc-decoupling-*`, and `divider-*` synthetic regions.
+- **EPIC-014 Phase 6 — common-emitter amplifier gallery rendered**
+  (TASK-129, ADR-0016). First analog-signal-flow gallery entry.
+  Two new kernel rules — `RULE_BJT_LOAD` (id 18) and
+  `RULE_BJT_DEGENERATION` (id 19) — close the ADR-0015 coverage
+  gap on the collector load and emitter degeneration resistors,
+  landing them in synthetic per-BJT regions
+  (`bjt-load-<ref>`, `bjt-degen-<ref>`).
+- **EPIC-014 Phase 6 — 555 monostable gallery rendered**
+  (TASK-130, ADR-0017). First multi-pin IC gallery entry. Pull-up
+  rule widened to accept IC `SIGNAL_INPUT` pins (in addition to
+  MCU GPIO/INPUT_ONLY), with rail-skip so the anchor picks the
+  resistor's signal-side terminal rather than an unrelated
+  coincident pin on VCC.
+- **EPIC-014 Phase 6 — op-amp non-inverting buffer gallery
+  rendered** (TASK-131). First dual-rail-supply gallery entry.
+  Unity-gain feedback (`A1.OUT ↔ A1.IN-`) on a single
+  `BUF_OUT` net keeps E10 (multi-net-pin) quiet; one decoupling
+  cap per rail satisfies E17 (power-pin floating) without
+  pairing into C+C. All 8 components placed on existing rules
+  — no kernel diff needed.
+- **EPIC-014 Phase 6 — multi-page split gallery rendered**
+  (TASK-132). Reuses the CE-amp topology, partitions across
+  two pages via `layout.yml`'s `pages:` block. Two SVGs
+  (`-p1.svg`, `-p2.svg`) from one `circuit.yml`; `GND` cross-page
+  label glyph (`GND ▶ p2` / `p1 ◀ GND`) renders on both pages.
+  Three nets span the boundary — under the E22 six-net
+  threshold. Gallery regression script
+  (`scripts/check_gallery_regression.py`) extended to compare
+  per-page SVGs (`<base>-p<N>.svg`) in addition to the
+  single-SVG path.
+- **EPIC-014 Phase 6 — component-skill docs final pass**
+  (TASK-133). Layout skill docs' canonical-slot table extended
+  with rule IDs 11–19 (RC low-pass, RC high-pass, CC decoupling,
+  R+R divider, BJT, RWB, generic IC, BJT load, BJT degeneration);
+  pull-up row updated to note ADR-0017's IC SIGNAL_INPUT
+  widening. `index.md` ERC count corrected from 15 to 27.
+  `erc-checks.md` gains an S6/S7 section (sub-block schema
+  validation, TASK-117). Gallery README index updated: all five
+  entries now ship with committed SVGs; source links point at
+  the closed EPIC-014 tasks (TASK-128..132) instead of the
+  superseded TASK-096..100.
+- **EPIC-014 closed** (24/24 tasks, 4 ADRs filed: ADR-0015,
+  ADR-0016, ADR-0017, plus EPIC-006's ADR-0014 referenced).
+  Delivered: sub-blocks + instances grammar (Phase 2), four
+  passive-shape kernel rules (RC LP, RC HP, CC pair, R+R
+  divider, Phase 1), active-device profiles (BJT NPN/PNP,
+  ic/555, ic/opamp_dual_supply, Phase 3), active-device ERC
+  rules (E16/E17/E18, Phase 4), multi-page layout schema +
+  renderer driver + cross-page label glyphs + cross-page ERC
+  (E19–E22, Phase 5), all five gallery entries rendered
+  (Phase 6), and a docs-only proofreading pass.
 
 ### Tooling
 
-- Elevated IDEA-003, IDEA-004, IDEA-007 to EPIC-011 (test plan + coverage
-  matrix, 9 tasks), EPIC-012 (tutorial + example gallery, 10 tasks), and
-  EPIC-013 (post-EPIC-006 documentation audit, 8 tasks).
-- Filed IDEA-008 (first-class sub-block authoring + kernel
-  canonical rules for non-LED passive groupings) and IDEA-009
-  (active-device component profiles + multi-page renderer support)
-  as the unblocking follow-ups for the EPIC-012 gallery's deferred
-  rendered artefacts.
-- Groomed IDEA-008 and IDEA-009 to full implementation-plan depth
-  (phases, dependency graph, effort table, ERC implications,
-  open-question defaults), then elevated both into EPIC-014
-  (circuit library and renderer v2): 24 tasks bundling non-LED
-  kernel rules, first-class sub-blocks, active-device profiles
-  (BJT/555/op-amp), and multi-page renderer support. Both source
-  ideas archived at epic open per the `/ts-epic-new` convention;
-  tutorial step 3 + the five gallery README pointers updated to
-  reference EPIC-014 in place of the now-archived IDEA-008/009.
-- Merged IDEA-005 (motivation: bias toward on-hand parts) and the
-  unmerged IDEA-010 draft (PartsLedger contract) into IDEA-011 —
-  the canonical inventory-adapter dossier; IDEA-005 archived.
-- Opened IDEA-012 as a bookmark — gap analysis of the archived
-  IDEA-001 dossier against shipped 0.1.0; expects to spawn
-  follow-up ideas for deferred / contingent / excluded surface area.
+- Elevated IDEA-003/004/007 to EPIC-011 (test plan, 9 tasks),
+  EPIC-012 (tutorial + gallery, 10 tasks), EPIC-013 (docs audit,
+  8 tasks).
+- Filed IDEA-008/009 as EPIC-012 unblockers; groomed both to full
+  implementation-plan depth, then elevated into EPIC-014 (24 tasks).
+  Source ideas archived at epic open.
+- Merged IDEA-005 + IDEA-010 draft into IDEA-011 (PartsLedger
+  inventory-adapter dossier).
+- Opened IDEA-012 — gap analysis of archived IDEA-001 dossier vs
+  shipped v0.1.0.
 
 ### Removed
 
-- Relocated IDEA-006 (resistor color band detector spinoff tool) to
-  PartsLedger as IDEA-011 — vision/inventory-entry workflow belongs
-  with the parts ledger, not the schematic generator.
+- Relocated IDEA-006 (resistor color-band detector) to PartsLedger
+  as their IDEA-011.
 
 ## [v0.1.0] — 2026-05-13
 

@@ -1,0 +1,10 @@
+schema: layout/v1
+placements:
+  A1: { region: left-column, row: 0, label: left, topology-fingerprint: sha1:3a8b45a4952f }
+  C_VCC: { region: bus-V_PLUS, position: 0.5, topology-fingerprint: sha1:3605c19df614 }
+  C_VEE: { region: bus-V_MINUS, position: 0.5, topology-fingerprint: sha1:774a2b734087 }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  J2: { region: bottom-row, col: 1, topology-fingerprint: sha1:fbcdc3183d08 }
+  J_IN: { region: bottom-row, col: 2, topology-fingerprint: sha1:fbcdc3183d08 }
+  J_OUT: { region: bottom-row, col: 3, topology-fingerprint: sha1:fbcdc3183d08 }
+  U1: { region: mcu-center, topology-fingerprint: sha1:98bd5120adfe }

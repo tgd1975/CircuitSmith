@@ -1,0 +1,11 @@
+schema: layout/v1
+placements:
+  BTN: { region: left-column, row: 0, label: left, topology-fingerprint: sha1:cc0cc75c5661 }
+  C_CTRL: { region: bus-V33, position: 0.5, topology-fingerprint: sha1:3817d84ad7b1 }
+  C_T: { region: rc-low-pass-C_T-R_T, row: 1, label: rc-low-pass, topology-fingerprint: sha1:e16152aae78e }
+  J1: { region: bottom-row, col: 0, topology-fingerprint: sha1:fbcdc3183d08 }
+  LED1: { region: left-column, row: 1, label: left, topology-fingerprint: sha1:1d4b0fc1dfc9 }
+  R_LED: { region: left-column, attached-to: LED1, label: left, topology-fingerprint: sha1:3a5f90fe5c37 }
+  R_T: { region: rc-low-pass-C_T-R_T, row: 0, label: rc-low-pass, topology-fingerprint: sha1:3a62578b693b }
+  R_TRIG: { region: path-of-U1.2, step: 0, topology-fingerprint: sha1:535291a75094 }
+  U1: { region: right-column, row: 0, label: right, topology-fingerprint: sha1:312550b79b9c }
