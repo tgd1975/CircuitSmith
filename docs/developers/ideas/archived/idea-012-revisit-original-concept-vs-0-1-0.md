@@ -5,10 +5,16 @@ description: Walk the archived IDEA-001 dossier section-by-section against shipp
 category: tooling
 ---
 
-<!-- Bookmark idea — opened on the squash-merge into main without
-     review. The body below is a sketch of what the analysis should
-     cover; the real work is the thorough walk-through and the
-     follow-up ideas it spawns. -->
+## Archive Reason
+
+2026-05-15 — Elevated to EPIC-015 (Walk the IDEA-001 dossier vs
+shipped 0.1.0 — gap analysis and follow-up spawns). The
+implementation plan in this idea was sliced into nine tasks
+(TASK-134..142). The analysis-table canvas the idea body originally
+proposed to grow in-place was relocated to a working doc at
+`docs/developers/_dossier-gap-analysis.md` per the TASK-102
+underscore-prefixed precedent — archived files do not host evolving
+artefacts.
 
 ## Motivation
 

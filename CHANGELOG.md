@@ -167,6 +167,12 @@ first tag is cut.
   inventory-adapter dossier).
 - Opened IDEA-012 — gap analysis of archived IDEA-001 dossier vs
   shipped v0.1.0.
+- Elevated IDEA-012 to EPIC-015 (dossier gap analysis vs 0.1.0, 9
+  tasks: TASK-134..142, one per dossier file walk plus a cross-repo
+  cleanup / coverage-verification close-out). Source idea archived
+  at epic open; analysis canvas relocated to working doc at
+  `docs/developers/_dossier-gap-analysis.md` per the
+  `_doc-audit-inventory.md` precedent.
 
 ### Removed
 

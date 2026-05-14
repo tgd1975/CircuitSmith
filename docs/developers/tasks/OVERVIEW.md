@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 9** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 133** | █████████░ 93%
+⚪ **Open: 18** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 142** | █████████░ 87%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -22,7 +22,7 @@
 xychart-beta
     title "Cumulative tasks closed"
     x-axis ["05-13", "05-14"]
-    line [1, 35]
+    line [1, 44]
 ```
 
 </td><td>
@@ -31,7 +31,7 @@ xychart-beta
 xychart-beta
     title "Cumulative epics closed"
     x-axis ["05-13", "05-14"]
-    line [0, 2]
+    line [0, 3]
 ```
 
 </td><td>
@@ -40,7 +40,7 @@ xychart-beta
 xychart-beta
     title "Cumulative effort hours — green: estimate, blue: actual"
     x-axis ["05-13", "05-14"]
-    line [5, 152.25]
+    line [5, 185.25]
     line [5, 47.5]
 ```
 
@@ -51,7 +51,7 @@ _Legend: green line = estimate (midpoint hours from `effort:`); blue line = actu
 | Date | Tasks closed | Cum. tasks | Est. h | Cum. est. h | Actual h | Cum. actual h | Epics closed | Cum. epics |
 |------|-------------:|-----------:|-------:|------------:|---------:|--------------:|-------------:|-----------:|
 | 2026-05-13 | 1 | 1 | 5 | 5 | 5 | 5 | 0 | 0 |
-| 2026-05-14 | 34 | 35 | 147.2 | 152.2 | 42.5 | 47.5 | 2 | 2 |
+| 2026-05-14 | 43 | 44 | 180.2 | 185.2 | 42.5 | 47.5 | 3 | 3 |
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -77,6 +77,15 @@ _No paused tasks._
 | [TASK-107](open/task-107-test-plan-alignment-with-epic-011.md) | Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-108](open/task-108-annotate-idea-001-dossier.md) | Annotate the archived IDEA-001 dossier with what shipped vs what didn't | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-109](open/task-109-final-pass-readme-and-entry-points.md) | Final pass on README.md and top-level entry-point docs | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-134](open/task-134-dossier-phase-plan-walk.md) | Walk the IDEA-001 phase plan against shipped 0.1.0 + scaffold the analysis table | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-135](open/task-135-dossier-components-walk.md) | Walk the IDEA-001 components dossier against shipped component library | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-136](open/task-136-dossier-yaml-format-walk.md) | Walk the IDEA-001 YAML-format dossier against the shipped circuit.schema.json | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-137](open/task-137-dossier-layout-engine-walk.md) | Walk the IDEA-001 layout-engine concept against the shipped kernel + router | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-138](open/task-138-dossier-erc-engine-walk.md) | Walk the IDEA-001 ERC dossier check-by-check against the shipped erc_engine | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-139](open/task-139-dossier-exporters-walk.md) | Walk the IDEA-001 exporters dossier against shipped BOM + netlist exporters | Small (&lt;2h) | Junior | ⚪ open |
+| [TASK-140](open/task-140-dossier-rule-catalog-walk.md) | Walk the IDEA-001 rule-catalog dossier against the shipped catalog size and shape | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-141](open/task-141-dossier-skill-packaging-walk.md) | Walk the IDEA-001 skill-packaging dossier against the shipped skill and acceptance tests | Small (&lt;2h) | Medium | ⚪ open |
+| [TASK-142](open/task-142-dossier-cross-repo-cleanup-and-close-out.md) | Cross-repo reference cleanup and walk-coverage verification | Small (&lt;2h) | Medium | ⚪ open |
 
 ## Closed Tasks
 

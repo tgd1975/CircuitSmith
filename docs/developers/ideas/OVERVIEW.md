@@ -1,6 +1,6 @@
 # Ideas Overview
 
-**Open: 3** | **Archived: 8**
+**Open: 2** | **Archived: 9**
 
 Ideas are lightweight, qualitative proposals tracked in [`open/`](open/) until they are either converted into structured tasks or archived. Archived ideas are kept for history in [`archived/`](archived/). See [README.md](README.md) for the file-naming convention (one row per IDEA, sub-notes use the `idea-NNN.<sub-slug>.md` form).
 
@@ -9,7 +9,6 @@ Ideas are lightweight, qualitative proposals tracked in [`open/`](open/) until t
 | ID | Category | Title | Description |
 |----|----------|-------|-------------|
 | [IDEA-011](open/idea-011-prefer-on-hand-parts-from-partsledger.md) | 🛠️ tooling | Prefer on-hand parts from PartsLedger via --prefer-inventory adapter | Read PartsLedger's inventory as a soft preference during component selection, biasing generated circuits toward parts already on the bench; defines the cross-repo contract and the three-column BOM output. |
-| [IDEA-012](open/idea-012-revisit-original-concept-vs-0-1-0.md) | 🛠️ tooling | Revisit the original IDEA-001 dossier — gap analysis against shipped 0.1.0 | Walk the archived IDEA-001 dossier section-by-section against shipped 0.1.0 and spawn follow-up ideas for the deliberately-deferred, contingent, and excluded surface area. |
 | [IDEA-013](open/idea-013-senior-review-and-refactor-pass.md) | 🛠️ tooling | Senior-developer + senior-architect review pass and refactor | Commission a senior-dev / senior-architect review of everything shipped so far — score correctness, readability, maintainability, test coverage, and docs; produce a prioritised good / improve / bad punch list driving a refactor epic. |
 
 ## Archived Ideas
@@ -24,3 +23,4 @@ Ideas are lightweight, qualitative proposals tracked in [`open/`](open/) until t
 | [IDEA-007](archived/idea-007-doc-audit-and-rewrite-after-epic-006.md) | 🛠️ tooling | Intensive review and rework of the documentation after EPIC-006 |
 | [IDEA-008](archived/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md) | 🛠️ tooling | First-class sub-block authoring + kernel rules for non-LED passive groupings |
 | [IDEA-009](archived/idea-009-active-device-profiles-and-multi-page-renderer.md) | 🛠️ tooling | Active-device component profiles (BJT, 555, op-amp) and multi-page renderer support |
+| [IDEA-012](archived/idea-012-revisit-original-concept-vs-0-1-0.md) | 🛠️ tooling | Revisit the original IDEA-001 dossier — gap analysis against shipped 0.1.0 |
