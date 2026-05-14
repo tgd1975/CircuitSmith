@@ -2,11 +2,34 @@
 id: EPIC-011
 name: test-plan-and-coverage
 title: Test Plan and Coverage Matrix
-status: open
+status: closed
 opened: 2026-05-13
-closed:
+closed: 2026-05-14
 assigned:
 branch: release/epic-011-test-plan-and-coverage
+---
+
+## Archived — scope was overloaded, beyond useful
+
+This epic is closed without delivering anything. A single-session
+attempt to drive it (TASK-083..090) reached the end of TASK-090's
+gap-triage step and tipped over: 15 follow-up tasks plus 13 ideas
+came out of triaging the per-subsystem chapters, and at that point
+it was clear the epic had grown past the value its plan would
+ever deliver — most of the gaps were either acceptable-by-design
+non-goals or speculative future work hooked off other epics. The
+work-in-progress branch `release/epic-011-test-plan-and-coverage`
+was hard-dropped; nothing from the session survived.
+
+The nine child tasks (TASK-083..091) are closed as cancelled
+alongside this epic for the same reason — see each task's body for
+the one-line cancellation note.
+
+If a future maintainer revisits the underlying need (deliberate,
+contributor-readable test-plan documentation), reopen IDEA-003
+rather than this epic — the seed idea captures the goal without
+the execution-plan baggage that sank this attempt.
+
 ---
 
 Seeded by IDEA-003 (Detailed test plan for every part of CircuitSmith).

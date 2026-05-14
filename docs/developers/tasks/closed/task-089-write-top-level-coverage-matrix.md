@@ -1,8 +1,9 @@
 ---
 id: TASK-089
 title: Write the top-level coverage matrix with the PR-time/nightly/release axis
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 7
 prerequisites: [TASK-085, TASK-086, TASK-087, TASK-088]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

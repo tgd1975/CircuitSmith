@@ -1,8 +1,9 @@
 ---
 id: TASK-091
 title: Add a CI staleness check that flags tests not referenced in the plan
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 9
 prerequisites: [TASK-089, TASK-090]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

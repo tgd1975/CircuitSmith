@@ -1,8 +1,9 @@
 ---
 id: TASK-090
 title: File concrete follow-up tasks for every coverage gap exposed by the plan
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Small (<2h)
 complexity: Medium
 human-in-loop: Main
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 8
 prerequisites: [TASK-089]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

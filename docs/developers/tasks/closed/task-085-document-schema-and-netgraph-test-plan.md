@@ -1,8 +1,9 @@
 ---
 id: TASK-085
 title: Author the schema and netgraph subsystem test plans
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Medium (2-8h)
 complexity: Medium
 human-in-loop: Clarification
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 3
 prerequisites: [TASK-084]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

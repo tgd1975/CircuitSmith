@@ -1,14 +1,19 @@
 ---
 id: TASK-083
 title: Scaffold docs/developers/testing/ directory and top-level index
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Small (<2h)
 complexity: Junior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
 order: 1
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

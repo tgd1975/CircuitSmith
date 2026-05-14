@@ -1,8 +1,9 @@
 ---
 id: TASK-084
 title: Inventory the existing test surface and tag every test by subsystem and layer
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 2
 prerequisites: [TASK-083]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 

@@ -172,6 +172,12 @@ first tag is cut.
 
 - Relocated IDEA-006 (resistor color-band detector) to PartsLedger
   as their IDEA-011.
+- **EPIC-011 — test plan and coverage matrix** archived without
+  delivering. Triage at TASK-090 produced 15 follow-up tasks + 13
+  ideas and made it clear the epic had grown past the value its
+  plan would deliver. The nine child tasks (TASK-083..091) closed
+  as cancelled alongside the epic; revisit by reopening IDEA-003,
+  not this epic.
 
 ## [v0.1.0] — 2026-05-13
 

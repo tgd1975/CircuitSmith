@@ -1,8 +1,9 @@
 ---
 id: TASK-088
 title: Author the exporters, skill-orchestration, and CI-gates subsystem test plans
-status: open
+status: closed
 opened: 2026-05-13
+closed: 2026-05-14
 effort: Medium (2-8h)
 complexity: Medium
 human-in-loop: Clarification
@@ -10,6 +11,10 @@ epic: test-plan-and-coverage
 order: 6
 prerequisites: [TASK-084]
 ---
+
+## Cancelled — EPIC-011 archived
+
+Closed without work. See EPIC-011's body for the rationale.
 
 ## Description
 
