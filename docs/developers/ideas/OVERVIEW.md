@@ -1,6 +1,6 @@
 # Ideas Overview
 
-**Open: 1** | **Archived: 8**
+**Open: 2** | **Archived: 8**
 
 Ideas are lightweight, qualitative proposals tracked in [`open/`](open/) until they are either converted into structured tasks or archived. Archived ideas are kept for history in [`archived/`](archived/). See [README.md](README.md) for the file-naming convention (one row per IDEA, sub-notes use the `idea-NNN.<sub-slug>.md` form).
 
@@ -9,6 +9,7 @@ Ideas are lightweight, qualitative proposals tracked in [`open/`](open/) until t
 | ID | Category | Title | Description |
 |----|----------|-------|-------------|
 | [IDEA-011](open/idea-011-prefer-on-hand-parts-from-partsledger.md) | 🛠️ tooling | Prefer on-hand parts from PartsLedger via --prefer-inventory adapter | Read PartsLedger's inventory as a soft preference during component selection, biasing generated circuits toward parts already on the bench; defines the cross-repo contract and the three-column BOM output. |
+| [IDEA-012](open/idea-012-revisit-original-concept-vs-0-1-0.md) | 🛠️ tooling | Revisit the original IDEA-001 dossier — gap analysis against shipped 0.1.0 | Walk the archived IDEA-001 dossier section-by-section against shipped 0.1.0 and spawn follow-up ideas for the deliberately-deferred, contingent, and excluded surface area. |
 
 ## Archived Ideas
 

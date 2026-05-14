@@ -64,6 +64,9 @@ first tag is cut.
 - Merged IDEA-005 (motivation: bias toward on-hand parts) and the
   unmerged IDEA-010 draft (PartsLedger contract) into IDEA-011 —
   the canonical inventory-adapter dossier; IDEA-005 archived.
+- Opened IDEA-012 as a bookmark — gap analysis of the archived
+  IDEA-001 dossier against shipped 0.1.0; expects to spawn
+  follow-up ideas for deferred / contingent / excluded surface area.
 
 ### Removed
 
