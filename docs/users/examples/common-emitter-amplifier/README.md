@@ -40,12 +40,11 @@ The intended `circuit.yml` would declare:
 > errors at schema time and mislead future contributors about what
 > the library supports.
 >
-> The missing capability is filed as
-> [IDEA-009](../../../developers/ideas/open/idea-009-active-device-profiles-and-multi-page-renderer.md).
-> The same idea also blocks TASK-098 (555), TASK-099 (op-amp), and
-> TASK-100 (multi-page split). See also
-> [IDEA-008](../../../developers/ideas/open/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md)
-> for the kernel canonical-rule additions the bias network needs.
+> The missing capability is scheduled under
+> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+> (seeded by IDEA-008 and IDEA-009). This example lands when
+> TASK-129 closes; the bjt_npn profile (TASK-120) and the
+> active-device ERC (TASK-123) are the direct unblockers.
 
 ## What makes it interesting
 
@@ -60,4 +59,4 @@ That's the new mental model the example introduces.
 ## Next example
 
 [555 monostable](../555-monostable/) — single-IC example, also
-blocked on IDEA-009's profile additions.
+scheduled under EPIC-014 (TASK-130).

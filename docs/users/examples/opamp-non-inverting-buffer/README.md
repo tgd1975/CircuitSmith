@@ -37,8 +37,11 @@ The intended `circuit.yml` would declare:
 > input pins, and the catalog needs at least one rule that fires on
 > a missing feedback path or a power-rail mistake.
 >
-> Filed as
-> [IDEA-009](../../../developers/ideas/open/idea-009-active-device-profiles-and-multi-page-renderer.md).
+> Scheduled under
+> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+> (seeded by IDEA-009). This example lands when TASK-131 closes;
+> the ic/opamp_dual_supply profile (TASK-122) is the direct
+> unblocker.
 
 ## What makes it interesting
 
@@ -53,4 +56,5 @@ op-amp schematic.
 ## Next example
 
 [Multi-page split](../multi-page-split/) — the largest gallery
-entry, blocked on IDEA-009's renderer page-break half.
+entry, scheduled under EPIC-014 (TASK-132) — exercises the
+renderer's page-break path.

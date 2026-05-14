@@ -41,12 +41,11 @@ python scripts/check_gallery_regression.py --rebaseline   # overwrite committed 
 ```
 
 Gallery entries that ship without a committed SVG (the entries
-blocked on
-[IDEA-008](../../developers/ideas/open/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md)
-or
-[IDEA-009](../../developers/ideas/open/idea-009-active-device-profiles-and-multi-page-renderer.md))
-are skipped with a one-line note; the guard activates for each
-example as soon as its prerequisites land and an SVG is committed.
+whose rendering is scheduled under
+[EPIC-014](../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+— seeded by IDEA-008 and IDEA-009) are skipped with a one-line
+note; the guard activates for each example as soon as its EPIC-014
+task closes and an SVG is committed.
 
 ## See also
 

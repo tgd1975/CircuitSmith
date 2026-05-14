@@ -23,10 +23,12 @@ the topology fingerprint and treats all three copies as
 instantiations of the same sub-block.
 
 A first-class `sub-blocks:` keyword (where you'd write the RC
-filter once and instantiate it twice) is filed as
-[IDEA-008](../../developers/ideas/open/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md).
-Until that lands, this step demonstrates the underlying kernel
-behaviour rather than the surface syntax.
+filter once and instantiate it twice) is scheduled under
+[EPIC-014](../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+(seeded by IDEA-008). Until that epic closes, this step
+demonstrates the underlying kernel behaviour rather than the
+surface syntax; the rewrite to first-class sub-blocks lands in
+TASK-119.
 
 ## The `.circuit.yml`
 

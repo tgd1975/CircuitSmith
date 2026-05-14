@@ -35,8 +35,10 @@ The intended `circuit.yml` would declare:
 > `VCC`) need a profile entry before the schema validator will
 > accept references to them.
 >
-> Filed as
-> [IDEA-009](../../../developers/ideas/open/idea-009-active-device-profiles-and-multi-page-renderer.md).
+> Scheduled under
+> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+> (seeded by IDEA-009). This example lands when TASK-130 closes;
+> the ic/555 profile (TASK-121) is the direct unblocker.
 
 ## What makes it interesting
 
@@ -50,4 +52,5 @@ That's the new schema vocabulary the example introduces.
 ## Next example
 
 [Op-amp non-inverting buffer](../opamp-non-inverting-buffer/) —
-another IC-flavoured example, also blocked on IDEA-009.
+another IC-flavoured example, also scheduled under EPIC-014
+(TASK-131).

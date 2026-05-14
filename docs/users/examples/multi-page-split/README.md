@@ -35,11 +35,13 @@ assignments to direct the split.
 > cram everything onto one oversized sheet or refuse, depending on
 > internal limits.
 >
-> Both halves of
-> [IDEA-009](../../../developers/ideas/open/idea-009-active-device-profiles-and-multi-page-renderer.md)
-> apply here. The page-break renderer path is the half this
-> example specifically waits on; the active-device profiles half
-> applies if the example chooses to include any IC components.
+> Scheduled under
+> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+> (seeded by IDEA-009). This example lands when TASK-132 closes;
+> the renderer multi-page driver (TASK-125), cross-page net labels
+> (TASK-126), and cross-page ERC (TASK-127) are the direct
+> unblockers. The example also uses the bjt_npn profile
+> (TASK-120) for at least one stage of the audio chain.
 
 ## What makes it interesting
 

@@ -52,6 +52,24 @@ first tag is cut.
   (active-device component profiles + multi-page renderer support)
   as the unblocking follow-ups for the EPIC-012 gallery's deferred
   rendered artefacts.
+- Groomed IDEA-008 and IDEA-009 to full implementation-plan depth
+  (phases, dependency graph, effort table, ERC implications,
+  open-question defaults), then elevated both into EPIC-014
+  (circuit library and renderer v2): 24 tasks bundling non-LED
+  kernel rules, first-class sub-blocks, active-device profiles
+  (BJT/555/op-amp), and multi-page renderer support. Both source
+  ideas archived at epic open per the `/ts-epic-new` convention;
+  tutorial step 3 + the five gallery README pointers updated to
+  reference EPIC-014 in place of the now-archived IDEA-008/009.
+- Merged IDEA-005 (motivation: bias toward on-hand parts) and the
+  unmerged IDEA-010 draft (PartsLedger contract) into IDEA-011 —
+  the canonical inventory-adapter dossier; IDEA-005 archived.
+
+### Removed
+
+- Relocated IDEA-006 (resistor color band detector spinoff tool) to
+  PartsLedger as IDEA-011 — vision/inventory-entry workflow belongs
+  with the parts ledger, not the schematic generator.
 
 ## [v0.1.0] — 2026-05-13
 

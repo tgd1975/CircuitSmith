@@ -55,11 +55,11 @@ re-typed.
 > required and the placer would consume credit per render — not
 > appropriate for a committed gallery fixture.
 >
-> The missing capability is filed as
-> [IDEA-008](../../../developers/ideas/open/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md);
-> the SVG, layout sidecar, and meta sidecar will land for this
-> example as soon as the kernel canonical-rule additions (Half 1 of
-> that idea) ship.
+> The missing capability is scheduled under
+> [EPIC-014](../../../developers/tasks/open/epic-014-circuit-library-and-renderer-v2.md)
+> (seeded by IDEA-008). The SVG, layout sidecar, and meta sidecar
+> will land for this example when TASK-128 closes — the R+R
+> canonical rule (TASK-114) is the unblocker.
 
 The ERC engine **does** accept the circuit standalone — running
 `.venv/bin/python -m circuitsmith.erc_engine --circuit circuit.yml`
@@ -79,7 +79,7 @@ This entry serves two purposes simultaneously:
    user hits — the voltage divider is, structurally, the
    simplest-possible circuit *the kernel cannot render*. Future
    readers landing here see the gap immediately and know where to
-   look for the follow-up (IDEA-008).
+   look for the follow-up (EPIC-014 / TASK-114).
 
 The CI regression diff (TASK-101) skips this entry until the SVG
 lands.

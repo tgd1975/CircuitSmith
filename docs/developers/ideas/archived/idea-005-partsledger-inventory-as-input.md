@@ -5,6 +5,19 @@ description: Treat PartsLedger inventory as a constraint/preference source so ge
 category: 🛠️ tooling
 ---
 
+## Archive Reason
+
+2026-05-14 — Superseded by [IDEA-011](../open/idea-011-prefer-on-hand-parts-from-partsledger.md).
+
+IDEA-011 merges the *why* from this dossier with the cross-repo
+contract drafted alongside it (the unmerged IDEA-010 draft) into a
+single coherent specification: motivation, one-way data flow,
+what's read from PartsLedger, field mapping, soft-prefer policy,
+three-column BOM output, and open questions. The content below is
+kept verbatim for history.
+
+---
+
 Investigate how much adaptation is required to feed
 [PartsLedger](https://github.com/tgd1975/PartsLedger)'s inventory
 (`$CS_PARTSLEDGER_PATH`) into CircuitSmith as a **soft preference**
