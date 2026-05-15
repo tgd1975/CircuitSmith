@@ -1,9 +1,11 @@
 ---
 id: TASK-134
 title: Walk the IDEA-001 phase plan against shipped 0.1.0 + scaffold the analysis table
-status: open
+status: closed
+closed: 2026-05-15
 opened: 2026-05-15
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
 epic: dossier-gap-analysis

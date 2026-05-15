@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 18** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 142** | █████████░ 87%
+⚪ **Open: 17** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 125** | **Total: 142** | █████████░ 88%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -77,7 +77,6 @@ _No paused tasks._
 | [TASK-107](open/task-107-test-plan-alignment-with-epic-011.md) | Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-108](open/task-108-annotate-idea-001-dossier.md) | Annotate the archived IDEA-001 dossier with what shipped vs what didn't | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-109](open/task-109-final-pass-readme-and-entry-points.md) | Final pass on README.md and top-level entry-point docs | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-134](open/task-134-dossier-phase-plan-walk.md) | Walk the IDEA-001 phase plan against shipped 0.1.0 + scaffold the analysis table | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-135](open/task-135-dossier-components-walk.md) | Walk the IDEA-001 components dossier against shipped component library | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-136](open/task-136-dossier-yaml-format-walk.md) | Walk the IDEA-001 YAML-format dossier against the shipped circuit.schema.json | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-137](open/task-137-dossier-layout-engine-walk.md) | Walk the IDEA-001 layout-engine concept against the shipped kernel + router | Small (&lt;2h) | Medium | ⚪ open |
@@ -215,6 +214,7 @@ _No paused tasks._
 | [TASK-131](closed/task-131-gallery-reattempt-opamp-non-inverting-buffer.md) | Gallery re-attempt — op-amp non-inverting buffer (supersedes TASK-099) | Small (&lt;2h) |
 | [TASK-132](closed/task-132-gallery-reattempt-multi-page-split.md) | Gallery re-attempt — multi-page split (supersedes TASK-100) | Medium (2-8h) |
 | [TASK-133](closed/task-133-component-skill-docs-final-pass.md) | Component-skill docs final pass | Small (&lt;2h) |
+| [TASK-134](closed/task-134-dossier-phase-plan-walk.md) | Walk the IDEA-001 phase plan against shipped 0.1.0 + scaffold the analysis table | Small (&lt;2h) |
 
 ## Archived Releases
 
