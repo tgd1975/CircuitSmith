@@ -1,9 +1,11 @@
 ---
 id: TASK-137
 title: Walk the IDEA-001 layout-engine concept against the shipped kernel + router
-status: open
+status: closed
+closed: 2026-05-15
 opened: 2026-05-15
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: dossier-gap-analysis

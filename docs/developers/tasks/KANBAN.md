@@ -28,12 +28,11 @@ kanban
 
 ## dossier-gap-analysis
 
-_⚪ 6 open · 🔵 0 active · 🟡 0 paused · 🟢 3 closed · ███░░░░░░░ 33%_
+_⚪ 5 open · 🔵 0 active · 🟡 0 paused · 🟢 4 closed · ████░░░░░░ 44%_
 
 ```mermaid
 kanban
   Open
-    TASK_137["Walk the IDEA-001 layout-engine concept against the shipped kernel + router"]
     TASK_138["Walk the IDEA-001 ERC dossier check-by-check against the shipped erc_engine"]
     TASK_139["Walk the IDEA-001 exporters dossier against shipped BOM + netlist exporters"]
     TASK_140["Walk the IDEA-001 rule-catalog dossier against the shipped catalog size and shape"]
@@ -45,6 +44,7 @@ kanban
     TASK_134["Walk the IDEA-001 phase plan against shipped 0.1.0 + scaffold the analysis table"]
     TASK_135["Walk the IDEA-001 components dossier against shipped component library"]
     TASK_136["Walk the IDEA-001 YAML-format dossier against the shipped circuit.schema.json"]
+    TASK_137["Walk the IDEA-001 layout-engine concept against the shipped kernel + router"]
 ```
 
 ## post-epic-006-doc-audit
