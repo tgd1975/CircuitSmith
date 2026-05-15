@@ -51,8 +51,22 @@ evolving spec.
 
 | Dossier §5.3 row | Bucket | Verdict / evidence / spawned IDEA |
 |---|---|---|
+| **Day-one library** (15 profiles: ESP32, nRF52840, RESISTOR, CAPACITOR, LED, PUSHBUTTON, PIEZO, USB_C, DC_BARREL, MONO_JACK, STEREO_JACK, PIN_HEADER_{2,3,4,6,8}, SCREW_TERMINAL_{2,3}, BME280, SSD1306) | 1 | Shipped per EPIC-001. `passives.py` + `mcus.py` + `connectors.py` + `sensors.py` cover all 15 day-one profiles with the dossier-specified category keys. EPIC-014 added two further category families on top (`actives.py` for transistors, `ics.py` for 555 + op-amp) — out of dossier day-one scope, noted for context. |
+| Generic diode / Schottky (backlog row 1) | 3 | Gate not tripped. `actives.py` ships only `bjt_npn` + `bjt_pnp` (EPIC-014 TASK-120) — no diode profile, no `category: diode` row in `§5.3` / `layout.schema.json`. E9 catalog entry exists (`src/circuitsmith/knowledge/rules.json`) but `erc_engine.py:103` records the v0.1 WARNING-not-ERROR gate inline, and line 936 emits "(WARNING at v0.1 pending the `diode` category.)" — gate still wired. The dossier's "promote E9 to ERROR once diode lands" condition holds. |
+| 3-pin linear regulator (AMS1117-3.3, LM7805) (backlog row 2) | 3 | Gate not tripped. No `regulator` category in any `components/*.py`; no `category: regulator` in `layout.schema.json`. Dossier-stated priority "High — ubiquitous on maker boards" still pending. Re-evaluate when a gallery or builder-doc circuit needs a regulated supply. |
+| Potentiometer / trimpot (backlog row 3) | 3 | Gate not tripped. No `pot` row, no profile. Dossier-stated priority "High — maker-UI workhorse" still pending. |
+| DHT22 / DHT11 — 1-wire digital sensor (backlog row 4) | 3 | Gate not tripped. No `digital-sensor` row added and `i2c-sensor` not renamed to `i2c-peripheral`. Priority "Medium" in the dossier; status unchanged. |
+| N-MOSFET / NPN BJT as a switch (backlog row 5) | 2 | Reduced scope: **BJT half shipped, MOSFET half not**. EPIC-014 TASK-120 + ADR-0015 added `bjt_npn` + `bjt_pnp` with per-pin `role:` annotation (`base`/`collector`/`emitter`) — the dossier's "gate-drain-source / base-collector-emitter roles" landed for BJTs only. Kernel rules `RULE_BJT_TO_GND` (id 15) and `RULE_RESISTOR_WITH_BJT` (id 16) handle base-drive resistors; TASK-129 added `RULE_BJT_LOAD` (id 18) and `RULE_BJT_DEGENERATION` (id 19) for collector/emitter resistors. N-MOSFET parts not shipped — the dossier's "switch" semantic is BJT-only in 0.1. Fine as-is; MOSFETs can land on the same pin-role pattern when a circuit needs them. No follow-up. |
+| Rotary encoder (backlog row 6) | 3 | Gate not tripped. No `encoder` row, no profile. Priority "Medium"; status unchanged. |
+| WS2812 / addressable LED chain (backlog row 7) | 3 | Gate not tripped — and the dossier itself flagged this as "likely out of scope per layout §2 non-goals" (chained data-bus topology rather than a net). Layout §2 still excludes chained-data topologies. Bucket 3 with the verdict that the gate is "would require a layout topology generalisation we don't intend to ship". |
+| Servo / motor header (backlog row 8) | 3 | Gate not tripped. Could ride on `PIN_HEADER_3` (already shipped) once a user authors a specific profile, or could spawn a `servo-header` row. No real demand surfaced; priority "Low"; status unchanged. |
 
-<!-- TASK-135 extends this sub-table. -->
+Cross-reference: archived [IDEA-009](../developers/ideas/archived/idea-009-active-device-profiles-and-multi-page-renderer.md)
+already covered the BJT / op-amp / 555 active-device space and was elevated
+into EPIC-014 — the rows above reflect that closure. The diode-category
+row is **not** in IDEA-009's scope (IDEA-009 focused on active devices
+that EPIC-012's gallery needed, not on the polarity-protection passive
+backlog), so the diode gate remains independently open.
 
 ## YAML format (idea-001.yaml-format.md)
 
