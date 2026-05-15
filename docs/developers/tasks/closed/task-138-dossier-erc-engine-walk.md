@@ -1,9 +1,11 @@
 ---
 id: TASK-138
 title: Walk the IDEA-001 ERC dossier check-by-check against the shipped erc_engine
-status: open
+status: closed
+closed: 2026-05-15
 opened: 2026-05-15
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: dossier-gap-analysis

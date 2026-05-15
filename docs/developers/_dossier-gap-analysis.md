@@ -127,10 +127,41 @@ no row to bucket.
 
 ## ERC engine (idea-001.erc-engine.md)
 
+15 rows: S1–S5 + E1–E10. Severity defaults are pulled directly from
+`src/circuitsmith/erc_engine.py:CHECK_TABLE` (lines 59–110) and
+cross-checked against the per-code entries in
+`src/circuitsmith/knowledge/rules.json`. EPIC-014's E11–E22 are
+out-of-dossier scope and listed under "Post-dossier additions"
+below.
+
 | Check | Shipped? | Severity matches dossier? | Bucket | Notes |
 |---|---|---|---|---|
+| **S1** — Unconnected required pin | Yes | Yes (ERROR) | 1 | Detection runs in `erc_engine.py` per spec. Per-instantiated-component evaluation. |
+| **S2** — Dangling net | Yes | Yes (ERROR) | 1 | Always-on. |
+| **S3** — Duplicate net name | Yes | Yes (WARNING) | 1 | Always-on. |
+| **S4** — Unknown reference | Yes (via schema) | Yes (ERROR) | 1 | Schema-validator emits this code; CHECK_TABLE entry preserves the row for the ERC report and the catalog validator (ADR-0006). Matches dossier intent. |
+| **S5** — Unknown pin | Yes (via schema) | Yes (ERROR) | 1 | Same shape as S4 (schema-validator surfaces it, CHECK_TABLE row for report uniformity). EPIC-014 TASK-121 widened S5 to accept `alt:`-listed pin aliases (e.g. `T1.GND` resolves to `T1.1` for the 555) — that's a strict expansion, not a regression. |
+| **E1** — Floating input | Yes | Yes (ERROR) | 1 | Source of truth for input-pull verdict is `pull:` net key, per dossier §E1. Hybrid `role:` map narrows direction on GPIOs first. Missing-role on a `bidir` GPIO downgrades E1 to WARNING with an explicit note in the finding message — matches dossier §E1 notes. |
+| **E2** — LED missing resistor | Yes | Yes (ERROR) | 1 | Every LED in the circuit. |
+| **E3** — LED resistor out of range | Yes | Yes (WARNING) | 1 | Calculates `(VCC - v_forward) / R` using `metadata.v_forward_by_color[color]` per the dossier; falls back to `v_forward_default` when `color:` is missing or unrecognised. |
+| **E4** — INPUT_ONLY pin driven | Yes | Yes (ERROR) | 1 | Reads `direction` not `category`. |
+| **E5** — Strapping pin without pull | Yes | Yes (WARNING) | 1 | Strapping-pin sets are profile-declared via `is_strapping: True`; the schema's "no internal pull on strapping pin" check (TASK-136 row) is the upstream guard. |
+| **E6** — Missing decoupling cap | Yes | Yes (WARNING) | 1 | Dossier flagged this as "shipped but dormant on current circuits — activates as soon as a qualifying component (non-MCU IC) appears". EPIC-014 added op-amp and 555 ICs; E6 is now active on those circuits and producing real findings on `555-monostable` and `opamp-non-inverting-buffer` gallery entries. No change to severity; activation is the expected behaviour. |
+| **E7** — I2C missing pull-up | Yes | Yes (WARNING) | 1 | Activates when `func: [I2C_SDA]` or `[I2C_SCL]` is tagged on a pin. Dossier-shipped "shipped but dormant" disposition; activates on the BME280 + SSD1306 profiles. |
+| **E8** — Current budget exceeded | Yes | Yes (WARNING) | 1 | Reads MCU `max_gpio_current_ma` + `max_total_current_ma` from profile metadata; sums declared LED currents. |
+| **E9** — Reverse-polarity unprotected | Yes (with caveat) | **No — shipped as WARNING, not ERROR** | 2 | The dossier specifies E9 as ERROR but **explicitly gates the ERROR-promotion on the `diode` category landing in §5.3** ([erc-engine §E9 note](../developers/ideas/archived/idea-001.erc-engine.md)). The `diode` category has not landed (see TASK-135 components row), so E9 remains WARNING per `erc_engine.py:103` and `:936`. This is the dossier's own staging plan; the severity mismatch is intentional, gate-driven, and matches the dossier's stated v0.1 disposition. Bucket 2 because the *currently-shipped severity* deviates from the dossier's *terminal* severity, but the deviation is the dossier-stated v0.1 outcome. Cross-link to TASK-135 diode-category row. No follow-up. |
+| **E10** — Pin conflict | Yes | Yes (ERROR) | 1 | Any pin appearing in more than one declared net. |
 
-<!-- TASK-138 extends this sub-table. 15 rows expected (S1–S5 + E1–E10). -->
+**Post-dossier additions (out of scope, noted for context).** EPIC-014
+added 12 new codes — S6/S7 (sub-block schema validation, TASK-117),
+E11–E15 (sub-block ERC + voltage-divider ambiguity, TASK-117/TASK-114),
+E16–E18 (active-device ERC: BJT role, op-amp floating supply,
+555 pin-naming drift, TASK-123), E19–E22 (cross-page rules,
+TASK-127). Catalog now at 27 codes total; CHECK_TABLE grew from
+15 → 27. Severity overrides via `meta.erc.<code>: off|warn|error`
+shipped per dossier; `meta.erc.cross-page-threshold` is a separate
+EPIC-014 knob outside the `meta.erc` schema (see TASK-136's YAML
+walk note).
 
 ## Exporters (idea-001.exporters.md)
 
