@@ -72,8 +72,35 @@ backlog), so the diode gate remains independently open.
 
 | Schema construct | Bucket | Verdict / evidence / spawned IDEA |
 |---|---|---|
+| Top-level `meta` block | 1 | Shipped per EPIC-001. `circuit.schema.json` `$defs.meta` requires `title` + `target`; permits `config`, `aliases`, `erc` plus open extension via `additionalProperties: true`. |
+| `meta.erc` per-check severity map | 1 | Shipped. Schema constrains keys to `^[ES][0-9]+$` and values to `off`/`warn`/`error` (`additionalProperties: false`). Note: the EPIC-014 TASK-127 cross-page-threshold knob does **not** ride under `meta.erc` (would fail the pattern); it lives elsewhere — out of dossier scope, no row. |
+| `meta.aliases` map (GPIO label propagation) | 1 | Shipped per dossier shape. Pre-pin-alias lookups through the ERC / BOM / renderer use it transparently. KiCad netlist deliberately ignores it per dossier §Net naming. |
+| `meta.config` external alias file | 1 | Shipped. The "file resolves" check runs in the post-schema validator (JSON Schema can't express filesystem existence) — matches the dossier's validation-boundary note. |
+| Top-level `components` map | 1 | Shipped. Schema enforces ref pattern `^[A-Za-z_][A-Za-z0-9_]*$` and `type:` pattern `^[a-z][a-z0-9_]*/[a-z0-9_]+$`. The dossier's broader "any pattern" framing tightened to a single literal form ("`category-namespace/profile-name`") — verdict captured implicitly in EPIC-001, not a reduction. |
+| Per-component `type` / `label` / `value` / `color` keys | 1 | Shipped. `$defs.component` lists exactly these four, plus `additionalProperties: true` for forward-compatibility (carries the per-component `meta:` block authors can attach for ERC overrides). |
+| Top-level `connections` array (oneOf the three forms) | 1 | Shipped. Schema enforces "exactly one of `pins`, `path`, or `(bus + backbone)`" via `oneOf` with mutual-exclusion `not` clauses (lines 88–117). Matches the dossier's "no fourth form needed" stance. |
+| Form 1 — `pins:` unordered set | 1 | Shipped. The dossier's "shortest path drawn by renderer" rendering contract is in `src/circuitsmith/renderer.py` and the router. |
+| Form 2 — `path:` ordered sequence + segment counting rule | 1 | Shipped. The flattener implements "group consecutive same-component tokens into one node; segments = nodes − 1" verbatim (`src/circuitsmith/netgraph.py:flatten` for the algorithm). Content-addressed segment names use the `<net>__<RefA>_<pinA>__<RefB>_<pinB>` convention from the dossier. |
+| Form 2 — net-merge at `path:` endpoints | 1 | Shipped per dossier (symmetric leading/trailing net-name token merging). Standard idiom on all five gallery circuits. |
+| Form 3 — `bus:` backbone + taps | 1 | Shipped. Schema's third `oneOf` branch requires `bus: true` and a non-empty `backbone`. `taps` are pin strings (the long-form `{ ref, layout: { position } }` per-tap entry the dossier explicitly retired never landed). |
+| Net-level `pull:` (`firmware` / `hardware_up` / `hardware_down`) | 1 | Shipped. Schema enum `["firmware", "hardware_up", "hardware_down"]` (line 81). ERC E1 reads this as its source of truth per the dossier. |
+| Net-level `role:` (scalar or `REF.PIN`-keyed map) | 1 | Shipped. Schema's `$defs.role` is a `oneOf` between scalar enum (`in`/`out`/`bidir`) and a pattern-keyed map. Schema cannot enforce "scalar form invalid when net has 2+ GPIO pins" or "key must be GPIO-typed" — both run in the post-schema validator, matching the dossier's validation-boundary note. |
+| `segment_names` length-equals-flattened-segments check | 1 | Shipped per dossier. JSON Schema permits any-length array; post-schema validator enforces the `nodes − 1` count with a citation of expected vs actual count. |
+| Net-name syntax (`^[A-Za-z0-9_+\-]+$` plus "at least one letter") | 1 | Shipped. Schema pattern enforces the character class; the "at least one letter" constraint runs in the post-schema validator per the dossier's note that JSON Schema draft 2020-12 lookaround isn't universally supported. |
+| Component-ref syntax (stricter form `^[A-Za-z_][A-Za-z0-9_]*$`) | 1 | Shipped. Same syntax used for sub-block and instance names too — see post-dossier note below. |
+| Markdown ` ```circuit ` integration (CI rewrite + `show_source` flag + hash-based staleness) | 1 | Shipped per EPIC-005. `src/circuitsmith/markdown.py` carries the `find_blocks`/`compute_hash`/rewrite pipeline; `.github/workflows/generate-circuits.yml` runs it on push. The dossier's MkDocs+`pymdownx.superfences` alternative is dead in this repo (IDEA-022 didn't migrate from AwesomeStudioPedal) — confirmed in TASK-134's Phase 5 row. |
+| YAML loader pinned to `ruamel.yaml` | 1 | Shipped. `pyproject.toml` carries the dependency; the round-trip regression test referenced in the dossier exists in `tests/`. |
+| `inputs:` / `outputs:` pin-alias form (sub-block port naming) | n/a | **Not in dossier scope.** The dossier proposes `meta.aliases` (component-pin → label rename), which shipped as documented. The `inputs:`/`outputs:` pin-alias form named in TASK-136's acceptance criterion is a misattribution — it is the IDEA-008 frozen-decisions table item from EPIC-014, where it lost to the `ports: { name: REF.PIN }` named-port map. Out of dossier scope; no row to bucket. |
 
-<!-- TASK-136 extends this sub-table. -->
+**Post-dossier additions (out of scope, noted for context).** The shipped
+schema also carries `sub-blocks` (`$defs.subBlocks` / `$defs.subBlock` /
+`$defs.ports`) and `instances` (`$defs.instances` / `$defs.instance`) plus
+the S6/S7 post-schema checks for nested-sub-block rejection and
+undeclared-instance reference. These are EPIC-014 (IDEA-008) additions on
+top of the dossier shape — see archived
+[IDEA-008](../developers/ideas/archived/idea-008-first-class-sub-blocks-and-non-led-kernel-rules.md)
+for the contract. No row above because the dossier didn't sketch this
+surface; cross-link rather than re-derive.
 
 ## Layout engine (idea-001.layout-engine-concept.md)
 

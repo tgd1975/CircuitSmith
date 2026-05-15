@@ -1,9 +1,11 @@
 ---
 id: TASK-136
 title: Walk the IDEA-001 YAML-format dossier against the shipped circuit.schema.json
-status: open
+status: closed
+closed: 2026-05-15
 opened: 2026-05-15
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: No
 epic: dossier-gap-analysis
