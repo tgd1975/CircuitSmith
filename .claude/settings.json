@@ -12,6 +12,7 @@
       "Bash(.venv/bin/ruff:*)",
 
       "Bash(python scripts/check_circuit_schema.py:*)",
+      "Bash(python scripts/check_doc_references.py:*)",
       "Bash(python scripts/check_erc_reports.py:*)",
       "Bash(python scripts/check_exporters.py:*)",
       "Bash(python scripts/check_gallery_regression.py:*)",

@@ -55,9 +55,9 @@ canonical-slot signature minted by `RULE_RR_VOLTAGE_DIVIDER`
 pair via the tap-net-name regex `/^(V?REF|SENSE|ADC|DIV|TAP)/i`;
 `ADC_IN` matches the `ADC` prefix and the rule fires deterministically.
 
-The full layout sidecar lives at [`voltage-divider.layout.yml`](voltage-divider.layout.yml);
+The full layout sidecar lives at [`layout.yml`](layout.yml);
 ERC report at [`erc-report.md`](erc-report.md); provenance and
-rubric metrics at [`voltage-divider.meta.yml`](voltage-divider.meta.yml).
+rubric metrics at [`meta.yml`](meta.yml).
 
 ## BOM
 

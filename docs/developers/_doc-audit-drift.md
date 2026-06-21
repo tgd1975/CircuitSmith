@@ -125,5 +125,17 @@ So the rewrite does not "fix" these by mistake:
   is still framed as unbuilt ("before EPIC-001 produces real Python code");
   **D28** — `README.md:179` license reads "MIT (planned)". Both fold into
   TASK-109's full rewrite.
-- **Still open:** D8, D10–D25 → TASK-105 / TASK-106 / TASK-107 per the
-  hand-off above.
+- **2026-06-21 — TASK-105** (this commit). Shipped
+  `scripts/check_doc_references.py` (class-1 relative-link gate, wired into
+  CI as `check-docs-refs`; the ID / code-path / external-URL classes are
+  behind flags) + its `tests/` suite. Resolved the broken links it found:
+  **D8** (RELEASING erc-checks path), **D16/D17/D18** (circuit-yaml.md →
+  `src/circuitsmith/`), **D20/D21/D24** (user-doc links → skill docs),
+  **D25** (idea-005 open→archived), plus a previously-uncatalogued cluster
+  of relocation-broken links in `circuit-yaml.md` / `layout.md`. **D23**
+  (tutorial task-folder labels) is accepted by the gate's lifecycle-folder
+  normalisation — housekeep moves task files without rewriting inbound
+  links, so the file existing by ID is what's enforced.
+- **Still open:** D10–D15 → TASK-107 (TESTING reconcile + stale imports);
+  D19, D22 → TASK-106 (tutorial/gallery status notes); D27, D28 → TASK-109
+  (README full rewrite).

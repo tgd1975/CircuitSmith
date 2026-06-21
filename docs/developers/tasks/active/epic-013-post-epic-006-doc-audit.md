@@ -98,3 +98,13 @@ Tasks are listed automatically in the Task Epics section of
   concept-stage openers in `CONTRIBUTING.md`, `CLAUDE.md`, and `README.md`
   (README interim — full rewrite deferred to TASK-109). Drafts are on-branch
   for the maintainer's cold-read at review/merge. Proceeding to TASK-105.
+- 2026-06-21 — TASK-105 closed (effort actual Medium — building the checker
+  and tuning out false positives across 292 files took longer than the Small
+  estimate). Shipped `scripts/check_doc_references.py`: a class-1 relative-link
+  gate (frozen records, vendored skills, code fences, and lifecycle-folder
+  drift excluded; ID / code-path / external-URL classes behind flags) with an
+  11-case `tests/` suite, wired into CI, allow-listed, and documented
+  (scripts/README, CI_PIPELINE). Fixed the ~17 broken links it surfaced —
+  chiefly the `src/circuitsmith/` relocation aftermath in the circuit skill
+  docs (`circuit-yaml.md`, `layout.md`) plus the user-doc links. Proceeding
+  to TASK-106 / TASK-107.

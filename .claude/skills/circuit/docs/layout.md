@@ -38,7 +38,7 @@ out.svg + out.layout.yml + out.meta.yml
 
 Every component is placed in exactly one **slot** — a `{region, index}`
 pair. The slot vocabulary is bounded by ADR-0001 and codified in
-[`layout.schema.json`](../schema/layout.schema.json).
+[`layout.schema.json`](../../../../src/circuitsmith/schema/layout.schema.json).
 
 | Region | Where | Index |
 |---|---|---|
@@ -176,7 +176,7 @@ of named pages and tag each placement with the page it belongs
 to. The kernel does not derive pages from circuit topology;
 pages are a *rendering* concern. Slot assignment happens within
 a page's region/slot vocabulary (per
-[ADR-0001](../../../docs/developers/adr/0001-slots-not-coordinates.md)),
+[ADR-0001](../../../../docs/developers/adr/0001-slots-not-coordinates.md)),
 so a `right-column` slot on `p1` is independent of a
 `right-column` slot on `p2`.
 
@@ -260,7 +260,7 @@ sees it.
 ## `meta.yml` sidecar
 
 Written by the renderer alongside every SVG. Schema:
-[`meta.schema.json`](../schema/meta.schema.json).
+[`meta.schema.json`](../../../../src/circuitsmith/schema/meta.schema.json).
 
 ```yaml
 schema: circuit-meta/v1
@@ -342,7 +342,7 @@ python -m circuit.renderer --circuit path/to/esp32.circuit.yml --out build/esp32
 
 The Python API mirrors the CLI: `render(..., use_ai_placer=True,
 ai_client=…)`. Tests inject a mock `LLMClient`; production uses
-[`AnthropicClient`](../layout_engine/ai_placer.py) which lazy-imports
+[`AnthropicClient`](../../../../src/circuitsmith/layout/ai_placer.py) which lazy-imports
 the SDK and reads `ANTHROPIC_API_KEY` from the environment.
 
 ### Input contract
@@ -443,7 +443,7 @@ Every renderer run writes:
 | `escalations: [<entry>]` | Always | The §17.2 drift-guard corpus — empty list on clean runs |
 
 `ai_invocations[].reason` and `escalations[].category` are documented
-in [`meta.schema.json`](../schema/meta.schema.json) as enums; the
+in [`meta.schema.json`](../../../../src/circuitsmith/schema/meta.schema.json) as enums; the
 list is the contract the Phase 2b trigger gate (TASK-058) reads.
 
 ## Phase 2b flags (cheat sheet)
@@ -475,7 +475,7 @@ See also:
 
 - [`circuit-yaml.md`](circuit-yaml.md) — the `.circuit.yml` format
   reference the layout engine reads.
-- [`meta.schema.json`](../schema/meta.schema.json) — machine-readable
+- [`meta.schema.json`](../../../../src/circuitsmith/schema/meta.schema.json) — machine-readable
   schema for the `meta.yml` sidecar.
-- [`layout.schema.json`](../schema/layout.schema.json) — machine-readable
+- [`layout.schema.json`](../../../../src/circuitsmith/schema/layout.schema.json) — machine-readable
   schema for `layout.yml`.

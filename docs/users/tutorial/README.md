@@ -33,11 +33,11 @@ know what each step covers.
 - [Example gallery](../examples/) — finished circuits you can read
   cold without following a step-by-step.
 - Developer docs:
-  - [`circuit-yaml.md`](../../developers/circuit-yaml.md) — full
+  - [`circuit-yaml.md`](../../../.claude/skills/circuit/docs/circuit-yaml.md) — full
     `.circuit.yml` reference.
   - [`ARCHITECTURE.md`](../../developers/ARCHITECTURE.md) — how the
     pipeline fits together.
-  - [`erc-checks.md`](../../developers/erc-checks.md) — what each
+  - [`erc-checks.md`](../../../.claude/skills/circuit/docs/erc-checks.md) — what each
     ERC check enforces.
 
 > Status: tutorial step content is filled in across
