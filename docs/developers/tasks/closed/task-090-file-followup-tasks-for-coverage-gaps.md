@@ -1,9 +1,11 @@
 ---
 id: TASK-090
 title: File concrete follow-up tasks for every coverage gap exposed by the plan
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: XS (<30m)
 complexity: Medium
 human-in-loop: Main
 epic: test-plan-and-coverage
@@ -36,13 +38,13 @@ loops.
 
 ## Acceptance Criteria
 
-- [ ] Every "known uncovered" item across the seven chapter files
+- [x] Every "known uncovered" item across the seven chapter files
       has one of three states: filed as TASK-NNN, filed as
       IDEA-NNN, or annotated "acceptable" with rationale.
-- [ ] The matrix's "Notes" column links to the filed task/idea
+- [x] The matrix's "Notes" column links to the filed task/idea
       where applicable, so a reader of the matrix can navigate from
       gap to follow-up.
-- [ ] No "known uncovered" item is left unannotated.
+- [x] No "known uncovered" item is left unannotated.
 
 ## Test Plan
 

@@ -102,3 +102,19 @@ Tasks are listed automatically in the Task Epics section of
   the cadence-policy + hand-maintained-for-v1 prose. Row count
   cross-checks against `_inventory.md`. Next: TASK-090 (gap triage,
   human-in-loop: Main).
+- 2026-06-21 — TASK-090 closed (effort actual XS). Triaged every
+  "known uncovered" item across the eight chapters into three states:
+  - **TASK (tractable):** TASK-134 (triggering fixtures for S1, S6, E4,
+    E6, E8) and TASK-135 (property-based tests for the router + NetGraph
+    form-equivalence).
+  - **IDEA (exploratory):** IDEA-014 (nightly + release CI tiers —
+    catalog online URL check, cross-version render matrix, live-LLM
+    placer smoke, KiCad-import + PartsLedger round-trip).
+  - **Acceptable (no file):** the remainder — AI transport adapter
+    (ADR-0002), rubric 2-circuit corpus, route-around-bodies and the
+    Ubuntu-only SVG golden (intentional v0.1 scope), SVG visual-semantics,
+    `meta.schema` transitive coverage, the agent-prompt non-goal, and the
+    pre-commit/ci.yml shell glue — each kept as its chapter's
+    known-uncovered rationale. Matrix Notes now link the filed items.
+  Per AUTONOMY's Main-HIL contract this triage is surfaced for review;
+  the filed items are reversible and easily reclassified.

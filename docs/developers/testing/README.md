@@ -113,14 +113,14 @@ cannot silently drift.
 |---|---|---|:--:|:--:|:--:|---|
 | `tests/test_schema_validation.py` | schema | unit, integration | ✓ | | | |
 | `tests/test_layout_schema.py` | schema | unit | ✓ | | | |
-| `tests/test_validate_catalog.py` | schema | unit | ✓ | | | online URL check is a future nightly |
+| `tests/test_validate_catalog.py` | schema | unit | ✓ | | | online URL check → IDEA-014 (nightly) |
 | `tests/test_components.py` | schema | unit | ✓ | | | connector-factory edge cases |
-| `tests/schema/test_sub_blocks_schema.py` | schema | unit | ✓ | | | S6 has no direct trigger (gap) |
+| `tests/schema/test_sub_blocks_schema.py` | schema | unit | ✓ | | | S6 untriggered → TASK-134 |
 | `tests/schema/test_pages_schema.py` | schema | unit | ✓ | | | |
 | `tests/components/test_bjt_profiles.py` | schema, layout-kernel | unit | ✓ | | | profile + BJT kernel rule |
 | `tests/components/test_555_profile.py` | schema | unit | ✓ | | | |
 | `tests/components/test_opamp_profile.py` | schema | unit | ✓ | | | |
-| `tests/test_netgraph.py` | netgraph | unit | ✓ | | | |
+| `tests/test_netgraph.py` | netgraph | unit | ✓ | | | form-equivalence property → TASK-135 |
 | `tests/test_netgraph_golden.py` | netgraph | golden | ✓ | | | cross-release drift gate |
 | `tests/netgraph/test_sub_block_flattener.py` | netgraph | unit | ✓ | | | |
 | `tests/test_kernel.py` | layout-kernel | unit, golden | ✓ | | | determinism + incremental diff |
@@ -135,14 +135,14 @@ cannot silently drift.
 | `tests/layout/test_bjt_load_degeneration_rules.py` | layout-kernel | unit, golden | ✓ | | | |
 | `tests/layout/test_pullup_ic_anchor.py` | layout-kernel | unit | ✓ | | | |
 | `tests/layout/test_page_propagation.py` | layout-kernel | unit, integration | ✓ | | | |
-| `tests/test_router.py` | router | unit | ✓ | | | property suite is a gap (TASK-090) |
+| `tests/test_router.py` | router | unit | ✓ | | | property suite → TASK-135 |
 | `tests/test_renderer.py` | renderer | unit, integration | ✓ | | | |
 | `tests/test_full_pedal_fixture.py` | renderer | integration, e2e | ✓ | | | full-pipeline e2e |
 | `tests/render/test_multi_page_driver.py` | renderer | integration | ✓ | | | |
 | `tests/render/test_cross_page_labels.py` | renderer | integration | ✓ | | | |
 | `tests/test_meta_yml_provenance.py` | renderer, layout-kernel | integration | ✓ | | | |
 | `tests/test_meta_yml_escalations.py` | renderer, layout-kernel | integration | ✓ | | | |
-| `tests/test_erc_engine.py` | erc-engine | unit | ✓ | | | S1/E6/E8 untriggered (TASK-090) |
+| `tests/test_erc_engine.py` | erc-engine | unit | ✓ | | | S1/E6/E8 untriggered → TASK-134 |
 | `tests/test_erc_report_enrichment.py` | erc-engine | unit | ✓ | | | |
 | `tests/test_renderer_erc.py` | erc-engine, renderer | integration | ✓ | | | pre-layout ERC contract |
 | `tests/erc/test_sub_block_rules.py` | erc-engine | unit | ✓ | | | E11–E15 |
