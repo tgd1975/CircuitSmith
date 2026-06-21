@@ -96,3 +96,9 @@ Tasks are listed automatically in the Task Epics section of
   `testing/ci-gates.md` (a 15-row gate catalogue with failure mode +
   bypass per gate). All eight chapters are now filled — TASK-089 (matrix)
   is unblocked.
+- 2026-06-21 — TASK-089 closed (effort actual Medium). Filled the
+  coverage matrix in `testing/README.md`: 59 rows (46 product + 13
+  tooling), one per test file, with subsystem/layer/cadence columns and
+  the cadence-policy + hand-maintained-for-v1 prose. Row count
+  cross-checks against `_inventory.md`. Next: TASK-090 (gap triage,
+  human-in-loop: Main).
