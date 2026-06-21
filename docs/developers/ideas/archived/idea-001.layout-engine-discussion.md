@@ -4,6 +4,11 @@
 > (e.g. `scripts/generate-schematic.py`, IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
 >
+> [Audit note 2026-06-21]: Exploration log behind EPIC-002's layout engine;
+> the decisions it converged on shipped per ADR-0001 (see the concept doc's
+> audit note for the realisation map). Retained as rationale, not
+> authoritative design.
+>
 > **This document is the exploration log, not the authoritative design.**
 > The consolidated, consistent concept — which resolves the contradictions
 > flagged in the "Design review: known gaps" section below — lives in

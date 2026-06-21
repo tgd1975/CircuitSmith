@@ -11,6 +11,19 @@ status: archived
 related: IDEA-011, IDEA-018, IDEA-019, IDEA-022
 ---
 
+> [Audit note 2026-06-21]: This dossier is the pre-build design for what
+> shipped as CircuitSmith v0.1.0. Realisation map: components + schema →
+> EPIC-001; renderer + layout kernel + Manhattan router → EPIC-002 (ADR-0001);
+> ERC engine → EPIC-003 (ADR-0005, ADR-0006); BOM + netlist exporters →
+> EPIC-004 (ADR-0004); markdown `circuit` blocks → EPIC-005; the Claude Code
+> skill + PyPI packaging → EPIC-006. 🔀 The library was relocated from
+> `.claude/skills/circuit/` to the installable `src/circuitsmith/` package
+> (ADR-0012, superseding ADR-0007). ⏳ EPIC-014 later added what this dossier
+> did not foresee: first-class sub-blocks, non-LED kernel rules, active-device
+> profiles (BJT / op-amp / 555), and the multi-page renderer. Each companion
+> file carries its own audit note; the original "what we plan to build" voice
+> is preserved as historical record.
+
 ## Archive Reason
 
 2026-05-12 — Converted to EPIC-001..006 with 45 derived tasks (TASK-001..045). Phase Plan and companion design docs remain authoritative references for the implementation; see [`docs/developers/tasks/EPICS.md`](../../tasks/EPICS.md) for the live work breakdown.

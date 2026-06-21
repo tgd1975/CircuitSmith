@@ -28,12 +28,11 @@ kanban
 
 ## post-epic-006-doc-audit
 
-_⚪ 2 open · 🔵 0 active · 🟡 0 paused · 🟢 6 closed · ████████░░ 75%_
+_⚪ 1 open · 🔵 0 active · 🟡 0 paused · 🟢 7 closed · █████████░ 88%_
 
 ```mermaid
 kanban
   Open
-    TASK_108["Annotate the archived IDEA-001 dossier with what shipped vs what didn't"]
     TASK_109["Final pass on README.md and top-level entry-point docs"]
   Active
   Paused
@@ -44,6 +43,7 @@ kanban
     TASK_105["Cross-reference audit — internal links, TASK/EPIC/IDEA refs, code-path mentions"]
     TASK_106["Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery"]
     TASK_107["Test-plan alignment — audit how it's tested sections against EPIC-011's plan"]
+    TASK_108["Annotate the archived IDEA-001 dossier with what shipped vs what didn't"]
 ```
 
 ## Other

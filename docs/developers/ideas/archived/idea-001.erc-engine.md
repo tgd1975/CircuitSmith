@@ -3,6 +3,12 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. `scripts/generate-schematic.py`, IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-003 as
+> `src/circuitsmith/erc_engine.py`, operating on the NetGraph pre-render
+> (ADR-0005 ERC-pre-layout, ADR-0003 shared contract). 🔀 The check set grew
+> from the dossier's S1–S5 / E1–E10 to S1–S7 + E1–E22 — EPIC-014 added the
+> sub-block, divider, active-device, and cross-page checks (E11–E22).
 
 The ERC operates on the **parsed YAML net graph** — not on Schemdraw drawing primitives.
 This means ERC runs before rendering, fails fast on electrical errors, and is completely

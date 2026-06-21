@@ -3,6 +3,13 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. `scripts/generate-schematic.py`, `data/config.json`, IDEA-011/018/019/022)
 > resolve via the [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ The v0.1 deterministic kernel + Manhattan
+> router shipped in EPIC-002 as `src/circuitsmith/layout/` (canonical slots,
+> ADR-0001). 🔀 EPIC-014 added the multi-page renderer and non-LED canonical
+> slots (RC/CC/RR pairs, transistor column). ⏳ The Phase-2b AI placer
+> (`layout/ai_placer.py`) exists but stays evidence-gated and untriggered
+> (ADR-0008).
 
 Authoritative design statement for the Circuit-Skill layout engine. This document
 is the source of truth for Phase 2 implementation. The companion

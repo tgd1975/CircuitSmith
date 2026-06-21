@@ -3,6 +3,11 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. `scripts/generate-schematic.py`, IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-001 as
+> `src/circuitsmith/components/` (profile format + pin aliasing as designed).
+> 🔀 EPIC-014 extended the set beyond passives / LED / MCU with active-device
+> profiles — BJT (NPN/PNP), dual-supply op-amp, and the 555 (TASK-120..122).
 
 ## Profile structure
 

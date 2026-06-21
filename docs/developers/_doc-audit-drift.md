@@ -151,4 +151,11 @@ So the rewrite does not "fix" these by mistake:
   drift-prone embedded snippets with API-correct references to the real
   tests), and **D15** (duplication). Added a `testing/` pointer to
   `ARCHITECTURE.md`'s nav table.
+- **2026-06-21 — TASK-108** (this commit). Annotated the IDEA-001 dossier
+  with audit banners — one `> [Audit note 2026-06-21]:` per file mapping its
+  design area to the realising EPIC/ADR. Not a D-item resolution (the
+  dossier's foreign refs were classified intentional-not-drift above); this
+  is additive historical annotation, drafted at file-banner granularity for
+  the maintainer's cold-read (per-section deepening is the documented
+  extension point).
 - **Still open:** D27, D28 → TASK-109 (README full rewrite, Main-HIL).

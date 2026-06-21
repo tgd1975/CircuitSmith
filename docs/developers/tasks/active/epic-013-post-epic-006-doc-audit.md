@@ -121,3 +121,10 @@ Tasks are listed automatically in the Task Epics section of
   so they can't rot again). **EPIC-013 now at its Main-HIL remainder:
   TASK-108 (dossier annotation) and TASK-109 (README rewrite), both
   requiring maintainer review.**
+- 2026-06-21 — TASK-108 drafted/closed (effort actual Small). Added an audit
+  banner (`> [Audit note 2026-06-21]:`) to all nine `idea-001.*` dossier
+  files mapping each design area to the EPIC/ADR that realised it (components
+  → EPIC-001, ERC → EPIC-003, exporters → EPIC-004, layout → EPIC-002, etc.;
+  relocation via ADR-0012). Drafted at file-banner granularity for the
+  maintainer's cold-read; per-section deepening is the documented extension.
+  On-branch for review.
