@@ -112,7 +112,7 @@ def _bootstrap(tmp_path: Path, circuit_yaml: str) -> tuple[Path, Path]:
 def test_two_page_shared_rail_emits_paired_arrows(tmp_path: Path):
     circuit_path, bootstrap_layout = _bootstrap(tmp_path, _two_led_circuit_yaml())
     augmented = _augment_with_pages(
-        bootstrap_layout.read_text(),
+        bootstrap_layout.read_text(encoding="utf-8"),
         {"U1": "p1", "R1": "p1", "D1": "p1", "R2": "p2", "D2": "p2"},
         ["p1", "p2"],
     )
@@ -124,8 +124,8 @@ def test_two_page_shared_rail_emits_paired_arrows(tmp_path: Path):
         layout_path=pages_layout,
         out_svg=tmp_path / "build2" / "demo.svg",
     )
-    p1_text = result.svg_paths[0].read_text()
-    p2_text = result.svg_paths[1].read_text()
+    p1_text = result.svg_paths[0].read_text(encoding="utf-8")
+    p2_text = result.svg_paths[1].read_text(encoding="utf-8")
 
     # The PWR_LED2 / GND nets cross. Each page has at least one
     # cross-page label naming the *other* page.
@@ -141,7 +141,7 @@ def test_two_page_shared_rail_emits_paired_arrows(tmp_path: Path):
 def test_three_page_shared_rail_each_page_names_others(tmp_path: Path):
     circuit_path, bootstrap_layout = _bootstrap(tmp_path, _three_led_circuit_yaml())
     augmented = _augment_with_pages(
-        bootstrap_layout.read_text(),
+        bootstrap_layout.read_text(encoding="utf-8"),
         {
             "U1": "p1", "R1": "p1", "D1": "p1",
             "R2": "p2", "D2": "p2",
@@ -157,9 +157,9 @@ def test_three_page_shared_rail_each_page_names_others(tmp_path: Path):
         layout_path=pages_layout,
         out_svg=tmp_path / "build2" / "demo.svg",
     )
-    p1_text = result.svg_paths[0].read_text()
-    p2_text = result.svg_paths[1].read_text()
-    p3_text = result.svg_paths[2].read_text()
+    p1_text = result.svg_paths[0].read_text(encoding="utf-8")
+    p2_text = result.svg_paths[1].read_text(encoding="utf-8")
+    p3_text = result.svg_paths[2].read_text(encoding="utf-8")
 
     # p1 carries the MCU + LED1 chain; PWR_LED2 and PWR_LED3 each cross
     # from U1 to a different page, plus GND spans every page —
@@ -179,7 +179,7 @@ def test_single_page_circuit_emits_no_cross_page_labels(tmp_path: Path):
     """v0.1 coexistence: no pages block ⇒ no cross-page label group."""
     circuit_path, _ = _bootstrap(tmp_path, _two_led_circuit_yaml())
     out_svg = tmp_path / "build" / "demo.svg"
-    svg_text = out_svg.read_text()
+    svg_text = out_svg.read_text(encoding="utf-8")
     assert 'class="cross-page-labels"' not in svg_text
 
 
@@ -187,7 +187,7 @@ def test_internal_net_does_not_get_cross_page_label(tmp_path: Path):
     """A net entirely within one page must not appear in cross-page labels."""
     circuit_path, bootstrap_layout = _bootstrap(tmp_path, _two_led_circuit_yaml())
     augmented = _augment_with_pages(
-        bootstrap_layout.read_text(),
+        bootstrap_layout.read_text(encoding="utf-8"),
         {"U1": "p1", "R1": "p1", "D1": "p1", "R2": "p2", "D2": "p2"},
         ["p1", "p2"],
     )
@@ -198,7 +198,7 @@ def test_internal_net_does_not_get_cross_page_label(tmp_path: Path):
         layout_path=pages_layout,
         out_svg=tmp_path / "build2" / "demo.svg",
     )
-    p1_text = result.svg_paths[0].read_text()
+    p1_text = result.svg_paths[0].read_text(encoding="utf-8")
     # PWR_LED1 is U1↔R1↔D1, all on p1; it must not appear as a
     # cross-page label.
     assert 'data-net="PWR_LED1"' not in p1_text.split('cross-page-labels')[1] if 'cross-page-labels' in p1_text else True
@@ -208,7 +208,7 @@ def test_cross_page_label_rendering_is_deterministic(tmp_path: Path):
     """Two passes produce byte-identical SVGs (labels sorted)."""
     circuit_path, bootstrap_layout = _bootstrap(tmp_path, _two_led_circuit_yaml())
     augmented = _augment_with_pages(
-        bootstrap_layout.read_text(),
+        bootstrap_layout.read_text(encoding="utf-8"),
         {"U1": "p1", "R1": "p1", "D1": "p1", "R2": "p2", "D2": "p2"},
         ["p1", "p2"],
     )
