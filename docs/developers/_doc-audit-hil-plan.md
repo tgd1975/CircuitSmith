@@ -7,6 +7,31 @@
 > is how we drive that phase together; nothing here is executed without your
 > sign-off.
 
+## Status — updated 2026-06-21
+
+TASK-102..107 are **closed and pushed** on
+`release/epic-013-post-epic-006-doc-audit`. The three gating decisions were
+made: voice **accepted**, README **full rewrite** (TASK-109), `TESTING.md`
+**stub-and-point** (TASK-107). What landed: the canonical-voice note +
+concept-stage drift fixes (104); the `check_doc_references.py` CI gate +
+~17 broken-link fixes (105); tutorial alignment, "See also" pointers, and
+the ARCHITECTURE glossary (106); the `TESTING.md` ↔ `testing/`
+reconciliation (107).
+
+**Remaining — both Main-HIL, awaiting your direction:**
+
+- **TASK-108** — annotate the IDEA-001 dossier. Large: section-level
+  shipped / changed / dropped / future notes across all nine `idea-001.*`
+  files (~5,400 lines). The agent can draft; you must verify each EPIC / ADR
+  mapping — inaccuracies mislead future readers, which is why it is Main.
+- **TASK-109** — README + entry-point rewrite (blank-page, per your
+  decision). The public face; the AC requires your fresh-visitor cold-read.
+
+Two ways to proceed (your call): **(a)** I draft 108 then 109 on-branch for
+your cold-read at review — maximal progress, you sign off at merge; or
+**(b)** you drive them and I assist. The sections below are the execution
+reference either way.
+
 ## Why this phase is human-in-loop
 
 | Task | Order | HIL | Prereq | Why it needs you |
