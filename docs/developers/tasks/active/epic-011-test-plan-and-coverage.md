@@ -72,3 +72,8 @@ Tasks are listed automatically in the Task Epics section of
   module docstrings. Observations flag the missing nightly/release tier
   and the thin `router` / `skill-orchestration` coverage as input to
   TASK-089/090.
+- 2026-06-21 — TASK-085 closed (effort actual Medium). Authored
+  `testing/netgraph.md` and `testing/schema.md` against the canonical
+  8-section structure. Surfaced two real gaps for TASK-090: NetGraph has
+  no property-based connection-form-equivalence test, and `S6`
+  (slash-form sub-block name collision) has no triggering fixture.

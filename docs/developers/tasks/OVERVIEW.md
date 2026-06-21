@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 16** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 117** | **Total: 133** | █████████░ 88%
+⚪ **Open: 15** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 118** | **Total: 133** | █████████░ 89%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -31,7 +31,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-085](open/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-086](open/task-086-document-layout-and-router-test-plan.md) | Author the layout-kernel and Manhattan-router subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-087](open/task-087-document-renderer-and-erc-test-plan.md) | Author the renderer and ERC-engine subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-088](open/task-088-document-exporters-orchestration-ci-test-plan.md) | Author the exporters, skill-orchestration, and CI-gates subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
@@ -134,6 +133,7 @@ _No paused tasks._
 | [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
 | [TASK-083](closed/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) |
 | [TASK-084](closed/task-084-inventory-existing-test-surface.md) | Inventory the existing test surface and tag every test by subsystem and layer | Small (&lt;2h) |
+| [TASK-085](closed/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) |
 | [TASK-092](closed/task-092-decide-docs-users-structure.md) | Decide docs/users/ structure and update README pointer | Small (&lt;2h) |
 | [TASK-093](closed/task-093-scaffold-tutorial-and-examples-directories.md) | Scaffold docs/users/tutorial/ and docs/users/examples/ with indexes | Small (&lt;2h) |
 | [TASK-094](closed/task-094-tutorial-steps-1-3-minimal-and-fan-out.md) | Tutorial — steps 1-3 (minimal circuit, fan-out, sub-blocks) | Medium (2-8h) |
