@@ -16,6 +16,7 @@
       "Bash(python scripts/check_exporters.py:*)",
       "Bash(python scripts/check_gallery_regression.py:*)",
       "Bash(python scripts/check_phase2b_trigger.py:*)",
+      "Bash(python scripts/check_test_plan_staleness.py:*)",
       "Bash(python scripts/housekeep.py:*)",
       "Bash(python scripts/portability_lint.py:*)",
       "Bash(python scripts/regenerate_circuit_artefacts.py:*)",

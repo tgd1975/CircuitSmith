@@ -2,9 +2,9 @@
 id: EPIC-011
 name: test-plan-and-coverage
 title: Test Plan and Coverage Matrix
-status: open
+status: closed
 opened: 2026-05-13
-closed:
+closed: 2026-06-21
 assigned:
 branch: release/epic-011-test-plan-and-coverage
 ---
@@ -118,3 +118,12 @@ Tasks are listed automatically in the Task Epics section of
     known-uncovered rationale. Matrix Notes now link the filed items.
   Per AUTONOMY's Main-HIL contract this triage is surfaced for review;
   the filed items are reversible and easily reclassified.
+- 2026-06-21 — TASK-091 closed (effort actual Medium). Added
+  `scripts/check_test_plan_staleness.py` (parses the chapters' `pytest`
+  fenced blocks; fails on a `tests/` file with no plan reference or a
+  plan reference to a missing file), its `tests/` suite, the CI step in
+  `ci.yml`, the settings allow-rule, and the scripts-README / CI_PIPELINE
+  / matrix-CI-guard docs. **EPIC-011 complete (9/9).** On this branch the
+  only red test is the pre-existing `test_clean_gallery_exits_zero`
+  date-bomb inherited from `main` — resolved by
+  `fix/gallery-erc-report-date-normalisation`; merge that first.

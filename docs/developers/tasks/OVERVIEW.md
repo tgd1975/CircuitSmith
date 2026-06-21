@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 12** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 123** | **Total: 135** | █████████░ 91%
+⚪ **Open: 11** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 135** | █████████░ 92%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -31,7 +31,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-091](open/task-091-ci-staleness-check-for-test-plan.md) | Add a CI staleness check that flags tests not referenced in the plan | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-102](open/task-102-inventory-all-markdown-docs.md) | Inventory all .md docs and bucket by audience and freshness | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-103](open/task-103-drift-sweep-stale-claims.md) | Drift sweep — identify stale claims, retired scripts, and broken refs | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-104](open/task-104-voice-unification-rewrite.md) | Voice unification — pick canonical voice and rewrite earlier docs forward | Large (8-24h) | Senior | ⚪ open |
@@ -136,6 +135,7 @@ _No paused tasks._
 | [TASK-088](closed/task-088-document-exporters-orchestration-ci-test-plan.md) | Author the exporters, skill-orchestration, and CI-gates subsystem test plans | Medium (2-8h) |
 | [TASK-089](closed/task-089-write-top-level-coverage-matrix.md) | Write the top-level coverage matrix with the PR-time/nightly/release axis | Medium (2-8h) |
 | [TASK-090](closed/task-090-file-followup-tasks-for-coverage-gaps.md) | File concrete follow-up tasks for every coverage gap exposed by the plan | Small (&lt;2h) |
+| [TASK-091](closed/task-091-ci-staleness-check-for-test-plan.md) | Add a CI staleness check that flags tests not referenced in the plan | Medium (2-8h) |
 | [TASK-092](closed/task-092-decide-docs-users-structure.md) | Decide docs/users/ structure and update README pointer | Small (&lt;2h) |
 | [TASK-093](closed/task-093-scaffold-tutorial-and-examples-directories.md) | Scaffold docs/users/tutorial/ and docs/users/examples/ with indexes | Small (&lt;2h) |
 | [TASK-094](closed/task-094-tutorial-steps-1-3-minimal-and-fan-out.md) | Tutorial — steps 1-3 (minimal circuit, fan-out, sub-blocks) | Medium (2-8h) |

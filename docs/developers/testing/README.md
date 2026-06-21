@@ -157,6 +157,7 @@ cannot silently drift.
 | `tests/test_precommit_hook.py` | ci-gates | integration | ✓ | | | |
 | `tests/test_renderer_staleness.py` | ci-gates, renderer | integration | ✓ | | | Ubuntu-only golden |
 | `tests/test_schema_pre_commit.py` | ci-gates, schema | integration | ✓ | | | |
+| `tests/test_check_test_plan_staleness.py` | ci-gates | integration | ✓ | | | guards this matrix (TASK-091) |
 
 ### Project-tooling tests (`scripts/tests/`)
 
@@ -177,3 +178,11 @@ cannot silently drift.
 | `scripts/tests/test_release_snapshot.py` | task-system | unit | ✓ | | | tooling |
 
 <!-- MATRIX:END -->
+
+## CI guard
+
+`scripts/check_test_plan_staleness.py` (TASK-091) keeps this plan honest:
+on every PR it fails the build when a `tests/` file has no pytest-block
+reference in any chapter here, or when a chapter references a test file
+that no longer exists. Run it locally with
+`python scripts/check_test_plan_staleness.py`.

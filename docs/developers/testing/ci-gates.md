@@ -23,6 +23,7 @@ tests/test_schema_pre_commit.py
 tests/test_precommit_hook.py
 tests/test_renderer_staleness.py
 tests/test_check_gallery_regression.py
+tests/test_check_test_plan_staleness.py
 scripts/tests/test_check_erc_reports.py
 scripts/tests/test_phase2b_trigger.py
 scripts/tests/test_release_phase2b_gate.py
@@ -55,6 +56,7 @@ What each gate looks like when it fires, and how to clear it.
 | Catalog validation | `knowledge/` staged / CI | format / `enforced_by` / disclaimer / category-lint error | fix `rules.json`; offline via `CS_CATALOG_OFFLINE=1` |
 | Portability lint | `src/circuitsmith/` staged / CI | host-project token leak in the package | remove the leak; **no bypass** (load-bearing per ADR-0012) |
 | Gallery regression | CI | "FAIL `<circuit>`: `<diff>`" | fix, or `check_gallery_regression.py --rebaseline` + re-commit |
+| Test-plan staleness | CI | "missing from plan" / "dangling reference" | add/repoint the test's pytest-block reference in `docs/developers/testing/` |
 | NetGraph golden | CI (pytest) | serialiser drift / stale golden | investigate drift, or `update_netgraph_golden.py --bump-schema-version` |
 | Version lockstep | CI (pytest) | `__version__` ≠ `pyproject` version | sync both (via `/release`) |
 | Phase 2b trigger | release time | escalations present in committed `meta.yml` | review; bypass `CS_PHASE2B_BYPASS` |
@@ -87,6 +89,9 @@ asserting the gate's pass/fail behaviour:
   `tests/test_check_gallery_regression.py` (TASK-101) drive the
   re-render-and-diff staleness gates end-to-end (the latter now covers
   the ERC-date normalisation that keeps the gate deterministic).
+- `tests/test_check_test_plan_staleness.py` (TASK-091) drives the
+  test-plan staleness gate (`check_test_plan_staleness.py`) over
+  constructed clean / missing-from-plan / dangling / nested trees.
 
 ## Golden / snapshot tests
 
@@ -130,6 +135,7 @@ not pre-commit. No single number is pinned beyond that policy.
 | `tests/test_precommit_hook.py` | ✓ | | |
 | `tests/test_renderer_staleness.py` | ✓ | | |
 | `tests/test_check_gallery_regression.py` | ✓ | | |
+| `tests/test_check_test_plan_staleness.py` | ✓ | | |
 | `scripts/tests/test_check_erc_reports.py` | ✓ | | |
 | `scripts/tests/test_phase2b_trigger.py` | ✓ | | |
 | `scripts/tests/test_release_phase2b_gate.py` | ✓ | | |

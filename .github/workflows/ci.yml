@@ -86,6 +86,15 @@ jobs:
         shell: bash
         run: python scripts/check_gallery_regression.py
 
+      - name: Test-plan staleness gate (TASK-091)
+        # Fails when a tests/ file has no reference in the test plan
+        # (docs/developers/testing/), or when the plan references a test
+        # file that no longer exists. CI-only — walking every test file
+        # is too slow for the pre-commit budget.
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_test_plan_staleness.py
+
       - name: Catalog validation (offline)
         # Format + enforced_by + heuristic disclaimer + category-lint.
         # Online URL reachability runs nightly via the separate
