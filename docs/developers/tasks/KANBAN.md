@@ -28,12 +28,11 @@ kanban
 
 ## post-epic-006-doc-audit
 
-_⚪ 4 open · 🔵 0 active · 🟡 0 paused · 🟢 4 closed · █████░░░░░ 50%_
+_⚪ 3 open · 🔵 0 active · 🟡 0 paused · 🟢 5 closed · ██████░░░░ 62%_
 
 ```mermaid
 kanban
   Open
-    TASK_106["Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery"]
     TASK_107["Test-plan alignment — audit how it's tested sections against EPIC-011's plan"]
     TASK_108["Annotate the archived IDEA-001 dossier with what shipped vs what didn't"]
     TASK_109["Final pass on README.md and top-level entry-point docs"]
@@ -44,6 +43,7 @@ kanban
     TASK_103["Drift sweep — identify stale claims, retired scripts, and broken refs"]
     TASK_104["Voice unification — pick canonical voice and rewrite earlier docs forward"]
     TASK_105["Cross-reference audit — internal links, TASK/EPIC/IDEA refs, code-path mentions"]
+    TASK_106["Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery"]
 ```
 
 ## Other

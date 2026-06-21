@@ -108,3 +108,8 @@ Tasks are listed automatically in the Task Epics section of
   chiefly the `src/circuitsmith/` relocation aftermath in the circuit skill
   docs (`circuit-yaml.md`, `layout.md`) plus the user-doc links. Proceeding
   to TASK-106 / TASK-107.
+- 2026-06-21 — TASK-106 closed (effort actual Small). Removed the stale
+  EPIC-012 status notes in `users/README.md` and `tutorial/README.md`; added
+  tutorial/gallery "See also" pointers to the three skill reference docs and
+  a canonical-term glossary to `ARCHITECTURE.md`. Tutorial terminology
+  scanned consistent with the reference docs — no disagreements to reconcile.

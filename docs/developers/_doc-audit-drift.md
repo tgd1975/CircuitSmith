@@ -136,6 +136,12 @@ So the rewrite does not "fix" these by mistake:
   (tutorial task-folder labels) is accepted by the gate's lifecycle-folder
   normalisation — housekeep moves task files without rewriting inbound
   links, so the file existing by ID is what's enforced.
+- **2026-06-21 — TASK-106** (this commit). Resolved **D19** (users/README
+  status note) and **D22** (tutorial/README placeholder block) — both
+  EPIC-012 statuses are now closed. Added tutorial/gallery "See also"
+  pointers to `circuit-yaml.md`, `layout.md`, `erc-checks.md`, and a
+  canonical-term glossary to `ARCHITECTURE.md`. No terminology
+  disagreements found (the tutorial steps scanned clean against the
+  reference docs).
 - **Still open:** D10–D15 → TASK-107 (TESTING reconcile + stale imports);
-  D19, D22 → TASK-106 (tutorial/gallery status notes); D27, D28 → TASK-109
-  (README full rewrite).
+  D27, D28 → TASK-109 (README full rewrite).

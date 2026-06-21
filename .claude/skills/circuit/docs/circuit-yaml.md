@@ -3,6 +3,9 @@
 > Audience: contributors authoring circuits. Companion design doc:
 > [`docs/developers/ideas/archived/idea-001.yaml-format.md`](../../../../docs/developers/ideas/archived/idea-001.yaml-format.md).
 > Layout engine consumer: [`layout.md`](layout.md).
+> **New to CircuitSmith?** The [tutorial](../../../../docs/users/tutorial/)
+> and [example gallery](../../../../docs/users/examples/) show `.circuit.yml`
+> end-to-end; this is the reference.
 
 A `.circuit.yml` describes a circuit declaratively in three top-level
 sections: `meta`, `components`, `connections`. The renderer

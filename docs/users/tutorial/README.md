@@ -39,10 +39,3 @@ know what each step covers.
     pipeline fits together.
   - [`erc-checks.md`](../../../.claude/skills/circuit/docs/erc-checks.md) — what each
     ERC check enforces.
-
-> Status: tutorial step content is filled in across
-> [TASK-094](../../developers/tasks/open/task-094-tutorial-steps-1-3-minimal-and-fan-out.md)
-> (steps 1-3) and
-> [TASK-095](../../developers/tasks/open/task-095-tutorial-steps-4-6-erc-bom-iteration.md)
-> (steps 4-6) of EPIC-012. Until those land, the step files are
-> placeholders.

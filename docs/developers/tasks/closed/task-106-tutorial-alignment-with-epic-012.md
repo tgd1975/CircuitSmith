@@ -1,9 +1,11 @@
 ---
 id: TASK-106
 title: Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
 epic: post-epic-006-doc-audit
@@ -47,14 +49,14 @@ terminology and behaviour claims are stable. In practice: TASK-093
 
 ## Acceptance Criteria
 
-- [ ] Every reference doc has been spot-checked against the
+- [x] Every reference doc has been spot-checked against the
       relevant tutorial step or gallery example.
-- [ ] Disagreements resolved in the reference doc (or filed as
+- [x] Disagreements resolved in the reference doc (or filed as
       follow-up if the tutorial needs adjustment).
-- [ ] Reference docs (`circuit-yaml.md`, `layout.md`,
+- [x] Reference docs (`circuit-yaml.md`, `layout.md`,
       `erc-checks.md`) gain a "See also" pointer to the tutorial
       / gallery near the top.
-- [ ] Terminology consistent: a glossary entry in
+- [x] Terminology consistent: a glossary entry in
       `docs/developers/ARCHITECTURE.md` (or sibling) captures the
       canonical terms.
 

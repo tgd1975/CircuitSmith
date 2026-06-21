@@ -192,6 +192,22 @@ escalations justify the placer. The trigger is evidence-driven, not
 calendar-driven — see [ADR-0008](adr/0008-phase-2b-trigger-on-evidence.md)
 and [TASK-058](tasks/open/task-058-implement-check-phase2b-trigger.md).
 
+## Glossary
+
+Canonical terms — the tutorial, reference docs, and code use these
+consistently:
+
+| Term | Meaning |
+|---|---|
+| **net** | An electrical node: the set of pins that share a connection. Defined by the `connections:` block. |
+| **component** | A placed part (resistor, LED, MCU, …) resolved against a profile in `components/`. |
+| **pin** | A named terminal on a component, resolved against the component's profile. |
+| **slot** | A `{region, index}` placement position; the layout kernel assigns one per component (ADR-0001). |
+| **region** | A named placement zone (e.g. `mcu-center`, `right-column`). |
+| **sub-block** | A reusable group of components + connections, instantiated by reference (EPIC-014). |
+| **NetGraph** | The typed graph shared by ERC, layout, and netlist export (ADR-0003). |
+| **ERC** | Electrical Rule Check: structural (S*) + electrical (E*) checks run strictly pre-layout. |
+
 ## Where to go next
 
 | You want… | Go to |

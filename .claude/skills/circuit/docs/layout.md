@@ -1,5 +1,9 @@
 # Layout engine — user guide
 
+> **New to CircuitSmith?** The [tutorial](../../../../docs/users/tutorial/)
+> and [example gallery](../../../../docs/users/examples/) show the layout in
+> action; this is the reference.
+>
 > Audience: contributors authoring `.circuit.yml` files and reading the
 > rendered SVG / `meta.yml` output. For design rationale and rejected
 > alternatives, see the companion concept doc at
