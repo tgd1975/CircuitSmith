@@ -89,3 +89,10 @@ Tasks are listed automatically in the Task Epics section of
   fixture-coverage table. That table is the epic's sharpest output:
   S1, E6, E8 have no triggering fixture and E4 only a predicate-path
   test — the most actionable TASK-090 candidates.
+- 2026-06-21 — TASK-088 closed (effort actual Medium). Authored
+  `testing/exporters.md` (BOM/netlist + round-trip + PartsLedger as a
+  known manual step), `testing/skill-orchestration.md` (the agent-prompt
+  out-of-scope vs post-processing in-scope boundary), and
+  `testing/ci-gates.md` (a 15-row gate catalogue with failure mode +
+  bypass per gate). All eight chapters are now filled — TASK-089 (matrix)
+  is unblocked.

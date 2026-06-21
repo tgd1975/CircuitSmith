@@ -48,12 +48,11 @@ kanban
 
 ## test-plan-and-coverage
 
-_⚪ 4 open · 🔵 0 active · 🟡 0 paused · 🟢 5 closed · ██████░░░░ 56%_
+_⚪ 3 open · 🔵 0 active · 🟡 0 paused · 🟢 6 closed · ███████░░░ 67%_
 
 ```mermaid
 kanban
   Open
-    TASK_088["Author the exporters, skill-orchestration, and CI-gates subsystem test plans"]
     TASK_089["Write the top-level coverage matrix with the PR-time/nightly/release axis"]
     TASK_090["File concrete follow-up tasks for every coverage gap exposed by the plan"]
     TASK_091["Add a CI staleness check that flags tests not referenced in the plan"]
@@ -65,4 +64,5 @@ kanban
     TASK_085["Author the schema and netgraph subsystem test plans"]
     TASK_086["Author the layout-kernel and Manhattan-router subsystem test plans"]
     TASK_087["Author the renderer and ERC-engine subsystem test plans"]
+    TASK_088["Author the exporters, skill-orchestration, and CI-gates subsystem test plans"]
 ```
