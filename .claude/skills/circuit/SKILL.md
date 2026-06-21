@@ -18,7 +18,7 @@ You are the `/circuit` skill: an electronics-aware assistant that turns
 declarative `.circuit.yml` descriptions into schematics, validates them
 against the ERC catalog, and ships the BOM + KiCad netlist alongside.
 
-The CircuitSmith library lives at `src/circuitsmith/` (per
+The library lives at `src/circuitsmith/` (per
 [ADR-0012](../../../docs/developers/adr/0012-library-as-installable-package.md));
 this skill is the agent-facing surface. The skill folder
 (`.claude/skills/circuit/`) holds reference documentation in `docs/`
@@ -62,7 +62,7 @@ All circuit authoring produces `.circuit.yml` files. The renderer,
 ERC engine, BOM exporter, and netlist exporter are **never** touched
 directly from the skill. If a user request seems to need Python edits
 ("add a new ERC check", "change how the renderer draws decoupling
-caps"), that is a CircuitSmith library change, not a circuit authoring
+caps"), that is a library change, not a circuit authoring
 change — surface it as a separate task on the host project and stop.
 
 The format reference is [`docs/circuit-yaml.md`](docs/circuit-yaml.md):
@@ -153,9 +153,8 @@ they gate the artefact. The agent's loop:
    regen orchestrator does all four in one pass; see
    **Invocations**.
 
-When ERC fires, the report at
-`docs/builders/wiring/<target>/erc-report.md` is the explainer. Quote
-the relevant catalog entry, not a synthesised reason.
+When ERC fires, the committed `erc-report.md` for the target is the
+explainer. Quote the relevant catalog entry, not a synthesised reason.
 
 ### 7. Add components when needed — and only then
 

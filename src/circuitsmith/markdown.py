@@ -217,14 +217,29 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Do not modify files; exit non-zero if any rewrite is needed.",
     )
+    parser.add_argument(
+        "--exclude",
+        nargs="*",
+        type=Path,
+        default=[],
+        metavar="DIR",
+        help="Directory subtrees to skip (e.g. archived design docs whose "
+             "```circuit blocks are illustrative, not rendered artefacts).",
+    )
     args = parser.parse_args(argv)
 
+    excludes = [e.resolve() for e in args.exclude]
     targets: list[Path] = []
     for p in args.paths:
         if p.is_dir():
             targets.extend(walk(p))
         elif p.is_file() and p.suffix == ".md":
             targets.append(p)
+    if excludes:
+        targets = [
+            t for t in targets
+            if not any(t.resolve().is_relative_to(e) for e in excludes)
+        ]
 
     any_drift = False
     any_fail = False

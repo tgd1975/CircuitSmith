@@ -164,6 +164,14 @@ first tag is cut.
   every day after the tutorial/gallery artefacts were committed, because
   the report header embeds `date.today()`. Added a date-independent
   regression test (`test_erc_report_date_only_diff_is_normalised`).
+- CI baseline restored: genericised the host-specific references
+  (`CircuitSmith`, `docs/builders/`) in the circuit skill docs (`SKILL.md`,
+  `docs/index.md`) that tripped `portability_lint.py` and masked the test
+  run; and gave `circuitsmith.markdown` an `--exclude` flag so the
+  ` ```circuit ` render check skips `docs/developers/ideas/archived/` (the
+  IDEA-001 dossier's illustrative blocks have no committed SVGs).
+  `generate-circuits.yml` passes the exclude on its rewrite and `--check`
+  steps.
 
 ### Tooling
 

@@ -114,6 +114,20 @@ def test_check_mode_exits_nonzero_when_block_unrewritten(tmp_path: Path, capsys)
     assert "MISSING" in captured.out
 
 
+def test_exclude_skips_blocks_under_excluded_dir(tmp_path: Path):
+    """--exclude DIR skips Markdown under that subtree (e.g. archived docs
+    whose ```circuit blocks are illustrative, not rendered artefacts)."""
+    body = _esp32_block_body()
+    archived = tmp_path / "archived"
+    archived.mkdir()
+    (archived / "frozen.md").write_text(_wrap_block(body))
+
+    # Without --exclude the unrendered block is flagged (exit 2, MISSING SVG).
+    assert main(["--check", str(tmp_path)]) == 2
+    # With --exclude on the archived subtree it is skipped → clean.
+    assert main(["--check", str(tmp_path), "--exclude", str(archived)]) == 0
+
+
 def test_check_mode_passes_after_rewrite(tmp_path: Path):
     body = _esp32_block_body()
     md_path = tmp_path / "guide.md"
