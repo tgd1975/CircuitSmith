@@ -171,7 +171,9 @@ first tag is cut.
   ` ```circuit ` render check skips `docs/developers/ideas/archived/` (the
   IDEA-001 dossier's illustrative blocks have no committed SVGs).
   `generate-circuits.yml` passes the exclude on its rewrite and `--check`
-  steps.
+  steps. Also set `pythonpath = ["."]` in the pytest config so bare
+  `pytest` (CI) resolves repo-root test imports (`from tests._sexp …`) the
+  way `python -m pytest` does locally.
 
 ### Tooling
 
