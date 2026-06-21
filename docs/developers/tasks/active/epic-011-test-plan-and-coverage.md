@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-13
 closed:
 assigned:
-branch: release/epic-011-test-plan-and-coverage
+branch: claude/wizardly-newton-alz23p
 ---
 
 Seeded by IDEA-003 (Detailed test plan for every part of CircuitSmith).
@@ -58,3 +58,13 @@ work because it can only happen *after* the plans expose the gaps.
 
 Tasks are listed automatically in the Task Epics section of
 `docs/developers/tasks/OVERVIEW.md` and in `EPICS.md` / `KANBAN.md`.
+
+## Implementation log
+
+- 2026-06-21 — TASK-083 closed (effort actual XS). Scaffolded
+  `docs/developers/testing/`: index (`README.md`) documenting the
+  one-file-per-subsystem convention, the chapter frontmatter shape, and
+  the matrix placeholder; nine per-subsystem chapter stubs; `_inventory.md`
+  referenced as the TASK-084 working artefact. Branch realigned from
+  `release/epic-011-test-plan-and-coverage` to
+  `claude/wizardly-newton-alz23p` for this session.

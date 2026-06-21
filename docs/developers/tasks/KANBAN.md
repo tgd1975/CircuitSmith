@@ -48,12 +48,11 @@ kanban
 
 ## test-plan-and-coverage
 
-_⚪ 9 open · 🔵 0 active · 🟡 0 paused · 🟢 0 closed · ░░░░░░░░░░ 0%_
+_⚪ 8 open · 🔵 0 active · 🟡 0 paused · 🟢 1 closed · █░░░░░░░░░ 11%_
 
 ```mermaid
 kanban
   Open
-    TASK_083["Scaffold docs/developers/testing/ directory and top-level index"]
     TASK_084["Inventory the existing test surface and tag every test by subsystem and layer"]
     TASK_085["Author the schema and netgraph subsystem test plans"]
     TASK_086["Author the layout-kernel and Manhattan-router subsystem test plans"]
@@ -65,4 +64,5 @@ kanban
   Active
   Paused
   Closed
+    TASK_083["Scaffold docs/developers/testing/ directory and top-level index"]
 ```

@@ -1,9 +1,11 @@
 ---
 id: TASK-083
 title: Scaffold docs/developers/testing/ directory and top-level index
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: XS (<30m)
 complexity: Junior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -35,13 +37,13 @@ placeholders**. Subsequent tasks fill those placeholders.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/testing/README.md` exists and links to placeholder
+- [x] `docs/developers/testing/README.md` exists and links to placeholder
       chapter files (one per subsystem).
-- [ ] Empty chapter files exist with frontmatter and an H1 only —
+- [x] Empty chapter files exist with frontmatter and an H1 only —
       `schema.md`, `netgraph.md`, `layout-kernel.md`, `router.md`,
       `renderer.md`, `erc-engine.md`, `exporters.md`,
       `skill-orchestration.md`, `ci-gates.md`.
-- [ ] Index documents the naming convention and the "one file per
+- [x] Index documents the naming convention and the "one file per
       subsystem" decision in a short prose paragraph.
 
 ## Test Plan
