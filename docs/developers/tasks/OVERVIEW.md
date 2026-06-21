@@ -4,54 +4,16 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 18** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 115** | **Total: 133** | █████████░ 86%
+⚪ **Open: 17** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 116** | **Total: 133** | █████████░ 87%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
 <!-- END HEADER -->
 
 <!-- BURNUP:START -->
-
 <a id="burn-up"></a>
 
-## Burn-up since v0.1.0
-
-<table><tr><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative tasks closed"
-    x-axis ["05-13", "05-14"]
-    line [1, 34]
-```
-
-</td><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative epics closed"
-    x-axis ["05-13", "05-14"]
-    line [0, 1]
-```
-
-</td><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative effort hours — green: estimate, blue: actual"
-    x-axis ["05-13", "05-14"]
-    line [5, 151.25]
-    line [5, 47.5]
-```
-
-</td></tr></table>
-
-_Legend: green line = estimate (midpoint hours from `effort:`); blue line = actual (midpoint hours from `effort_actual:`)._
-
-| Date | Tasks closed | Cum. tasks | Est. h | Cum. est. h | Actual h | Cum. actual h | Epics closed | Cum. epics |
-|------|-------------:|-----------:|-------:|------------:|---------:|--------------:|-------------:|-----------:|
-| 2026-05-13 | 1 | 1 | 5 | 5 | 5 | 5 | 0 | 0 |
-| 2026-05-14 | 33 | 34 | 146.2 | 151.2 | 42.5 | 47.5 | 1 | 1 |
+_No git tag found yet — burn-up chart needs a release tag to anchor on._
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -69,7 +31,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-083](open/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) | Junior | ⚪ open |
 | [TASK-084](open/task-084-inventory-existing-test-surface.md) | Inventory the existing test surface and tag every test by subsystem and layer | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-085](open/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
 | [TASK-086](open/task-086-document-layout-and-router-test-plan.md) | Author the layout-kernel and Manhattan-router subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
@@ -172,6 +133,7 @@ _No paused tasks._
 | [TASK-080](closed/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) |
 | [TASK-081](closed/task-081-author-release-workflow-scaffolding.md) | Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep) | Medium (2-8h) |
 | [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
+| [TASK-083](closed/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) |
 | [TASK-092](closed/task-092-decide-docs-users-structure.md) | Decide docs/users/ structure and update README pointer | Small (&lt;2h) |
 | [TASK-093](closed/task-093-scaffold-tutorial-and-examples-directories.md) | Scaffold docs/users/tutorial/ and docs/users/examples/ with indexes | Small (&lt;2h) |
 | [TASK-094](closed/task-094-tutorial-steps-1-3-minimal-and-fan-out.md) | Tutorial — steps 1-3 (minimal circuit, fan-out, sub-blocks) | Medium (2-8h) |
