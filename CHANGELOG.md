@@ -188,8 +188,9 @@ first tag is cut.
   separator (CRLF on Windows) — so the regenerated
   `layout.yml`/`meta.yml`/`erc-report.md` no longer drift to CRLF and fail
   the gallery gate's byte comparison; the cross-page render test reads SVGs
-  with `encoding="utf-8"` so the arrow glyphs survive a cp1252 default.
-  `check_circuit_schema.py
+  with `encoding="utf-8"` so the arrow glyphs survive a cp1252 default, and
+  the gallery date-normalisation test writes its fixture with an explicit LF
+  newline. `check_circuit_schema.py
   --all` now skips deliberately-invalid `invalid*` fixtures under
   `tests/fixtures/schema_check/` (they exist to exercise the validator's
   rejection path, so validating them always "failed" and wedged CI).

@@ -99,7 +99,10 @@ def test_erc_report_date_only_diff_is_normalised(tmp_path: Path) -> None:
         flags=re.MULTILINE,
     )
     assert mutated != text, "sample report header did not match the expected date pattern"
-    report.write_text(mutated, encoding="utf-8")
+    # newline="\n": on Windows write_text would otherwise translate to CRLF,
+    # but git checks the committed report out as LF (.gitattributes) and the
+    # renderer emits LF — the gate byte-compares, so the fixture must be LF too.
+    report.write_text(mutated, encoding="utf-8", newline="\n")
     result = _run(repo)
     assert result.returncode == 0, (
         f"date-only diff should be normalised, got exit {result.returncode}: "
