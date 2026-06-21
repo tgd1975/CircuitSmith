@@ -2,20 +2,14 @@
 
 > *CircuitSmith forges schematics. [PartsLedger](https://github.com/tgd1975/PartsLedger) keeps the record CircuitSmith reads.*
 
-**⚠️ Concept stage.** Everything below describes the *target* state of the
-project. None of the pipeline, skill, or component library exists yet — they
-are work items in [EPIC-001..006](docs/developers/tasks/EPICS.md). Phase 0
-(EPIC-007) bootstraps the Python project config; Phase 1 (EPIC-001) produces
-the first component profile. Read this README as a design preview, not a
-manual.
-
 CircuitSmith generates **circuit schematics from declarative YAML**, validates
 them against electrical rules, and exports both a bill of materials and a
 KiCad-compatible netlist — all driven by a Claude Code skill so that
 contributors describe what they want in natural language rather than writing
 Schemdraw code.
 
-**Status:** concept stage. The full design dossier was copied from
+**Status:** shipped at v0.1.0, published as the `circuitsmith` package. The
+original design dossier was copied from
 [AwesomeStudioPedal](https://github.com/tgd1975/AwesomeStudioPedal)'s IDEA-027
 companion files, archived on conversion to EPIC-001..006, and now lives in
 [docs/developers/ideas/archived/idea-001-circuit-skill.md](docs/developers/ideas/archived/idea-001-circuit-skill.md).
@@ -23,7 +17,7 @@ Predecessor artefacts the dossier references —
 [`scripts/generate-schematic.py`](https://github.com/tgd1975/AwesomeStudioPedal/blob/main/scripts/generate-schematic.py),
 [`data/config.json`](https://github.com/tgd1975/AwesomeStudioPedal/blob/main/data/config.json),
 [`docs/builders/wiring/`](https://github.com/tgd1975/AwesomeStudioPedal/tree/main/docs/builders/wiring) —
-live in that repo, not here. Implementation has not started.
+live in that repo, not here.
 
 ## Why
 
@@ -67,15 +61,11 @@ ERC runs **strictly pre-layout**: a malformed circuit never reaches the router.
 
 ## Architecture
 
-> **Status:** the architecture below describes the *target* state.
-> None of the product code exists yet — Phase 1 (EPIC-001) starts the
-> scaffolding. Today the repo holds only the design dossier and the
-> task-system infra.
-
-Everything ships inside `.claude/skills/circuit/` — a self-contained,
-path-agnostic Claude Code skill. The same directory is the library that
-the CI script imports, so there is no duplication between "the skill" and
-"the project's generator".
+The library lives at [`src/circuitsmith/`](src/circuitsmith/) — published as
+the `circuitsmith` Python package ([ADR-0012](docs/developers/adr/0012-library-as-installable-package.md)).
+The agent-facing skill at [`.claude/skills/circuit/`](.claude/skills/circuit/)
+(SKILL.md + docs) delegates to it, so there is no duplication between "the
+skill" and "the library".
 
 Key decoupling: `bom_exporter.py` walks `components` directly;
 `netlist_exporter.py` walks `NetGraph`. They never reach into each other.

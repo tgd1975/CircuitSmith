@@ -88,3 +88,13 @@ Tasks are listed automatically in the Task Epics section of
   Main-HIL. Autonomous progress ends here. `_doc-audit-hil-plan.md` lays out
   the canonical-voice decision, the README-scope decision, the per-task
   plan, and the batched review tempo for the maintainer to drive 104–109.
+- 2026-06-21 — Maintainer gave the three gating decisions (voice **accepted**;
+  README **full rewrite** at TASK-109; `TESTING.md` **stub-and-point** at
+  TASK-107). TASK-104 closed (effort actual Small — the inventory showed most
+  docs already canonical, so the voice pass touched only `ARCHITECTURE.md`
+  plus a handful of concept-stage drift fixes, far under the Large estimate).
+  Added the canonical-voice note to `CODING_STANDARDS.md`; removed the
+  ARCHITECTURE status block and corrected its ERC ranges; fixed the
+  concept-stage openers in `CONTRIBUTING.md`, `CLAUDE.md`, and `README.md`
+  (README interim — full rewrite deferred to TASK-109). Drafts are on-branch
+  for the maintainer's cold-read at review/merge. Proceeding to TASK-105.

@@ -103,6 +103,26 @@ CHANGELOG rhythm) lives in
 - Topic branches squash-merge to `main`. CHANGELOG `[Unreleased]` is
   updated as part of the same squash.
 
+## Documentation voice
+
+The canonical voice for prose docs (`README`, `docs/developers/*.md`, the
+testing chapters, skill docs). The exemplars are the
+[`docs/developers/testing/`](testing/) chapters, [`AUTONOMY.md`](AUTONOMY.md),
+and [`COMMIT_POLICY.md`](COMMIT_POLICY.md). Pre-EPIC-001 docs that don't
+match are drift — bring them forward (the EPIC-013 audit tracks this).
+
+- **Present-tense, declarative** for how the system behaves — "the renderer
+  emits an SVG", not "the renderer will emit one". Imperative for
+  instructions to the reader.
+- **Terse and concrete.** Lead with the rule; put the *why* in a trailing
+  clause or parenthetical.
+- **Cite, don't describe.** Reference tasks / ADRs / code paths inline
+  (`TASK-091`, `ADR-0012`, `src/circuitsmith/netgraph.py`).
+- **No rot.** No marketing language, no aspirational "we plan to" for
+  features that have shipped, no status banners that go stale.
+- **Readable rhythm.** Em-dashes for asides; short paragraphs over walls of
+  prose.
+
 ## When the standards don't cover your case
 
 Pick the most defensible default and continue. If the choice is

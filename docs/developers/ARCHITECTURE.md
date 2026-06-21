@@ -5,11 +5,8 @@ follow the ADR links; for the original design depth, the
 [IDEA-001 dossier](ideas/archived/idea-001-circuit-skill.md) and its
 companion files remain the source of record.
 
-> **Status:** the modules below describe the *target* architecture.
-> None of the product code exists yet — implementation begins with
-> EPIC-001 (Phase 1: component library + schema). The README's
-> `## Architecture` section summarises this doc; the depth lives
-> here.
+The README's `## Architecture` section summarises this doc; the depth
+lives here.
 
 ## What it produces
 
@@ -28,7 +25,7 @@ flowchart LR
     YAML[".circuit.yml"]
     SCHEMA["schema validation<br/><sub>rejects unknown<br/>components / pins</sub>"]
     NETGRAPH["NetGraph<br/>build"]
-    ERC["ERC<br/><sub>S1–S3 + E1–E10</sub>"]
+    ERC["ERC<br/><sub>S1–S7 + E1–E22</sub>"]
     LAYOUT["layout kernel<br/><sub>canonical slots</sub>"]
     ROUTER["Manhattan<br/>router"]
     RENDER["Schemdraw<br/>render"]
@@ -112,7 +109,7 @@ by [TASK-050](tasks/open/task-050-boundary-import-contract-test.md):
 | Skill prompt | `.claude/skills/circuit/SKILL.md` | [0006](adr/0006-rule-catalog-authoritative.md), [0012](adr/0012-library-as-installable-package.md) | — | LLM-facing instructions and invocation contract. |
 | `renderer` | `src/circuitsmith/renderer.py` | [0002](adr/0002-ai-only-at-authoring-time.md), [0012](adr/0012-library-as-installable-package.md) | — | YAML → Schemdraw → SVG; consumes layout.yml, never the AI placer. |
 | `netgraph` | `src/circuitsmith/netgraph.py` | [0003](adr/0003-netgraph-shared-contract.md) | [co-netgraph](../../.claude/skills/co-netgraph/) | The typed net graph shared by ERC, layout, and netlist export. |
-| `erc_engine` | `src/circuitsmith/erc_engine.py` | [0005](adr/0005-erc-pre-layout.md), [0006](adr/0006-rule-catalog-authoritative.md) | [co-erc-engine](../../.claude/skills/co-erc-engine/) | Structural S1–S3 + electrical E1–E10 checks against `NetGraph`. |
+| `erc_engine` | `src/circuitsmith/erc_engine.py` | [0005](adr/0005-erc-pre-layout.md), [0006](adr/0006-rule-catalog-authoritative.md) | [co-erc-engine](../../.claude/skills/co-erc-engine/) | Structural S1–S7 + electrical E1–E22 checks against `NetGraph`. |
 | `bom_exporter` | `src/circuitsmith/export/bom_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `components`; emits BOM markdown + CSV. |
 | `netlist_exporter` | `src/circuitsmith/export/netlist_exporter.py` | [0004](adr/0004-exporter-decoupling.md) | — | Walks `NetGraph`; emits KiCad `.net`. |
 | `layout` (CLI) | `src/circuitsmith/layout.py` | [0001](adr/0001-slots-not-coordinates.md) | — | CLI entry for `/circuit layout`; orchestrates kernel + router. |

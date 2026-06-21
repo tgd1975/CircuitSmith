@@ -59,7 +59,7 @@ Freshness values: `pre-epic-001`, `mid-epic` (EPIC-001..005), `epic-006`,
 
 | Path | Audience | Freshness | Lines | Era | Orphan? | Dup-coverage-of | Rewrite? |
 |---|---|---|---|---|---|---|---|
-| `ARCHITECTURE.md` | developer | **pre-epic-001** ³ | 209 | concept | no | — | **YES — TASK-104** |
+| `ARCHITECTURE.md` | developer | post-epic-006 | 209 | EPIC-006 | no | — | ✅ TASK-104 |
 | `TESTING.md` | developer | **mid-epic** | 183 | EPIC-008 | no | **`testing/` dir (EPIC-011)** | **YES — reconcile/stub, TASK-107** |
 | `CI_PIPELINE.md` | developer | post-epic-006 | 140 | EPIC-009 | no | — | clean |
 | `DEVELOPMENT_SETUP.md` | contributor | post-epic-006 | 201 | EPIC-009 | no | — | clean |
@@ -98,8 +98,8 @@ point at `testing/README.md` after reconciliation.
 
 | Path | Audience | Freshness | Lines | Orphan? | Rewrite? |
 |---|---|---|---|---|---|
-| `builders/wiring/esp32/README.md` | builder | mid-epic | 19 | candidate | low priority — verify links |
-| `builders/wiring/nrf52840/README.md` | builder | mid-epic | 19 | candidate | low priority — verify links |
+| `builders/wiring/esp32/README.md` | builder | mid-epic | 19 | candidate | skipped — clean (post-epic-006, agent-verified) |
+| `builders/wiring/nrf52840/README.md` | builder | mid-epic | 19 | candidate | skipped — clean (post-epic-006, agent-verified) |
 
 ### Circuit skill docs (`.claude/skills/circuit/`)
 

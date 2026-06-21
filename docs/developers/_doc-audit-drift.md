@@ -110,3 +110,20 @@ So the rewrite does not "fix" these by mistake:
   (voice). D10–D15 → TASK-107 (test-plan alignment). D19, D22 → TASK-106
   (tutorial alignment). D8, D16–D18, D20–D21, D23–D25 → TASK-105 (cross-ref
   audit + `check_doc_references.py`).
+
+## Resolution log
+
+- **2026-06-21 — TASK-104** (this commit). Resolved **D6** (CONTRIBUTING
+  opener), **D7** (CLAUDE opener), **D9** (ARCHITECTURE status block), and
+  **D1–D5** (README concept-stage banners, status paragraph, and the
+  `.claude/skills/circuit` "ships everything" claim — *interim* de-lying so
+  the front page is truthful; the full blank-page README rewrite is
+  TASK-109). Fixed in passing: ARCHITECTURE's stale ERC ranges
+  `S1–S3 + E1–E10` → `S1–S7 + E1–E22` (**D26**, newly found). Canonical
+  voice note added to `CODING_STANDARDS.md` (§ Documentation voice).
+- **Newly found, still open:** **D27** — `README.md` `## Phase plan` section
+  is still framed as unbuilt ("before EPIC-001 produces real Python code");
+  **D28** — `README.md:179` license reads "MIT (planned)". Both fold into
+  TASK-109's full rewrite.
+- **Still open:** D8, D10–D25 → TASK-105 / TASK-106 / TASK-107 per the
+  hand-off above.

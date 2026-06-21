@@ -8,7 +8,7 @@ the schematic-design sibling of [PartsLedger](https://github.com/tgd1975/PartsLe
 [`IDEA-027`](https://github.com/tgd1975/AwesomeStudioPedal/blob/main/docs/developers/ideas/open/idea-027-circuit-skill.md)
 in [AwesomeStudioPedal](https://github.com/tgd1975/AwesomeStudioPedal).
 
-The repo is currently at concept stage — the inherited dossier (`idea-001.*`)
+CircuitSmith has shipped through v0.1.0. The inherited dossier (`idea-001.*`)
 lives in [`docs/developers/ideas/archived/`](docs/developers/ideas/archived/);
 it was copied from AwesomeStudioPedal's IDEA-027 companion files and archived
 on conversion to EPIC-001..006. Predecessor artefacts the dossier references —
