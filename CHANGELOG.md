@@ -155,6 +155,16 @@ first tag is cut.
   (E19–E22, Phase 5), all five gallery entries rendered
   (Phase 6), and a docs-only proofreading pass.
 
+### Fixed
+
+- Gallery regression gate (`scripts/check_gallery_regression.py`) now
+  normalises the auto-stamped ERC-report header date before diffing,
+  mirroring the sibling builder gate `check_erc_reports.py`. Previously
+  the gate — and the `test_clean_gallery_exits_zero` test — went red on
+  every day after the tutorial/gallery artefacts were committed, because
+  the report header embeds `date.today()`. Added a date-independent
+  regression test (`test_erc_report_date_only_diff_is_normalised`).
+
 ### Tooling
 
 - Elevated IDEA-003/004/007 to EPIC-011 (test plan, 9 tasks),

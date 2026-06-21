@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -151,6 +152,19 @@ def _normalise_meta(text: str) -> str:
     return "".join(out)
 
 
+# The ERC report header carries an auto-stamped generation date
+# (`erc_report.render_report`). Normalise it before diffing so the
+# regression gate is stable across days — mirrors the sibling gate
+# `check_erc_reports.py:_normalise_dates`.
+_ERC_DATE_LINE_RE = re.compile(
+    r"^(# ERC Report — .* — )\d{4}-\d{2}-\d{2}$", re.MULTILINE
+)
+
+
+def _normalise_erc_dates(text: str) -> str:
+    return _ERC_DATE_LINE_RE.sub(r"\1<DATE>", text)
+
+
 def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
     """Render circuit and compare against committed artefacts.
 
@@ -254,6 +268,14 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 # changing the circuit content.
                 committed = _normalise_meta(committed)
                 regenerated = _normalise_meta(regenerated)
+                if committed == regenerated:
+                    continue
+            elif dst.name == "erc-report.md" or dst.name.endswith(".erc-report.md"):
+                # See `_normalise_erc_dates`: the report header carries
+                # an auto-stamped generation date that drifts per-day
+                # without reflecting a content change.
+                committed = _normalise_erc_dates(committed)
+                regenerated = _normalise_erc_dates(regenerated)
                 if committed == regenerated:
                     continue
             diffs.append(_diff(str(dst.relative_to(REPO_ROOT)), committed, regenerated))
