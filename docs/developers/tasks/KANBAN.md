@@ -48,12 +48,11 @@ kanban
 
 ## test-plan-and-coverage
 
-_⚪ 6 open · 🔵 0 active · 🟡 0 paused · 🟢 3 closed · ███░░░░░░░ 33%_
+_⚪ 5 open · 🔵 0 active · 🟡 0 paused · 🟢 4 closed · ████░░░░░░ 44%_
 
 ```mermaid
 kanban
   Open
-    TASK_086["Author the layout-kernel and Manhattan-router subsystem test plans"]
     TASK_087["Author the renderer and ERC-engine subsystem test plans"]
     TASK_088["Author the exporters, skill-orchestration, and CI-gates subsystem test plans"]
     TASK_089["Write the top-level coverage matrix with the PR-time/nightly/release axis"]
@@ -65,4 +64,5 @@ kanban
     TASK_083["Scaffold docs/developers/testing/ directory and top-level index"]
     TASK_084["Inventory the existing test surface and tag every test by subsystem and layer"]
     TASK_085["Author the schema and netgraph subsystem test plans"]
+    TASK_086["Author the layout-kernel and Manhattan-router subsystem test plans"]
 ```

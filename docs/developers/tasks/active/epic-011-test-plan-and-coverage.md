@@ -77,3 +77,9 @@ Tasks are listed automatically in the Task Epics section of
   8-section structure. Surfaced two real gaps for TASK-090: NetGraph has
   no property-based connection-form-equivalence test, and `S6`
   (slash-form sub-block name collision) has no triggering fixture.
+- 2026-06-21 — TASK-086 closed (effort actual Medium). Authored
+  `testing/layout-kernel.md` (kernel + rubric v0.1/v1 + AI-placer
+  convergence, the seven EPIC-014 canonical-rule tests) and
+  `testing/router.md`. Headline gap: the router has no property-based
+  routing tests despite IDEA-003 anticipating them; the real
+  AnthropicClient adapter is also uncovered by design (ADR-0002).
