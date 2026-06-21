@@ -1,9 +1,11 @@
 ---
 id: TASK-084
 title: Inventory the existing test surface and tag every test by subsystem and layer
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -38,10 +40,10 @@ around as a working document is cheap and makes the audit re-runnable.
 
 ## Acceptance Criteria
 
-- [ ] `_inventory.md` exists and lists every test file currently in
+- [x] `_inventory.md` exists and lists every test file currently in
       the repo.
-- [ ] Each entry has at least one subsystem tag and one layer tag.
-- [ ] PR-time vs nightly vs release classification is filled in for
+- [x] Each entry has at least one subsystem tag and one layer tag.
+- [x] PR-time vs nightly vs release classification is filled in for
       every entry (defer to "PR-time" unless the test is gated behind
       a CI variable or fixture marker).
 

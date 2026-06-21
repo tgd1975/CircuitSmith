@@ -6,7 +6,7 @@ status: open
 opened: 2026-05-13
 closed:
 assigned:
-branch: claude/wizardly-newton-alz23p
+branch: release/epic-011-test-plan-and-coverage
 ---
 
 Seeded by IDEA-003 (Detailed test plan for every part of CircuitSmith).
@@ -65,6 +65,10 @@ Tasks are listed automatically in the Task Epics section of
   `docs/developers/testing/`: index (`README.md`) documenting the
   one-file-per-subsystem convention, the chapter frontmatter shape, and
   the matrix placeholder; nine per-subsystem chapter stubs; `_inventory.md`
-  referenced as the TASK-084 working artefact. Branch realigned from
-  `release/epic-011-test-plan-and-coverage` to
-  `claude/wizardly-newton-alz23p` for this session.
+  referenced as the TASK-084 working artefact.
+- 2026-06-21 — TASK-084 closed (effort actual Small). Authored
+  `docs/developers/testing/_inventory.md`: all 59 test files (46
+  product-code, 13 tooling) tagged by subsystem, layer, and cadence from their
+  module docstrings. Observations flag the missing nightly/release tier
+  and the thin `router` / `skill-orchestration` coverage as input to
+  TASK-089/090.
