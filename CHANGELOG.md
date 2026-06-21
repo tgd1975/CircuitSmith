@@ -11,6 +11,15 @@ first tag is cut.
 
 ### Added
 
+- **Test-coverage follow-ups from EPIC-011** (TASK-134, TASK-135).
+  Triggering fixtures for the previously-untriggered ERC/schema checks
+  (S1, S6, E4, E6, E8) — which surfaced that S1/S6/E6 are dormant on the
+  shipped library (an E6 profile-`kind`/pin-`type` mismatch and an S6
+  schema↔validator slash-pattern inconsistency, documented in the
+  chapters). Plus Hypothesis property tests for the router (segment
+  orthogonality, determinism, net-order invariance) and NetGraph
+  `pins`/`path`/`bus` form-equivalence. Adds the `hypothesis` dev
+  dependency.
 - **EPIC-011 — test plan and coverage matrix** closed (9 tasks).
   New `docs/developers/testing/`: an index + coverage matrix (59 test
   files mapped to subsystem / layer / PR-nightly-release cadence) and

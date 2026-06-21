@@ -18,6 +18,7 @@ from ruamel.yaml import YAML
 
 from circuitsmith.erc_engine import CHECK_TABLE, Finding, run
 from circuitsmith.netgraph import NetGraph
+from circuitsmith.schema.registry import Profile, load_profiles
 
 
 # ── Test scaffolding ────────────────────────────────────────────────────────
@@ -125,6 +126,53 @@ def test_S3_fires_on_duplicate_net_name() -> None:
     findings = _run(circuit)
     s3 = [f for f in findings if f.check == "S3"]
     assert s3 and s3[0].severity == "warning"
+
+
+def test_S1_fires_on_unconnected_required_pin() -> None:
+    """A profile pin marked `required: True` that lands in no net fires S1.
+
+    TASK-134: no day-one shipped profile carries `required:` on any pin, so
+    S1 has no triggering fixture against the stock library — it is only
+    *avoided* by the other structural fixtures. We synthesise a minimal
+    component profile with one required pin, wire only its *other* pin, and
+    pass it via the `run(profiles=…)` override so `_check_S1` sees a required
+    pin absent from `pin_index`. The component sits on an otherwise-clean
+    ESP32 circuit; S1 is the only structural error expected.
+    """
+    profiles = dict(load_profiles())
+    profiles["test/required_pin_widget"] = Profile(
+        type="test/required_pin_widget",
+        file="test",
+        name="required_pin_widget",
+        pins=frozenset({"A", "B"}),
+        category="ic",
+        pins_detail={
+            # A is required but deliberately left unconnected below → S1.
+            "A": {"side": "left",  "type": "GPIO", "direction": "bidir",
+                  "required": True},
+            "B": {"side": "right", "type": "GPIO", "direction": "bidir"},
+        },
+        metadata={"kind": "ic"},
+    )
+    circuit = {
+        "meta": {"title": "tst", "target": "esp32"},
+        "components": {
+            "U1": {"type": "mcu/esp32"},
+            "X1": {"type": "test/required_pin_widget"},
+        },
+        "connections": [
+            # Only X1.B is wired; X1.A (required) is connected to no net.
+            {"net": "SIG", "pins": ["U1.D13", "X1.B"]},
+            {"net": "GND", "pins": ["U1.GNDL", "U1.GNDR"]},
+            {"net": "VCC", "pins": ["U1.VIN", "U1.V33"]},
+        ],
+    }
+    graph = NetGraph.from_yaml_dict(circuit)
+    findings = run(graph, circuit, profiles=profiles)
+    assert any(
+        f.check == "S1" and f.ref == "X1" and f.pin == "A" and f.severity == "error"
+        for f in findings
+    ), f"expected an S1 error on X1.A; got: {findings}"
 
 
 def test_S_class_error_skips_E_class() -> None:
@@ -266,6 +314,48 @@ def test_E4_fires_with_led_cathode_driving_input_only() -> None:
     assert any(f.check == "S2" for f in findings)
 
 
+def test_E4_fires_clean_with_no_s_class_gate() -> None:
+    """E4 in isolation: INPUT_ONLY pin driven by an `out` pin, no S-class gate.
+
+    TASK-134: the sibling test above leaves D1.A dangling, so S2 fires and
+    gates the entire E-class run — E4 never reports. Here the LED anode is
+    wired through a legal current-limited *path* net (so E2 stays quiet) and
+    the BAD net carries `pull: firmware` (so E1 stays quiet on the
+    INPUT_ONLY pin). The circuit is structurally clean — no S1/S2/S3 — so
+    the E-class run proceeds and E4 is the only finding.
+
+    Mechanism: LED.K declares `direction: out` (the only shipped pin that
+    does); ESP32 D34 is `type: INPUT_ONLY`. Sharing a net trips
+    `_check_E4`'s `direction == "out"` predicate against the INPUT_ONLY pin.
+    """
+    circuit = {
+        "meta": {"title": "tst", "target": "esp32"},
+        "components": {
+            "U1": {"type": "mcu/esp32"},
+            "D1": {"type": "passives/led", "color": "red"},
+            "R1": {"type": "passives/resistor", "value": 330},
+        },
+        "connections": [
+            # K (direction: out) on the same net as D34 (INPUT_ONLY) → E4.
+            # pull: firmware keeps E1 from firing on the INPUT_ONLY input.
+            {"net": "BAD", "pins": ["D1.K", "U1.D34"], "pull": "firmware"},
+            # Anode wired through a proper current-limited path → no E2.
+            {"net": "ANODE", "path": ["U1.D25", "R1.1", "R1.2", "D1.A"]},
+            {"net": "GND", "pins": ["U1.GNDL", "U1.GNDR"]},
+            {"net": "VCC", "pins": ["U1.VIN", "U1.V33"]},
+        ],
+    }
+    findings = _run(circuit)
+    # No S-class error must gate the E-class run.
+    assert not any(
+        f.check.startswith("S") and f.severity == "error" for f in findings
+    ), f"S-class error would gate E4; got: {findings}"
+    assert any(
+        f.check == "E4" and f.net == "BAD" and f.pin == "D34"
+        for f in findings
+    ), f"expected E4 on U1.D34; got: {findings}"
+
+
 # ── Electrical: E5 strapping pin without pull ──────────────────────────────
 
 
@@ -289,6 +379,59 @@ def test_E5_fires_on_unpulled_strapping_pin_with_switch() -> None:
     assert any(f.check == "E5" for f in findings)
 
 
+# ── Electrical: E6 IC decoupling cap ───────────────────────────────────────
+
+
+def test_E6_fires_on_non_mcu_ic_without_decoupling_cap() -> None:
+    """A non-MCU IC with a POWER pin on a power rail with no cap fires E6.
+
+    TASK-134: `_check_E6` requires `_kind(profile) == "ic"` AND a pin with
+    `attrs.get("type") == "POWER"`. The shipped general-purpose IC profiles
+    do **not** qualify: `ic/555` has `kind: "timer"` and its supply pin is
+    `type: "POWER_INPUT"`; `ic/opamp_dual_supply` has `kind: "opamp"` with
+    `POWER_INPUT` rails. Neither matches the `kind == "ic"` +
+    `type == "POWER"` predicate, so E6 is dormant on the stock library.
+
+    We synthesise a minimal non-MCU IC (`kind: "ic"`, one `type: "POWER"`
+    pin) and place its VCC pin on the power rail with no capacitor anywhere
+    on that net. The ESP32 (the MCU) is excluded from E6 by the
+    `ref in mcu_refs` guard, so E6 fires only on the synthetic IC.
+    """
+    profiles = dict(load_profiles())
+    profiles["test/decoupled_ic"] = Profile(
+        type="test/decoupled_ic",
+        file="test",
+        name="decoupled_ic",
+        pins=frozenset({"VCC", "GND", "IO"}),
+        category="ic",
+        pins_detail={
+            "VCC": {"side": "top",    "type": "POWER",  "direction": "in"},
+            "GND": {"side": "bottom", "type": "GROUND", "direction": "in"},
+            "IO":  {"side": "left",   "type": "GPIO",   "direction": "bidir"},
+        },
+        metadata={"kind": "ic"},
+    )
+    circuit = {
+        "meta": {"title": "tst", "target": "esp32"},
+        "components": {
+            "U1": {"type": "mcu/esp32"},
+            "U2": {"type": "test/decoupled_ic"},
+        },
+        "connections": [
+            # U2.VCC sits on the power rail; no capacitor on the net → E6.
+            {"net": "VCC", "pins": ["U1.VIN", "U1.V33", "U2.VCC"]},
+            {"net": "GND", "pins": ["U1.GNDL", "U2.GND"]},
+            {"net": "SIG", "pins": ["U1.D13", "U2.IO"]},
+        ],
+    }
+    graph = NetGraph.from_yaml_dict(circuit)
+    findings = run(graph, circuit, profiles=profiles)
+    assert any(
+        f.check == "E6" and f.ref == "U2" and f.net == "VCC"
+        for f in findings
+    ), f"expected E6 on U2's VCC rail; got: {findings}"
+
+
 # ── Electrical: E7 I2C pull-up ─────────────────────────────────────────────
 
 
@@ -310,6 +453,68 @@ def test_E7_fires_on_i2c_net_without_pullup() -> None:
     }
     findings = _run(circuit)
     assert any(f.check == "E7" for f in findings)
+
+
+# ── Electrical: E8 LED current budget ──────────────────────────────────────
+
+
+def test_E8_fires_when_led_current_exceeds_total_budget() -> None:
+    """Summed LED path current over the MCU's `max_total_current_ma` fires E8.
+
+    TASK-134: `_check_E8` sums `(vcc - v_forward) / R * 1000` across every
+    LED path net and reports when the total exceeds the MCU profile's
+    `max_total_current_ma`. To keep the fixture minimal *and* isolate E8
+    (no per-GPIO E3 overcurrent co-firing), we synthesise an MCU profile
+    with a deliberately low total budget (20 mA) and a generous per-GPIO
+    budget (500 mA). Two LED paths at ~13.6 mA each (5.0 V, 220 Ω, red LED
+    Vf 2.0 V) total ~27.3 mA > 20 mA → E8, while each branch stays well
+    under the per-GPIO ceiling so E3 never fires.
+
+    A synthetic MCU is used rather than 17+ LEDs on the shipped ESP32
+    (200 mA budget) because lowering the budget keeps the circuit two-LED
+    small and the only finding E8.
+    """
+    profiles = dict(load_profiles())
+    profiles["test/low_budget_mcu"] = Profile(
+        type="test/low_budget_mcu",
+        file="test",
+        name="low_budget_mcu",
+        pins=frozenset({"IO1", "IO2", "VIN", "GND"}),
+        category="ic",
+        pins_detail={
+            "IO1": {"side": "left", "type": "GPIO",   "direction": "bidir"},
+            "IO2": {"side": "left", "type": "GPIO",   "direction": "bidir"},
+            "VIN": {"side": "left", "type": "POWER",  "direction": "in"},
+            "GND": {"side": "left", "type": "GROUND", "direction": "in"},
+        },
+        metadata={
+            "kind": "mcu",
+            "vcc_max": 5.0,
+            "max_gpio_current_ma": 500,   # generous → no per-GPIO E3
+            "max_total_current_ma": 20,   # tight → E8 fires with two LEDs
+        },
+    )
+    circuit = {
+        "meta": {"title": "tst", "target": "esp32"},
+        "components": {
+            "U1": {"type": "test/low_budget_mcu"},
+            "R1": {"type": "passives/resistor", "value": 220},
+            "R2": {"type": "passives/resistor", "value": 220},
+            "D1": {"type": "passives/led", "color": "red"},
+            "D2": {"type": "passives/led", "color": "red"},
+        },
+        "connections": [
+            {"net": "L1", "path": ["U1.IO1", "R1.1", "R1.2", "D1.A", "D1.K", "GND"]},
+            {"net": "L2", "path": ["U1.IO2", "R2.1", "R2.2", "D2.A", "D2.K", "GND"]},
+            {"net": "GND", "pins": ["U1.GND", "U1.VIN"]},
+        ],
+    }
+    graph = NetGraph.from_yaml_dict(circuit)
+    findings = run(graph, circuit, profiles=profiles)
+    e8 = [f for f in findings if f.check == "E8"]
+    assert e8 and e8[0].severity == "warning", (
+        f"expected an E8 warning; got: {findings}"
+    )
 
 
 # ── Electrical: E10 pin conflict ───────────────────────────────────────────

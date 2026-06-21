@@ -18,6 +18,7 @@ Test files covering this subsystem:
 
 ```pytest
 tests/test_router.py
+tests/layout/test_router_properties.py
 ```
 
 ## Inputs and outputs
@@ -63,15 +64,40 @@ coordinates, which would be brittle against placement tweaks.
 
 ## Property / fuzz tests
 
-**None — and this is the subsystem's notable gap.** IDEA-003 anticipated
-property tests over randomised netlists (the router is the natural home
-for them). Today every invariant is checked on a handful of
-hand-constructed layouts. The invariants a property suite *would*
-assert: every segment orthogonal, every net routable, determinism under
-input permutation. The properties deliberately **out of scope**:
-asymptotic optimality and aesthetic quality (the router makes no
-optimality claim). Filed as the headline TASK-090 candidate for this
-chapter.
+`tests/layout/test_router_properties.py` (TASK-135) closes what was this
+chapter's headline gap — IDEA-003 anticipated property tests over
+generated netlists, and they now exist. Rather than generate arbitrary
+circuits (almost never routable), the suite generates **variations of a
+known-good template**: an esp32 MCU plus a Hypothesis-chosen number (1–4)
+of `GPIO → resistor → LED → ground-pin` branches, with Hypothesis-varied
+resistor values, net names, and `connections` ordering. The layout and
+NetGraph are built exactly as the example-based `tests/test_router.py`
+does, so every generated case is valid by construction.
+
+Invariants asserted (PR-time, `max_examples=40`, `deadline=None`):
+
+- **Orthogonality** — every `Segment` of every routed wire is horizontal
+  or vertical.
+- **Determinism** — routing the same input twice yields byte-identical
+  geometry (segment lists, crossings, body-intersection counts).
+- **Net-order invariance** — shuffling the `connections` list yields
+  identical routed geometry, because the §9 contract sorts nets
+  alphabetically before routing.
+
+Deliberately **out of scope** (not asserted): asymptotic optimality,
+aesthetic quality, crossing counts (the router makes no optimality claim).
+
+**Scoping note discovered while writing the suite.** Net-order invariance
+holds only when no single net's *membership* depends on entry order. A
+path that terminates at a bare `GND` net-name token triggers the path-tail
+merge, and `NetGraph` appends the merged pin into `GND` in
+connection-declaration order — so reordering entries reorders `GND`'s
+membership and the router routes it as mirror-image geometry. That is the
+within-net-order effect (which is contract-correct, not an invariant)
+reached through a different door, not router non-determinism. The strategy
+sidesteps it by terminating each branch at the real `U1.GNDL` pin, keeping
+every net's membership order entry-order-independent. Permutation is
+therefore scoped to net order; within-net pin order is held fixed.
 
 ## Performance budget
 
@@ -89,10 +115,13 @@ runtime. A dedicated perf gate is a TASK-090 candidate.
 
 ## Known uncovered cases
 
-- **Property-based routing.** No randomised-netlist generation (see
-  above). Rationale: the invariant set is small and well-covered by
-  examples, but generated topology is the right long-term guard —
-  TASK-090 candidate.
+- **Property-based routing over *arbitrary* topology.** The property
+  suite (TASK-135) generates variations of a known-good template, not
+  arbitrary circuits — arbitrary circuits are almost never routable, so
+  template-variation is the high-signal strategy. Generation over a wider
+  topology space (multiple regions, attached chains, bus nets) remains a
+  candidate; the current suite covers the orthogonality / determinism /
+  net-order invariants over the passive-branch family.
 - **Route-around-bodies.** The router counts
   `intra_component_intersections` but does not re-route to avoid them.
   Rationale: intentional v0.1 scope; resolution is a post-v0.1
@@ -106,7 +135,9 @@ runtime. A dedicated perf gate is a TASK-090 candidate.
 | Test file | PR | Nightly | Release |
 |---|:--:|:--:|:--:|
 | `tests/test_router.py` | ✓ | | |
+| `tests/layout/test_router_properties.py` | ✓ | | |
 
-Runs at PR-time. A property-based router suite, when added, would be a
-natural **nightly** citizen (large iteration counts), keeping the
-PR-time slice fast.
+Both run at PR-time. The property suite uses a fast
+`max_examples=40` budget so it stays a negligible slice of the PR-time
+run; the large-iteration variant (`max_examples` in the thousands) is the
+designated **nightly** citizen once the nightly tier (IDEA-014) exists.

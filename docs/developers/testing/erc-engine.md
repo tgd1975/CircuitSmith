@@ -60,7 +60,7 @@ Which `CHECK_TABLE` codes have a triggering fixture today:
 
 | Code | Meaning | Triggering fixture | Where |
 |---|---|:--:|---|
-| S1 | single-pin / floating net | ✗ | only *avoided* (`ANODE tied off`) — no direct trigger |
+| S1 | unconnected required pin | ✓ | `test_S1_fires_on_unconnected_required_pin` (synthetic profile with a `required:` pin) |
 | S2 | dangling net | ✓ | `test_S2_fires_on_dangling_net` |
 | S3 | duplicate net name | ✓ | `test_S3_fires_on_duplicate_net_name` (warning) |
 | S4 | unknown component type | ✓ | schema layer — `test_schema_validation.py` |
@@ -68,11 +68,11 @@ Which `CHECK_TABLE` codes have a triggering fixture today:
 | E1 | floating input | ✓ | `test_E1_fires_on_floating_button_input` (+ pass case) |
 | E2 | LED without series resistor | ✓ | `test_E2_fires_on_led_without_resistor` |
 | E3 | resistor overcurrent | ✓ | `test_E3_fires_on_resistor_too_small…` (warning) |
-| E4 | INPUT_ONLY pin driven | ~ | predicate wired; no clean isolated trigger (S-class gates it) |
+| E4 | INPUT_ONLY pin driven | ✓ | `test_E4_fires_clean_with_no_s_class_gate` (path-routed anode + `pull:` keep S2/E1/E2 quiet) |
 | E5 | strapping pin unpulled | ✓ | `test_E5_fires_on_unpulled_strapping_pin…` |
-| E6 | IC VCC pin undecoupled | ✗ | dormant on shipped; needs a non-MCU IC with a VCC pin |
+| E6 | IC VCC pin undecoupled | ✓ | `test_E6_fires_on_non_mcu_ic_without_decoupling_cap` (synthetic `kind: ic` + `POWER` pin) |
 | E7 | I²C net without pull-up | ✓ | `test_E7_fires_on_i2c_net_without_pullup` |
-| E8 | (electrical) | ✗ | no triggering fixture in the suite |
+| E8 | LED current-budget exceeded | ✓ | `test_E8_fires_when_led_current_exceeds_total_budget` (synthetic low-budget MCU) |
 | E9 | USB VBUS without protection | ✓ | shipped circuits (warning) |
 | E10 | pin shared across two nets | ✓ | `test_E10_fires_when_pin_in_two_nets` |
 | E11–E15 | sub-block + divider ambiguity | ✓ | `tests/erc/test_sub_block_rules.py` |
@@ -108,13 +108,17 @@ circuit.
 
 ## Known uncovered cases
 
-- **S1, E6, E8 have no triggering fixture; E4 only a predicate-path
-  test.** This is the concrete output of the coverage table. Rationale,
-  per code: S1 is structurally avoided by the other fixtures; E6 needs a
-  non-MCU IC profile with a VCC pin (none in the day-one corpus); E8 has
-  no minimal fixture authored; E4's clean trigger is masked because an
-  S-class error gates the E-class run. All four are TASK-090 candidates
-  — the most actionable gaps the whole epic surfaced.
+- **S1, E4, E6, E8 — now covered (TASK-134).** Previously the most
+  actionable gaps the epic surfaced (originally TASK-090 candidates):
+  S1 was only *avoided* by other fixtures, E6/E8 had no triggering
+  fixture, and E4 had only a predicate-path test masked by an S-class
+  gate. TASK-134 added one targeted fixture per code in
+  `tests/test_erc_engine.py` — S1 and E6 via synthetic profiles (a
+  `required:` pin; a `kind: ic` IC with a `POWER` pin — neither shape
+  exists in the day-one corpus), E8 via a synthetic low-budget MCU, and
+  E4 via a clean fixture (path-routed anode plus `pull:`) that keeps the
+  circuit structurally valid so the E-class run proceeds and E4 reports
+  in isolation. See the rule-coverage table above.
 - **Catalog ↔ engine consistency at runtime.** The catalog validator
   checks `enforced_by` codes against `CHECK_TABLE` statically
   ([`schema.md`](schema.md)), but no test asserts every *fired* finding

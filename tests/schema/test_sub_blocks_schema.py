@@ -1,6 +1,9 @@
 """EPIC-014 / TASK-115 — schema extension for sub-blocks + instances."""
 from __future__ import annotations
 
+import json
+
+import circuitsmith.schema.validator as validator_module
 from circuitsmith.schema.validator import validate
 
 
@@ -82,6 +85,66 @@ def test_nested_sub_block_rejected_via_schema_pattern():
     assert any(f.check == "schema" and "rc_lowpass" in f.message for f in findings)
 
 
+def test_S6_fires_on_slash_form_nested_sub_block(monkeypatch, tmp_path):
+    """The S6 *cross-reference* check fires for a slash-form sub-block name.
+
+    TASK-134: S6 (`validator._check`-inline) catches a sub-block whose
+    `components.*.type` names another sub-block. The validator docstring
+    frames this as the defence "for cases where a sub-block happens to be
+    named with the slash form (`foo/bar`)" — i.e. a name that *passes* the
+    component-type regex `^[a-z][a-z0-9_]*/[a-z0-9_]+$` and so isn't caught
+    by the structural pattern test above.
+
+    But there is a latent inconsistency in the shipped schema: the
+    `subBlocks` key pattern is `^[A-Za-z_][A-Za-z0-9_]*$` (no slash), so a
+    slash-form sub-block *name* is rejected at the JSON-Schema phase, which
+    returns early before the S6 cross-check ever runs. With the stock
+    schema S6 is therefore unreachable through `validate()`.
+
+    To exercise the genuine S6 predicate in `validator.py` (no `src/`
+    edits), we point `SCHEMA_PATH` at a copy of the shipped schema whose
+    `subBlocks` key pattern admits a `/`. The JSON-Schema phase then passes,
+    and the real S6 cross-reference logic fires on the nested slash-form
+    type. This both proves S6 works and documents the schema/validator
+    inconsistency that keeps it dormant in production.
+    """
+    schema = json.loads(validator_module.SCHEMA_PATH.read_text())
+    sub_blocks_def = schema["$defs"]["subBlocks"]
+    original_key = next(iter(sub_blocks_def["patternProperties"]))
+    sub_blocks_def["patternProperties"] = {
+        # Same as shipped but allow `/` in the key so a slash-form sub-block
+        # name survives the JSON-Schema phase and the S6 cross-check runs.
+        "^[A-Za-z_][A-Za-z0-9_/]*$": sub_blocks_def["patternProperties"][original_key]
+    }
+    relaxed = tmp_path / "relaxed.circuit.schema.json"
+    relaxed.write_text(json.dumps(schema))
+    monkeypatch.setattr(validator_module, "SCHEMA_PATH", relaxed)
+
+    circuit = {
+        "meta": {"title": "s6", "target": "esp32"},
+        "components": {"U1": {"type": "mcu/esp32"}},
+        "sub-blocks": {
+            # Slash-form sub-block name — passes the relaxed key pattern.
+            "sub/inner": {
+                "components": {"R": {"type": "passives/resistor", "value": 1000}},
+                "ports": {"a": "R.1", "b": "R.2"},
+            },
+            # `outer`'s component type names the slash-form sub-block → S6.
+            "outer": {
+                "components": {"NESTED": {"type": "sub/inner"}},
+                "ports": {"x": "NESTED.a"},
+            },
+        },
+        "instances": {"O1": {"sub-block": "outer"}},
+        "connections": [
+            {"net": "SIG", "pins": ["U1.D25", "O1.x"]},
+            {"net": "GND", "pins": ["U1.GNDL"]},
+        ],
+    }
+    findings = validate(circuit, profiles=_profiles_stub())
+    assert any(
+        f.check == "S6" and "sub/inner" in f.message for f in findings
+    ), f"expected an S6 finding naming 'sub/inner'; got: {findings}"
 
 
 def test_undeclared_sub_block_instance_rejected():

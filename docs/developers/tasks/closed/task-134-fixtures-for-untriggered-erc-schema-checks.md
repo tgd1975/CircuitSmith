@@ -1,9 +1,11 @@
 ---
 id: TASK-134
 title: Add triggering fixtures for untriggered ERC and schema checks
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-06-21
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: No
 ---
@@ -29,10 +31,10 @@ Add one targeted fixture per code so every check has a triggering case.
 
 ## Acceptance Criteria
 
-- [ ] S1, S6, E6, and E8 each have a fixture that produces the finding.
-- [ ] E4 has a fixture that triggers it without being masked by an
+- [x] S1, S6, E6, and E8 each have a fixture that produces the finding.
+- [x] E4 has a fixture that triggers it without being masked by an
       S-class error.
-- [ ] The coverage table in `erc-engine.md` / `schema.md` is updated to
+- [x] The coverage table in `erc-engine.md` / `schema.md` is updated to
       mark these as covered.
 
 ## Test Plan
