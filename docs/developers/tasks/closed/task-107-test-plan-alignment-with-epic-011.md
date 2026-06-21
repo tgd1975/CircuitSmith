@@ -1,9 +1,11 @@
 ---
 id: TASK-107
 title: Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
 epic: post-epic-006-doc-audit
@@ -42,11 +44,11 @@ minimum.
 
 ## Acceptance Criteria
 
-- [ ] Every narrative doc with a testing claim has been audited
+- [x] Every narrative doc with a testing claim has been audited
       against the matching test-plan chapter.
-- [ ] Duplicated content collapsed to a summary + pointer.
-- [ ] Disagreements resolved (chapter wins; narrative doc fixed).
-- [ ] Each narrative doc with a testing relevance has at least one
+- [x] Duplicated content collapsed to a summary + pointer.
+- [x] Disagreements resolved (chapter wins; narrative doc fixed).
+- [x] Each narrative doc with a testing relevance has at least one
       "see `docs/developers/testing/X.md`" link.
 
 ## Test Plan

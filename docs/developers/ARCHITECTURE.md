@@ -215,7 +215,7 @@ consistently:
 | Decisions (the *why*) | [`adr/`](adr/) — start with [`README.md`](adr/README.md) for the index. |
 | Original design depth (the *thinking*) | [`ideas/archived/idea-001-circuit-skill.md`](ideas/archived/idea-001-circuit-skill.md) and its eight companion files. |
 | Per-file invariants surfaced at edit time | [`CODE_OWNERS.md`](CODE_OWNERS.md) and the `.claude/skills/co-*` skills. |
-| Test layers, fixtures, golden updates | [`TESTING.md`](TESTING.md). |
+| Test layers, fixtures, golden updates | [`TESTING.md`](TESTING.md) (how-to) and [`testing/`](testing/README.md) (coverage plan). |
 | CI gates and the local mirror | [`CI_PIPELINE.md`](CI_PIPELINE.md). |
 | Setup, install, smoke-test | [`DEVELOPMENT_SETUP.md`](DEVELOPMENT_SETUP.md). |
 | Task / epic / idea workflow | [`TASK_SYSTEM.md`](TASK_SYSTEM.md). |

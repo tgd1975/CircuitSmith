@@ -113,3 +113,11 @@ Tasks are listed automatically in the Task Epics section of
   tutorial/gallery "See also" pointers to the three skill reference docs and
   a canonical-term glossary to `ARCHITECTURE.md`. Tutorial terminology
   scanned consistent with the reference docs — no disagreements to reconcile.
+- 2026-06-21 — TASK-107 closed (effort actual Small). Reconciled `TESTING.md`
+  against EPIC-011's `testing/` plan (decision: stub-and-point) — it now
+  defers the coverage plan to `testing/README.md` and keeps the practical
+  how-to, with the stale `from circuit.*` imports and concept-stage language
+  gone (drift-prone embedded examples replaced by pointers to the real tests
+  so they can't rot again). **EPIC-013 now at its Main-HIL remainder:
+  TASK-108 (dossier annotation) and TASK-109 (README rewrite), both
+  requiring maintainer review.**

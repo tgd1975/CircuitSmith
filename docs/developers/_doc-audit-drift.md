@@ -143,5 +143,12 @@ So the rewrite does not "fix" these by mistake:
   canonical-term glossary to `ARCHITECTURE.md`. No terminology
   disagreements found (the tutorial steps scanned clean against the
   reference docs).
-- **Still open:** D10–D15 → TASK-107 (TESTING reconcile + stale imports);
-  D27, D28 → TASK-109 (README full rewrite).
+- **2026-06-21 — TASK-107** (this commit). Reconciled `TESTING.md` to the
+  EPIC-011 `testing/` plan: it now points at
+  [`testing/`](testing/README.md) as the canonical coverage plan and keeps
+  only the practical how-to. Resolved **D10/D14** (concept-stage language),
+  **D11–D13** (stale `from circuit.*` imports — removed by replacing the
+  drift-prone embedded snippets with API-correct references to the real
+  tests), and **D15** (duplication). Added a `testing/` pointer to
+  `ARCHITECTURE.md`'s nav table.
+- **Still open:** D27, D28 → TASK-109 (README full rewrite, Main-HIL).
