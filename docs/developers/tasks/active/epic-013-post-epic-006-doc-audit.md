@@ -70,3 +70,21 @@ those epics, just enough that their canonical artefacts exist.
 
 Tasks are listed automatically in the Task Epics section of
 `docs/developers/tasks/OVERVIEW.md` and in `EPICS.md` / `KANBAN.md`.
+
+## Implementation log
+
+- 2026-06-21 — TASK-102 closed (effort actual Small) and TASK-103 closed
+  (effort actual Medium). Inventory (`_doc-audit-inventory.md`) buckets all
+  292 tracked `.md` files: 241 are records / ADRs / generated indexes /
+  sidecars / skill-defs (out of voice scope), leaving ~51 prose docs
+  enumerated by audience + freshness. Drift catalogue
+  (`_doc-audit-drift.md`) logs 25 grep/Glob-verified items across 11 files —
+  dominated by a "concept stage / nothing exists yet" cluster (README,
+  ARCHITECTURE, CONTRIBUTING, CLAUDE, TESTING, users/*) and the
+  `src/circuitsmith/` relocation aftermath (stale `from circuit.*` imports +
+  `.claude/skills/circuit/` paths in TESTING.md and circuit-yaml.md).
+- 2026-06-21 — **HIL boundary.** TASK-104 (voice unification) is Main-HIL
+  and every later task (105–109) is gated on it; 108 and 109 are also
+  Main-HIL. Autonomous progress ends here. `_doc-audit-hil-plan.md` lays out
+  the canonical-voice decision, the README-scope decision, the per-task
+  plan, and the batched review tempo for the maintainer to drive 104–109.

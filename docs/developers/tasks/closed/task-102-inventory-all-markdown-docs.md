@@ -1,9 +1,11 @@
 ---
 id: TASK-102
 title: Inventory all .md docs and bucket by audience and freshness
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Clarification
 epic: post-epic-006-doc-audit
@@ -48,11 +50,11 @@ re-derive the same data three times.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/_doc-audit-inventory.md` exists and lists
+- [x] `docs/developers/_doc-audit-inventory.md` exists and lists
       every `.md` file in the repo.
-- [ ] Every entry has audience, freshness, line count, and
+- [x] Every entry has audience, freshness, line count, and
       last-substantive-edit-date.
-- [ ] Orphans flagged; duplicate-coverage pairs cross-linked.
+- [x] Orphans flagged; duplicate-coverage pairs cross-linked.
 
 ## Test Plan
 

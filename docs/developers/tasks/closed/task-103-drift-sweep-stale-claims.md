@@ -1,9 +1,11 @@
 ---
 id: TASK-103
 title: Drift sweep — identify stale claims, retired scripts, and broken refs
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 epic: post-epic-006-doc-audit
@@ -52,10 +54,10 @@ naturally subsumes drift fixes in rewritten files) and TASK-109
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/_doc-audit-drift.md` exists with every drift
+- [x] `docs/developers/_doc-audit-drift.md` exists with every drift
       item from a complete walk of the inventory.
-- [ ] Each item has file/line, drift class, and proposed fix.
-- [ ] No silent omissions — every file from the inventory must be
+- [x] Each item has file/line, drift class, and proposed fix.
+- [x] No silent omissions — every file from the inventory must be
       either visited (drift items logged) or marked
       "scanned, no drift" in the drift doc.
 

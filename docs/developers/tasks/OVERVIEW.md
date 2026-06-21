@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 11** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 135** | █████████░ 92%
+⚪ **Open: 9** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 126** | **Total: 135** | █████████░ 93%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
@@ -31,8 +31,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-102](open/task-102-inventory-all-markdown-docs.md) | Inventory all .md docs and bucket by audience and freshness | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-103](open/task-103-drift-sweep-stale-claims.md) | Drift sweep — identify stale claims, retired scripts, and broken refs | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-104](open/task-104-voice-unification-rewrite.md) | Voice unification — pick canonical voice and rewrite earlier docs forward | Large (8-24h) | Senior | ⚪ open |
 | [TASK-105](open/task-105-cross-reference-audit.md) | Cross-reference audit — internal links, TASK/EPIC/IDEA refs, code-path mentions | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-106](open/task-106-tutorial-alignment-with-epic-012.md) | Tutorial alignment — audit reference docs against EPIC-012's tutorial and gallery | Small (&lt;2h) | Medium | ⚪ open |
@@ -146,6 +144,8 @@ _No paused tasks._
 | [TASK-099](closed/task-099-example-opamp-non-inverting-buffer.md) | Example gallery — op-amp non-inverting buffer | Medium (2-8h) |
 | [TASK-100](closed/task-100-example-multi-page-split.md) | Example gallery — multi-page split (stresses renderer page-break) | Medium (2-8h) |
 | [TASK-101](closed/task-101-ci-regression-diff-for-gallery.md) | CI regression diff — regenerate the tutorial and gallery, fail on drift | Medium (2-8h) |
+| [TASK-102](closed/task-102-inventory-all-markdown-docs.md) | Inventory all .md docs and bucket by audience and freshness | Small (&lt;2h) |
+| [TASK-103](closed/task-103-drift-sweep-stale-claims.md) | Drift sweep — identify stale claims, retired scripts, and broken refs | Medium (2-8h) |
 | [TASK-110](closed/task-110-freeze-open-question-defaults.md) | Freeze open-question defaults for EPIC-014 | XS (&lt;30m) |
 | [TASK-111](closed/task-111-kernel-rule-rc-low-pass.md) | Kernel canonical rule — R + C low-pass | Medium (2-8h) |
 | [TASK-112](closed/task-112-kernel-rule-rc-high-pass.md) | Kernel canonical rule — R + C high-pass | Medium (2-8h) |
