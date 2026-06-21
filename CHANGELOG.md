@@ -11,6 +11,18 @@ first tag is cut.
 
 ### Added
 
+- **EPIC-013 — post-EPIC-006 documentation audit** closed (8 tasks).
+  Inventoried all 292 `.md` files and catalogued 25 drift items
+  (TASK-102/103); captured a canonical documentation voice in
+  `CODING_STANDARDS.md` and cleared the "concept stage" claims that outlived
+  the shipped package (TASK-104); added the `check_doc_references.py` CI gate
+  and fixed ~17 broken links — mostly the `src/circuitsmith/` relocation
+  aftermath in the skill docs (TASK-105); aligned the reference docs with the
+  tutorial/gallery and added a glossary (TASK-106); reconciled `TESTING.md`
+  against the `testing/` plan (TASK-107); annotated the IDEA-001 dossier with
+  what shipped (TASK-108); and rewrote `README.md` for the shipped reality
+  (TASK-109). The Main-HIL cold-read sign-offs for TASK-108/109 are pending
+  maintainer review of the branch.
 - **EPIC-011 — test plan and coverage matrix** closed (9 tasks).
   New `docs/developers/testing/`: an index + coverage matrix (59 test
   files mapped to subsystem / layer / PR-nightly-release cadence) and

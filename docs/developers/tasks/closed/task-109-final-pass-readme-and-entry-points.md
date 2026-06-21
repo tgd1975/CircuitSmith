@@ -1,9 +1,11 @@
 ---
 id: TASK-109
 title: Final pass on README.md and top-level entry-point docs
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Main
 epic: post-epic-006-doc-audit
@@ -53,15 +55,17 @@ sign-off, not just agent draft.
 
 ## Acceptance Criteria
 
-- [ ] `README.md` reflects the post-EPIC-006 state, with tutorial
+- [x] `README.md` reflects the post-EPIC-006 state, with tutorial
       / gallery / developer doc pointers all working.
-- [ ] `CONTRIBUTING.md` points at the developer onboarding pack
+- [x] `CONTRIBUTING.md` points at the developer onboarding pack
       and the task system.
-- [ ] No "we plan to" language remains for features that have
+- [x] No "we plan to" language remains for features that have
       shipped.
-- [ ] `markdownlint-cli2` passes; `scripts/check_doc_references.py`
+- [x] `markdownlint-cli2` passes; `scripts/check_doc_references.py`
       (from TASK-105) passes.
 - [ ] The maintainer reads each entry-point cold and signs off.
+      *(Pending: the agent draft is on-branch; this Main-HIL sign-off is the
+      maintainer's step when reviewing the branch before merge.)*
 
 ## Test Plan
 

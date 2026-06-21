@@ -2,9 +2,9 @@
 id: EPIC-013
 name: post-epic-006-doc-audit
 title: Post-EPIC-006 Documentation Audit and Rewrite
-status: open
+status: closed
 opened: 2026-05-13
-closed:
+closed: 2026-06-21
 assigned:
 branch: release/epic-013-post-epic-006-doc-audit
 ---
@@ -128,3 +128,9 @@ Tasks are listed automatically in the Task Epics section of
   relocation via ADR-0012). Drafted at file-banner granularity for the
   maintainer's cold-read; per-section deepening is the documented extension.
   On-branch for review.
+- 2026-06-21 — TASK-109 closed (effort actual Small) — blank-page `README.md`
+  rewrite for the shipped reality (what it is; see-it tutorial/gallery;
+  install; docs map; status; non-goals; MIT). **EPIC-013 complete (8/8).**
+  The agent's drafting is done; the Main-HIL cold-read sign-offs for TASK-108
+  (dossier accuracy) and TASK-109 (fresh-visitor README) are the maintainer's
+  remaining step, to be done when reviewing this branch before merge.

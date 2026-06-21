@@ -158,4 +158,12 @@ So the rewrite does not "fix" these by mistake:
   is additive historical annotation, drafted at file-banner granularity for
   the maintainer's cold-read (per-section deepening is the documented
   extension point).
-- **Still open:** D27, D28 → TASK-109 (README full rewrite, Main-HIL).
+- **2026-06-21 — TASK-109** (this commit). Rewrote `README.md` for the
+  shipped reality — resolved **D27** (the phase-plan section framed as
+  unbuilt is gone, replaced by a Status section) and **D28** (license now
+  reads `[MIT](LICENSE)`). The README leads with what CircuitSmith is plus
+  tutorial / gallery / install / docs pointers, all gate-verified.
+- **All catalogued drift resolved.** The doc-reference gate
+  (`check_doc_references.py`) keeps the living narrative docs honest going
+  forward. The Main-HIL cold-reads (TASK-108 dossier, TASK-109 README) are
+  the maintainer's at branch review.
