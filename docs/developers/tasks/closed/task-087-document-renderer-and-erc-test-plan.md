@@ -1,9 +1,11 @@
 ---
 id: TASK-087
 title: Author the renderer and ERC-engine subsystem test plans
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -53,14 +55,14 @@ ERC-specific items to call out:
 
 ## Acceptance Criteria
 
-- [ ] `renderer.md` and `erc-engine.md` are no longer empty
+- [x] `renderer.md` and `erc-engine.md` are no longer empty
       placeholders and follow the canonical chapter structure.
-- [ ] Renderer chapter documents the golden-SVG diff policy
+- [x] Renderer chapter documents the golden-SVG diff policy
       (byte-exact vs allowed drift classes) in one paragraph.
-- [ ] ERC chapter enumerates which S1–S5 / E1–E10 rules have
+- [x] ERC chapter enumerates which S1–S5 / E1–E10 rules have
       triggering fixtures and which do not, with rationale for the
       gaps.
-- [ ] Every "known uncovered" item has a one-sentence rationale.
+- [x] Every "known uncovered" item has a one-sentence rationale.
 
 ## Test Plan
 

@@ -83,3 +83,9 @@ Tasks are listed automatically in the Task Epics section of
   `testing/router.md`. Headline gap: the router has no property-based
   routing tests despite IDEA-003 anticipating them; the real
   AnthropicClient adapter is also uncovered by design (ADR-0002).
+- 2026-06-21 — TASK-087 closed (effort actual Medium). Authored
+  `testing/renderer.md` (byte-exact SVG golden policy + meta/erc
+  normalisation) and `testing/erc-engine.md` with the rule-by-rule
+  fixture-coverage table. That table is the epic's sharpest output:
+  S1, E6, E8 have no triggering fixture and E4 only a predicate-path
+  test — the most actionable TASK-090 candidates.
