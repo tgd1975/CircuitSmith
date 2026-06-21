@@ -174,6 +174,21 @@ first tag is cut.
   steps. Also set `pythonpath = ["."]` in the pytest config so bare
   `pytest` (CI) resolves repo-root test imports (`from tests._sexp …`) the
   way `python -m pytest` does locally.
+- Windows CI baseline restored (cross-platform hardening). Every text-file
+  read/write in the library now passes `encoding="utf-8"` (`renderer.py`,
+  `markdown.py`, `schema/validator.py`, `schema/layout_validator.py`,
+  `erc_engine.py`); the renderer's ERC-report write previously crashed on
+  Windows (`UnicodeEncodeError`, cp1252) because the report embeds status
+  emoji (✅/⚠️/❌). Added `.gitattributes` (`* text=auto eol=lf`, plus an
+  explicit `*.svg text eol=lf`) so a Windows checkout keeps LF — without it
+  CRLF flips the raw bytes of `circuit.schema.json`, breaking the
+  `schema_version` SHA-256 in `test_netgraph_golden.py`, and of committed
+  SVGs, breaking the gallery gate's byte comparison. `check_circuit_schema.py
+  --all` now skips deliberately-invalid `invalid*` fixtures under
+  `tests/fixtures/schema_check/` (they exist to exercise the validator's
+  rejection path, so validating them always "failed" and wedged CI).
+  `check_gallery_regression.py` prints relative paths with forward slashes so
+  its stdout is identical on POSIX and Windows.
 
 ### Tooling
 

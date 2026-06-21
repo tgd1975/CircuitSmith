@@ -104,7 +104,7 @@ def render_block_to_svg(yaml_source: str, out_dir: Path, name: str) -> Path:
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     yml_path = out_dir / f"{name}.circuit.yml"
-    yml_path.write_text(yaml_source)
+    yml_path.write_text(yaml_source, encoding="utf-8")
     svg_path = out_dir / f"{name}.svg"
     layout_path = out_dir / f"{name}.layout.yml"
     meta_path = out_dir / f"{name}.meta.yml"
@@ -147,7 +147,7 @@ def rewrite_markdown(md_path: Path, *, check: bool = False) -> tuple[bool, list[
     Returns `(changed, messages)`. In `check` mode, no files are
     modified; `changed` reports whether a rewrite *would* happen.
     """
-    text = md_path.read_text()
+    text = md_path.read_text(encoding="utf-8")
     blocks = find_blocks(text)
     if not blocks:
         return False, []
@@ -185,7 +185,7 @@ def rewrite_markdown(md_path: Path, *, check: bool = False) -> tuple[bool, list[
 
     changed = new_text != text
     if changed and not check:
-        md_path.write_text(new_text)
+        md_path.write_text(new_text, encoding="utf-8")
         messages.append(f"rewrote {md_path}")
     return changed, messages
 

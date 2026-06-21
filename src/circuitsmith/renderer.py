@@ -182,7 +182,7 @@ def render(
             title=str(circuit.get("meta", {}).get("title", circuit_path.stem)),
             target=str(circuit.get("meta", {}).get("target", "unknown")),
         )
-        actual_out_erc_report.write_text(report_md)
+        actual_out_erc_report.write_text(report_md, encoding="utf-8")
 
     erc_errors = [f for f in erc_findings if f.severity == "error"]
     if erc_errors:
@@ -226,7 +226,7 @@ def render(
             escalations=escalations,
             placed=0,
             ai_invocations=ai_invocations,
-        ))
+        ), encoding="utf-8")
         raise RenderError(
             stage="kernel",
             findings=[exc],
@@ -273,7 +273,7 @@ def render(
                 escalations=escalations,
                 placed=len(layout.placements),
                 ai_invocations=ai_invocations,
-            ))
+            ), encoding="utf-8")
             raise RenderError(
                 stage="ai-placer",
                 findings=[ai_result],
@@ -320,7 +320,7 @@ def render(
             escalations=escalations,
             state="incomplete",
             ai_invocations=ai_invocations,
-        ))
+        ), encoding="utf-8")
         raise RenderError(
             stage="rubric",
             findings=rubric_result.failures,
@@ -345,7 +345,7 @@ def render(
 
     layout_yaml = render_layout_yaml(layout)
     actual_out_layout.parent.mkdir(parents=True, exist_ok=True)
-    actual_out_layout.write_text(layout_yaml)
+    actual_out_layout.write_text(layout_yaml, encoding="utf-8")
 
     actual_out_meta.write_text(_emit_meta_yaml(
         circuit_path=circuit_path,
@@ -357,7 +357,7 @@ def render(
         escalations=escalations,
         state="complete",
         ai_invocations=ai_invocations,
-    ))
+    ), encoding="utf-8")
 
     return RenderResult(
         layout=layout,
@@ -914,7 +914,7 @@ def _yaml_inline(value: Any) -> str:
 def _load_yaml(path: Path) -> Any:
     from ruamel.yaml import YAML
     yaml = YAML(typ="safe")
-    with open(path) as fh:
+    with open(path, encoding="utf-8") as fh:
         return yaml.load(fh)
 
 

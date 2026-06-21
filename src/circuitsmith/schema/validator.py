@@ -56,7 +56,7 @@ def validate(
     findings: list[Finding] = []
 
     # ── Phase 1: structural JSON Schema ─────────────────────────────────
-    schema = json.loads(SCHEMA_PATH.read_text())
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
     for err in sorted(validator.iter_errors(circuit), key=lambda e: e.path):
         findings.append(Finding(
@@ -173,7 +173,7 @@ def validate_file(yml_path: Path | str) -> list[Finding]:
     """Convenience: load YAML via ruamel.yaml and validate the result."""
     from ruamel.yaml import YAML
     yaml = YAML(typ="safe")
-    with open(yml_path) as fh:
+    with open(yml_path, encoding="utf-8") as fh:
         circuit = yaml.load(fh)
     return validate(circuit)
 
