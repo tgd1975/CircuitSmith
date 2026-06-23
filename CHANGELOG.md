@@ -155,6 +155,48 @@ first tag is cut.
   (E19–E22, Phase 5), all five gallery entries rendered
   (Phase 6), and a docs-only proofreading pass.
 
+### Fixed
+
+- Gallery regression gate (`scripts/check_gallery_regression.py`) now
+  normalises the auto-stamped ERC-report header date before diffing,
+  mirroring the sibling builder gate `check_erc_reports.py`. Previously
+  the gate — and the `test_clean_gallery_exits_zero` test — went red on
+  every day after the tutorial/gallery artefacts were committed, because
+  the report header embeds `date.today()`. Added a date-independent
+  regression test (`test_erc_report_date_only_diff_is_normalised`).
+- CI baseline restored: genericised the host-specific references
+  (`CircuitSmith`, `docs/builders/`) in the circuit skill docs (`SKILL.md`,
+  `docs/index.md`) that tripped `portability_lint.py` and masked the test
+  run; and gave `circuitsmith.markdown` an `--exclude` flag so the
+  ` ```circuit ` render check skips `docs/developers/ideas/archived/` (the
+  IDEA-001 dossier's illustrative blocks have no committed SVGs).
+  `generate-circuits.yml` passes the exclude on its rewrite and `--check`
+  steps. Also set `pythonpath = ["."]` in the pytest config so bare
+  `pytest` (CI) resolves repo-root test imports (`from tests._sexp …`) the
+  way `python -m pytest` does locally.
+- Windows CI baseline restored (cross-platform hardening). Every text-file
+  read/write in the library now passes `encoding="utf-8"` (`renderer.py`,
+  `markdown.py`, `schema/validator.py`, `schema/layout_validator.py`,
+  `erc_engine.py`); the renderer's ERC-report write previously crashed on
+  Windows (`UnicodeEncodeError`, cp1252) because the report embeds status
+  emoji (✅/⚠️/❌). Added `.gitattributes` (`* text=auto eol=lf`, plus an
+  explicit `*.svg text eol=lf`) so a Windows checkout keeps LF — without it
+  CRLF flips the raw bytes of `circuit.schema.json`, breaking the
+  `schema_version` SHA-256 in `test_netgraph_golden.py`, and of committed
+  SVGs. The renderer also writes its text artefacts with an explicit LF
+  newline — Python's `write_text` otherwise translates to the platform
+  separator (CRLF on Windows) — so the regenerated
+  `layout.yml`/`meta.yml`/`erc-report.md` no longer drift to CRLF and fail
+  the gallery gate's byte comparison; the cross-page render test reads SVGs
+  with `encoding="utf-8"` so the arrow glyphs survive a cp1252 default, and
+  the gallery date-normalisation test writes its fixture with an explicit LF
+  newline. `check_circuit_schema.py
+  --all` now skips deliberately-invalid `invalid*` fixtures under
+  `tests/fixtures/schema_check/` (they exist to exercise the validator's
+  rejection path, so validating them always "failed" and wedged CI).
+  `check_gallery_regression.py` prints relative paths with forward slashes so
+  its stdout is identical on POSIX and Windows.
+
 ### Tooling
 
 - Elevated IDEA-003/004/007 to EPIC-011 (test plan, 9 tasks),

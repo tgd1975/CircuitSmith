@@ -24,7 +24,7 @@ LAYOUT_SCHEMA_PATH = Path(__file__).resolve().parent / "layout.schema.json"
 def validate_layout(layout: dict[str, Any]) -> list[Finding]:
     """Validate a parsed .layout.yml dict; empty list = valid."""
     findings: list[Finding] = []
-    schema = json.loads(LAYOUT_SCHEMA_PATH.read_text())
+    schema = json.loads(LAYOUT_SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
     for err in sorted(validator.iter_errors(layout), key=lambda e: list(e.absolute_path)):
         findings.append(Finding(
@@ -94,7 +94,7 @@ def validate_layout_file(yml_path: Path | str) -> list[Finding]:
     """Convenience: load YAML via ruamel.yaml and validate."""
     from ruamel.yaml import YAML
     yaml = YAML(typ="safe")
-    with open(yml_path) as fh:
+    with open(yml_path, encoding="utf-8") as fh:
         layout = yaml.load(fh)
     return validate_layout(layout)
 

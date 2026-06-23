@@ -71,6 +71,10 @@ where = ["src"]
 # work begins) and task-system tooling tests at `scripts/tests/`.
 # See docs/developers/TESTING.md for the layer convention.
 testpaths = ["tests", "scripts/tests"]
+# Put the repo root on sys.path so repo-root imports like
+# `from tests._sexp import …` resolve under a bare `pytest` invocation (CI),
+# matching `python -m pytest` locally.
+pythonpath = ["."]
 python_files = "test_*.py"
 addopts = "-ra"
 strict_markers = true

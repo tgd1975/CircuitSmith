@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -151,6 +152,19 @@ def _normalise_meta(text: str) -> str:
     return "".join(out)
 
 
+# The ERC report header carries an auto-stamped generation date
+# (`erc_report.render_report`). Normalise it before diffing so the
+# regression gate is stable across days — mirrors the sibling gate
+# `check_erc_reports.py:_normalise_dates`.
+_ERC_DATE_LINE_RE = re.compile(
+    r"^(# ERC Report — .* — )\d{4}-\d{2}-\d{2}$", re.MULTILINE
+)
+
+
+def _normalise_erc_dates(text: str) -> str:
+    return _ERC_DATE_LINE_RE.sub(r"\1<DATE>", text)
+
+
 def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
     """Render circuit and compare against committed artefacts.
 
@@ -166,6 +180,11 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
     """
     paths = _artefact_paths(circuit_path)
     rel_circuit = circuit_path.relative_to(REPO_ROOT)
+    # User-facing messages use forward slashes on every platform so the
+    # gate's stdout/stderr is identical on POSIX and Windows (the
+    # regression tests assert on `docs/users/...` literals; a Windows
+    # backslash rendering would spuriously fail them).
+    rel_circuit_posix = rel_circuit.as_posix()
 
     # Multi-page circuits expose `paths["svg"]` as a list of per-page
     # paths; single-page circuits as a single Path. Normalise to a
@@ -179,7 +198,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
         svg_dsts = [svg_value]
         any_svg = svg_value.exists()
     if not any_svg:
-        return True, f"skip {rel_circuit} (no committed SVG)"
+        return True, f"skip {rel_circuit_posix} (no committed SVG)"
 
     with tempfile.TemporaryDirectory(prefix="cs-gallery-check-", dir=REPO_ROOT) as tmpdir:
         tmp = Path(tmpdir)
@@ -206,7 +225,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 out_erc_report=out_paths["erc"],
             )
         except RenderError as exc:
-            return False, f"FAIL {rel_circuit}: renderer aborted at {exc.stage} — {exc.summary}"
+            return False, f"FAIL {rel_circuit_posix}: renderer aborted at {exc.stage} — {exc.summary}"
 
         diffs: list[str] = []
         # Build the {dst, regen} pair list. SVGs need special handling
@@ -233,7 +252,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 dst.write_bytes(regen_bytes)
                 continue
             if not dst.exists():
-                diffs.append(f"missing committed: {dst.relative_to(REPO_ROOT)}")
+                diffs.append(f"missing committed: {dst.relative_to(REPO_ROOT).as_posix()}")
                 continue
             committed_bytes = dst.read_bytes()
             if committed_bytes == regen_bytes:
@@ -244,7 +263,7 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 regenerated = regen_bytes.decode("utf-8")
             except UnicodeDecodeError:
                 diffs.append(
-                    f"{dst.relative_to(REPO_ROOT)}: binary mismatch "
+                    f"{dst.relative_to(REPO_ROOT).as_posix()}: binary mismatch "
                     f"(committed {len(committed_bytes)} B, regenerated {len(regen_bytes)} B)"
                 )
                 continue
@@ -256,14 +275,22 @@ def _check_one(circuit_path: Path, rebaseline: bool) -> tuple[bool, str]:
                 regenerated = _normalise_meta(regenerated)
                 if committed == regenerated:
                     continue
-            diffs.append(_diff(str(dst.relative_to(REPO_ROOT)), committed, regenerated))
+            elif dst.name == "erc-report.md" or dst.name.endswith(".erc-report.md"):
+                # See `_normalise_erc_dates`: the report header carries
+                # an auto-stamped generation date that drifts per-day
+                # without reflecting a content change.
+                committed = _normalise_erc_dates(committed)
+                regenerated = _normalise_erc_dates(regenerated)
+                if committed == regenerated:
+                    continue
+            diffs.append(_diff(dst.relative_to(REPO_ROOT).as_posix(), committed, regenerated))
 
         if rebaseline:
-            return True, f"rebase {rel_circuit}"
+            return True, f"rebase {rel_circuit_posix}"
         if diffs:
             joined = "\n".join(d for d in diffs if d.strip())
-            return False, f"FAIL {rel_circuit}:\n{joined}"
-        return True, f"ok {rel_circuit}"
+            return False, f"FAIL {rel_circuit_posix}:\n{joined}"
+        return True, f"ok {rel_circuit_posix}"
 
 
 def main(argv: list[str] | None = None) -> int:
