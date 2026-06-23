@@ -1,9 +1,11 @@
 ---
 id: TASK-089
 title: Write the top-level coverage matrix with the PR-time/nightly/release axis
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -55,14 +57,14 @@ for v1**; revisit if the matrix grows past ~80 rows.
 
 ## Acceptance Criteria
 
-- [ ] `docs/developers/testing/README.md` has a filled-in matrix
+- [x] `docs/developers/testing/README.md` has a filled-in matrix
       with every test file from the inventory listed.
-- [ ] PR-time / nightly / release cadence is set for every row,
+- [x] PR-time / nightly / release cadence is set for every row,
       consistent with the per-subsystem chapters.
-- [ ] A short prose paragraph at the top of the matrix explains the
+- [x] A short prose paragraph at the top of the matrix explains the
       column conventions and the cadence policy (budgets per
       cadence, which gate runs which subset).
-- [ ] The "hand-maintained for v1" decision is documented in the
+- [x] The "hand-maintained for v1" decision is documented in the
       matrix's prose so future contributors don't reinvent the
       question.
 

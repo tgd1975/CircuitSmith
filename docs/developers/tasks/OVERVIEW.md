@@ -4,54 +4,16 @@
 
 <!-- markdownlint-disable-file MD033 -->
 
-⚪ **Open: 18** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 115** | **Total: 133** | █████████░ 86%
+⚪ **Open: 11** | 🔵 **Active: 0** | 🟡 **Paused: 0** | 🟢 **Closed: 124** | **Total: 135** | █████████░ 92%
 
 **Jump to:** [Burn-up](#burn-up) · [Active Tasks](#active-tasks) · [Paused Tasks](#paused-tasks) · [Open Tasks](#open-tasks) · [Closed Tasks](#closed-tasks)
 
 <!-- END HEADER -->
 
 <!-- BURNUP:START -->
-
 <a id="burn-up"></a>
 
-## Burn-up since v0.1.0
-
-<table><tr><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative tasks closed"
-    x-axis ["05-13", "05-14"]
-    line [1, 34]
-```
-
-</td><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative epics closed"
-    x-axis ["05-13", "05-14"]
-    line [0, 1]
-```
-
-</td><td>
-
-```mermaid
-xychart-beta
-    title "Cumulative effort hours — green: estimate, blue: actual"
-    x-axis ["05-13", "05-14"]
-    line [5, 151.25]
-    line [5, 47.5]
-```
-
-</td></tr></table>
-
-_Legend: green line = estimate (midpoint hours from `effort:`); blue line = actual (midpoint hours from `effort_actual:`)._
-
-| Date | Tasks closed | Cum. tasks | Est. h | Cum. est. h | Actual h | Cum. actual h | Epics closed | Cum. epics |
-|------|-------------:|-----------:|-------:|------------:|---------:|--------------:|-------------:|-----------:|
-| 2026-05-13 | 1 | 1 | 5 | 5 | 5 | 5 | 0 | 0 |
-| 2026-05-14 | 33 | 34 | 146.2 | 151.2 | 42.5 | 47.5 | 1 | 1 |
+_No git tag found yet — burn-up chart needs a release tag to anchor on._
 <!-- BURNUP:END -->
 
 <!-- GENERATED -->
@@ -69,15 +31,6 @@ _No paused tasks._
 | ID | Title | Effort | Complexity | Status |
 |----|-------|--------|------------|--------|
 | [TASK-041](open/task-041-run-five-acceptance-tests.md) | Run the five Phase 6 acceptance tests | Large (8-24h) | Senior | ⚪ open |
-| [TASK-083](open/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) | Junior | ⚪ open |
-| [TASK-084](open/task-084-inventory-existing-test-surface.md) | Inventory the existing test surface and tag every test by subsystem and layer | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-085](open/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-086](open/task-086-document-layout-and-router-test-plan.md) | Author the layout-kernel and Manhattan-router subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-087](open/task-087-document-renderer-and-erc-test-plan.md) | Author the renderer and ERC-engine subsystem test plans | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-088](open/task-088-document-exporters-orchestration-ci-test-plan.md) | Author the exporters, skill-orchestration, and CI-gates subsystem test plans | Medium (2-8h) | Medium | ⚪ open |
-| [TASK-089](open/task-089-write-top-level-coverage-matrix.md) | Write the top-level coverage matrix with the PR-time/nightly/release axis | Medium (2-8h) | Senior | ⚪ open |
-| [TASK-090](open/task-090-file-followup-tasks-for-coverage-gaps.md) | File concrete follow-up tasks for every coverage gap exposed by the plan | Small (&lt;2h) | Medium | ⚪ open |
-| [TASK-091](open/task-091-ci-staleness-check-for-test-plan.md) | Add a CI staleness check that flags tests not referenced in the plan | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-102](open/task-102-inventory-all-markdown-docs.md) | Inventory all .md docs and bucket by audience and freshness | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-103](open/task-103-drift-sweep-stale-claims.md) | Drift sweep — identify stale claims, retired scripts, and broken refs | Medium (2-8h) | Senior | ⚪ open |
 | [TASK-104](open/task-104-voice-unification-rewrite.md) | Voice unification — pick canonical voice and rewrite earlier docs forward | Large (8-24h) | Senior | ⚪ open |
@@ -86,6 +39,8 @@ _No paused tasks._
 | [TASK-107](open/task-107-test-plan-alignment-with-epic-011.md) | Test-plan alignment — audit "how it's tested" sections against EPIC-011's plan | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-108](open/task-108-annotate-idea-001-dossier.md) | Annotate the archived IDEA-001 dossier with what shipped vs what didn't | Small (&lt;2h) | Medium | ⚪ open |
 | [TASK-109](open/task-109-final-pass-readme-and-entry-points.md) | Final pass on README.md and top-level entry-point docs | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-134](open/task-134-fixtures-for-untriggered-erc-schema-checks.md) | Add triggering fixtures for untriggered ERC and schema checks | Medium (2-8h) | Medium | ⚪ open |
+| [TASK-135](open/task-135-property-based-tests-router-and-netgraph.md) | Add property-based tests for the router and NetGraph form-equivalence | Medium (2-8h) | Senior | ⚪ open |
 
 ## Closed Tasks
 
@@ -172,6 +127,15 @@ _No paused tasks._
 | [TASK-080](closed/task-080-publish-circuitsmith-to-pypi.md) | Publish circuitsmith package to PyPI (first real 0.1.0) | Medium (2-8h) |
 | [TASK-081](closed/task-081-author-release-workflow-scaffolding.md) | Author release workflow scaffolding (RELEASING.md + release.yml + version lockstep) | Medium (2-8h) |
 | [TASK-082](closed/task-082-author-release-skill.md) | Author /release skill and register in .vibe/config.toml | Medium (2-8h) |
+| [TASK-083](closed/task-083-scaffold-testing-docs-directory.md) | Scaffold docs/developers/testing/ directory and top-level index | Small (&lt;2h) |
+| [TASK-084](closed/task-084-inventory-existing-test-surface.md) | Inventory the existing test surface and tag every test by subsystem and layer | Small (&lt;2h) |
+| [TASK-085](closed/task-085-document-schema-and-netgraph-test-plan.md) | Author the schema and netgraph subsystem test plans | Medium (2-8h) |
+| [TASK-086](closed/task-086-document-layout-and-router-test-plan.md) | Author the layout-kernel and Manhattan-router subsystem test plans | Medium (2-8h) |
+| [TASK-087](closed/task-087-document-renderer-and-erc-test-plan.md) | Author the renderer and ERC-engine subsystem test plans | Medium (2-8h) |
+| [TASK-088](closed/task-088-document-exporters-orchestration-ci-test-plan.md) | Author the exporters, skill-orchestration, and CI-gates subsystem test plans | Medium (2-8h) |
+| [TASK-089](closed/task-089-write-top-level-coverage-matrix.md) | Write the top-level coverage matrix with the PR-time/nightly/release axis | Medium (2-8h) |
+| [TASK-090](closed/task-090-file-followup-tasks-for-coverage-gaps.md) | File concrete follow-up tasks for every coverage gap exposed by the plan | Small (&lt;2h) |
+| [TASK-091](closed/task-091-ci-staleness-check-for-test-plan.md) | Add a CI staleness check that flags tests not referenced in the plan | Medium (2-8h) |
 | [TASK-092](closed/task-092-decide-docs-users-structure.md) | Decide docs/users/ structure and update README pointer | Small (&lt;2h) |
 | [TASK-093](closed/task-093-scaffold-tutorial-and-examples-directories.md) | Scaffold docs/users/tutorial/ and docs/users/examples/ with indexes | Small (&lt;2h) |
 | [TASK-094](closed/task-094-tutorial-steps-1-3-minimal-and-fan-out.md) | Tutorial — steps 1-3 (minimal circuit, fan-out, sub-blocks) | Medium (2-8h) |

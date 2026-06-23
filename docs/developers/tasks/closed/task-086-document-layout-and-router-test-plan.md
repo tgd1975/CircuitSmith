@@ -1,9 +1,11 @@
 ---
 id: TASK-086
 title: Author the layout-kernel and Manhattan-router subsystem test plans
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -42,15 +44,15 @@ Additional specifics for these two chapters:
 
 ## Acceptance Criteria
 
-- [ ] `layout-kernel.md` and `router.md` are no longer empty
+- [x] `layout-kernel.md` and `router.md` are no longer empty
       placeholders and follow the canonical chapter structure.
-- [ ] Property tests are enumerated with their invariants spelled out.
-- [ ] Router chapter includes the performance budget (current runtime
+- [x] Property tests are enumerated with their invariants spelled out.
+- [x] Router chapter includes the performance budget (current runtime
       on the canonical fixtures + the budget we refuse to exceed).
-- [ ] AI placer convergence testing is documented under
+- [x] AI placer convergence testing is documented under
       `layout-kernel.md` (reason-code emission, convergence iteration
       cap, --no-ai fallback path from TASK-018).
-- [ ] Every "known uncovered" item has a one-sentence rationale.
+- [x] Every "known uncovered" item has a one-sentence rationale.
 
 ## Test Plan
 

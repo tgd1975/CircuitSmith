@@ -1,9 +1,11 @@
 ---
 id: TASK-088
 title: Author the exporters, skill-orchestration, and CI-gates subsystem test plans
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -47,14 +49,14 @@ out:
 
 ## Acceptance Criteria
 
-- [ ] All three chapter files are filled in and follow the canonical
+- [x] All three chapter files are filled in and follow the canonical
       structure.
-- [ ] Exporters chapter documents the PartsLedger round-trip as a
+- [x] Exporters chapter documents the PartsLedger round-trip as a
       known manual step (not an uncovered gap).
-- [ ] Skill-orchestration chapter draws the explicit boundary
+- [x] Skill-orchestration chapter draws the explicit boundary
       between agent-prompt behaviour (out of scope) and
       post-processing determinism (in scope).
-- [ ] CI-gates chapter has one sub-section per gate listing failure
+- [x] CI-gates chapter has one sub-section per gate listing failure
       mode and bypass mechanism.
 
 ## Test Plan

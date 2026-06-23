@@ -1,9 +1,11 @@
 ---
 id: TASK-085
 title: Author the schema and netgraph subsystem test plans
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -46,12 +48,12 @@ exists to prevent.
 
 ## Acceptance Criteria
 
-- [ ] `schema.md` and `netgraph.md` are no longer empty placeholders.
-- [ ] Both files cover every section in the structure above (with
+- [x] `schema.md` and `netgraph.md` are no longer empty placeholders.
+- [x] Both files cover every section in the structure above (with
       "no budget" / "no fuzz tests" notes where applicable, never
       omitted headings).
-- [ ] Every test referenced exists in the inventory from TASK-084.
-- [ ] Each "known uncovered" item has a one-sentence rationale.
+- [x] Every test referenced exists in the inventory from TASK-084.
+- [x] Each "known uncovered" item has a one-sentence rationale.
 
 ## Test Plan
 

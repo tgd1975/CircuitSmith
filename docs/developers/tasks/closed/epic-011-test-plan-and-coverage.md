@@ -1,0 +1,129 @@
+---
+id: EPIC-011
+name: test-plan-and-coverage
+title: Test Plan and Coverage Matrix
+status: closed
+opened: 2026-05-13
+closed: 2026-06-21
+assigned:
+branch: release/epic-011-test-plan-and-coverage
+---
+
+Seeded by IDEA-003 (Detailed test plan for every part of CircuitSmith).
+
+Convert today's organically grown test suite into a deliberate matrix
+where coverage gaps are visible and intentional, not accidental. The
+test code already exists; what is missing is a single document a
+contributor can read to answer *"how is the router tested? what cases
+are deliberately uncovered? what's an acceptable PR-time check?"*
+
+The epic ships one structured directory under
+`docs/developers/testing/` — a per-subsystem set of plans plus a
+top-level coverage matrix — and the CI guardrail that prevents the
+plan from drifting away from the actual test surface.
+
+Scope and shape:
+
+- **One section per subsystem.** Schema validation, netgraph build,
+  layout kernel, Manhattan router, renderer, ERC engine, BOM/netlist
+  exporters, skill orchestration, CI gates. Each captures inputs and
+  outputs, unit/integration/golden/property-test layers, performance
+  budgets where they exist, and *known uncovered cases with rationale*.
+- **A top-level matrix.** Every test mapped to the subsystem it covers
+  and the layer it lives at — useful for spotting redundancy and gaps
+  in the same view. Includes the PR-time / nightly / release axis so
+  the fast feedback loop is explicit.
+- **Coverage-gap triage.** The plan exposes gaps; the epic files them
+  as concrete follow-up tasks rather than burying them inline.
+- **CI staleness guard.** New test files that appear in the tree
+  without a corresponding plan entry fail the gate. Same shape as the
+  existing erc-report staleness check (TASK-029).
+
+Relationships to neighbouring epics:
+
+- **EPIC-012 — tutorial and gallery** cross-references the example
+  gallery from the test plan, since the gallery doubles as a
+  regression suite. Coordination happens at TASK-101 (CI regression
+  diff) ↔ TASK-091 (staleness check).
+- **EPIC-013 — post-EPIC-006 doc audit** picks up the
+  "how it's tested" sections in narrative docs and verifies they match
+  the plan written here (TASK-107).
+
+Ordering inside the epic mirrors the natural pipeline: scaffold →
+inventory → per-subsystem plans → matrix → gap triage → CI guard.
+TASK-090 (gap triage) is deliberately last among the documentation
+work because it can only happen *after* the plans expose the gaps.
+
+## Tasks
+
+Tasks are listed automatically in the Task Epics section of
+`docs/developers/tasks/OVERVIEW.md` and in `EPICS.md` / `KANBAN.md`.
+
+## Implementation log
+
+- 2026-06-21 — TASK-083 closed (effort actual XS). Scaffolded
+  `docs/developers/testing/`: index (`README.md`) documenting the
+  one-file-per-subsystem convention, the chapter frontmatter shape, and
+  the matrix placeholder; nine per-subsystem chapter stubs; `_inventory.md`
+  referenced as the TASK-084 working artefact.
+- 2026-06-21 — TASK-084 closed (effort actual Small). Authored
+  `docs/developers/testing/_inventory.md`: all 59 test files (46
+  product-code, 13 tooling) tagged by subsystem, layer, and cadence from their
+  module docstrings. Observations flag the missing nightly/release tier
+  and the thin `router` / `skill-orchestration` coverage as input to
+  TASK-089/090.
+- 2026-06-21 — TASK-085 closed (effort actual Medium). Authored
+  `testing/netgraph.md` and `testing/schema.md` against the canonical
+  8-section structure. Surfaced two real gaps for TASK-090: NetGraph has
+  no property-based connection-form-equivalence test, and `S6`
+  (slash-form sub-block name collision) has no triggering fixture.
+- 2026-06-21 — TASK-086 closed (effort actual Medium). Authored
+  `testing/layout-kernel.md` (kernel + rubric v0.1/v1 + AI-placer
+  convergence, the seven EPIC-014 canonical-rule tests) and
+  `testing/router.md`. Headline gap: the router has no property-based
+  routing tests despite IDEA-003 anticipating them; the real
+  AnthropicClient adapter is also uncovered by design (ADR-0002).
+- 2026-06-21 — TASK-087 closed (effort actual Medium). Authored
+  `testing/renderer.md` (byte-exact SVG golden policy + meta/erc
+  normalisation) and `testing/erc-engine.md` with the rule-by-rule
+  fixture-coverage table. That table is the epic's sharpest output:
+  S1, E6, E8 have no triggering fixture and E4 only a predicate-path
+  test — the most actionable TASK-090 candidates.
+- 2026-06-21 — TASK-088 closed (effort actual Medium). Authored
+  `testing/exporters.md` (BOM/netlist + round-trip + PartsLedger as a
+  known manual step), `testing/skill-orchestration.md` (the agent-prompt
+  out-of-scope vs post-processing in-scope boundary), and
+  `testing/ci-gates.md` (a 15-row gate catalogue with failure mode +
+  bypass per gate). All eight chapters are now filled — TASK-089 (matrix)
+  is unblocked.
+- 2026-06-21 — TASK-089 closed (effort actual Medium). Filled the
+  coverage matrix in `testing/README.md`: 59 rows (46 product + 13
+  tooling), one per test file, with subsystem/layer/cadence columns and
+  the cadence-policy + hand-maintained-for-v1 prose. Row count
+  cross-checks against `_inventory.md`. Next: TASK-090 (gap triage,
+  human-in-loop: Main).
+- 2026-06-21 — TASK-090 closed (effort actual XS). Triaged every
+  "known uncovered" item across the eight chapters into three states:
+  - **TASK (tractable):** TASK-134 (triggering fixtures for S1, S6, E4,
+    E6, E8) and TASK-135 (property-based tests for the router + NetGraph
+    form-equivalence).
+  - **IDEA (exploratory):** IDEA-014 (nightly + release CI tiers —
+    catalog online URL check, cross-version render matrix, live-LLM
+    placer smoke, KiCad-import + PartsLedger round-trip).
+  - **Acceptable (no file):** the remainder — AI transport adapter
+    (ADR-0002), rubric 2-circuit corpus, route-around-bodies and the
+    Ubuntu-only SVG golden (intentional v0.1 scope), SVG visual-semantics,
+    `meta.schema` transitive coverage, the agent-prompt non-goal, and the
+    pre-commit/ci.yml shell glue — each kept as its chapter's
+    known-uncovered rationale. Matrix Notes now link the filed items.
+  Per AUTONOMY's Main-HIL contract this triage is surfaced for review;
+  the filed items are reversible and easily reclassified.
+- 2026-06-21 — TASK-091 closed (effort actual Medium). Added
+  `scripts/check_test_plan_staleness.py` (parses the chapters' `pytest`
+  fenced blocks; fails on a `tests/` file with no plan reference or a
+  plan reference to a missing file), its `tests/` suite, the CI step in
+  `ci.yml`, the settings allow-rule, and the scripts-README / CI_PIPELINE
+  / matrix-CI-guard docs. **EPIC-011 complete (9/9).** On this branch the
+  only red test is the pre-existing `test_clean_gallery_exits_zero`
+  date-bomb inherited from `main` — resolved by
+  `fix/gallery-erc-report-date-normalisation`; merge that first.

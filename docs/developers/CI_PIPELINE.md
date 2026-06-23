@@ -34,6 +34,7 @@ Steps, in order:
 | Portability lint | `python scripts/portability_lint.py src/circuitsmith`. No-op on missing dir, so safe pre-package-scaffold. | A path or import in `src/circuitsmith/` is OS-specific. |
 | Pytest | `pytest`. Picks up both test roots (`tests`, `scripts/tests`) per [`pyproject.toml`](../../pyproject.toml). | A test failed. Reproduce locally per [`TESTING.md`](TESTING.md). |
 | Tutorial + gallery regression gate (TASK-101) | `python scripts/check_gallery_regression.py`. Re-renders every committed `.circuit.yml` under `docs/users/{tutorial,examples}/` and diffs the SVG / sidecars against the committed artefacts. Skips circuits without a committed SVG (the EPIC-012 gallery entries blocked on IDEA-008 / IDEA-009). | A tutorial step or gallery example's committed artefact drifted from the renderer's current output. Reproduce locally with the same command; rebase with `--rebaseline` if the drift is intentional. |
+| Test-plan staleness gate (TASK-091) | `python scripts/check_test_plan_staleness.py`. Fails when a `tests/` file has no reference in the plan under `docs/developers/testing/`, or when the plan names a test file that no longer exists. | A new test landed without a plan entry, or a plan reference points at a deleted/renamed test. Add or repoint the `pytest`-block reference. |
 
 ## Local mirror — the pre-commit hook
 

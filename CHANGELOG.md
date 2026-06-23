@@ -11,6 +11,18 @@ first tag is cut.
 
 ### Added
 
+- **EPIC-011 — test plan and coverage matrix** closed (9 tasks).
+  New `docs/developers/testing/`: an index + coverage matrix (59 test
+  files mapped to subsystem / layer / PR-nightly-release cadence) and
+  nine per-subsystem chapters (schema, netgraph, layout-kernel, router,
+  renderer, erc-engine, exporters, skill-orchestration, ci-gates) on a
+  canonical 8-section structure (TASK-083..089). The matrix surfaced
+  concrete gaps — untriggered ERC/schema checks (S1/S6/E4/E6/E8) and a
+  missing router property suite — triaged into TASK-134/TASK-135 +
+  IDEA-014 (TASK-090). A CI staleness gate
+  (`scripts/check_test_plan_staleness.py`) fails the build when a
+  `tests/` file has no plan reference or the plan names a missing file
+  (TASK-091).
 - **EPIC-012 — tutorial and example gallery** closed (10 tasks).
   User-docs home at `docs/users/` (ADR-0014); six tutorial steps
   with committed `.circuit.yml` + rendered SVG sidecars (TASK-092..095);

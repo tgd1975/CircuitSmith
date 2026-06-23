@@ -1,9 +1,11 @@
 ---
 id: TASK-091
 title: Add a CI staleness check that flags tests not referenced in the plan
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: Clarification
 epic: test-plan-and-coverage
@@ -51,15 +53,15 @@ too slow. CI-only is correct.
 
 ## Acceptance Criteria
 
-- [ ] `scripts/check_test_plan_staleness.py` exists, is executable,
+- [x] `scripts/check_test_plan_staleness.py` exists, is executable,
       and exits 0 on the current repo state.
-- [ ] The script flags both missing-from-plan and dangling-reference
+- [x] The script flags both missing-from-plan and dangling-reference
       failures with actionable error messages.
-- [ ] CI runs the check on every PR (same job or sibling of the
+- [x] CI runs the check on every PR (same job or sibling of the
       erc-report staleness check).
-- [ ] `.claude/settings.json` includes the new `Bash(python ...)`
+- [x] `.claude/settings.json` includes the new `Bash(python ...)`
       allow rule.
-- [ ] `scripts/README.md` updated to list the new script and what it
+- [x] `scripts/README.md` updated to list the new script and what it
       does.
 
 ## Test Plan

@@ -11,6 +11,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | [`check_exporters.py`](check_exporters.py) | Exporter staleness guard for CI (TASK-035). | `python3 check_exporters.py` |
 | [`check_gallery_regression.py`](check_gallery_regression.py) | Check tutorial + gallery rendered artefacts for drift (TASK-101). | `python3 check_gallery_regression.py` |
 | [`check_phase2b_trigger.py`](check_phase2b_trigger.py) | Phase 2b trigger observer (TASK-058). | `python3 check_phase2b_trigger.py` |
+| [`check_test_plan_staleness.py`](check_test_plan_staleness.py) | Test-plan staleness gate (TASK-091, EPIC-011). | `python3 check_test_plan_staleness.py` |
 | [`codeowner_hook.py`](codeowner_hook.py) | Code-owner reminder hook — PreToolUse for ``Edit`` and ``Write``. | `python3 codeowner_hook.py` |
 | [`commit-pathspec.sh`](commit-pathspec.sh) | scripts/commit-pathspec.sh — wrapper for git's pathspec-form commit | `./commit-pathspec.sh` |
 | [`housekeep.py`](housekeep.py) | Central housekeeping for the task system. | `python3 housekeep.py` |
@@ -58,6 +59,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 **Purpose**: Phase 2b trigger observer (TASK-058).
 
 **Usage**: `python3 check_phase2b_trigger.py`
+
+### check_test_plan_staleness.py
+
+**Purpose**: Test-plan staleness gate (TASK-091, EPIC-011).
+
+**Usage**: `python3 check_test_plan_staleness.py`
 
 ### codeowner_hook.py
 
