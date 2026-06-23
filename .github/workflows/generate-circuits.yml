@@ -44,7 +44,7 @@ jobs:
 
       - name: Rewrite (push, non-main)
         if: github.event_name == 'push' && github.ref != 'refs/heads/main'
-        run: python -m circuitsmith.markdown docs
+        run: python -m circuitsmith.markdown docs --exclude docs/developers/ideas/archived
 
       - name: Commit any rewrites
         if: github.event_name == 'push' && github.ref != 'refs/heads/main'
@@ -59,4 +59,4 @@ jobs:
 
       - name: Check-only (PR)
         if: github.event_name == 'pull_request'
-        run: python -m circuitsmith.markdown --check docs
+        run: python -m circuitsmith.markdown --check docs --exclude docs/developers/ideas/archived

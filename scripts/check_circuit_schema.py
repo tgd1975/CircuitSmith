@@ -66,11 +66,20 @@ def _staged_circuit_yml() -> list[Path]:
 
 
 def _all_circuit_yml() -> list[Path]:
-    """Return every committed ``.circuit.yml`` under ``data/`` and ``tests/``."""
-    return sorted(
-        list((REPO_ROOT / "data").glob("*.circuit.yml"))
-        + list((REPO_ROOT / "tests" / "fixtures").rglob("*.circuit.yml"))
-    )
+    """Return every committed ``.circuit.yml`` that is *meant* to be valid.
+
+    Walks ``data/`` and ``tests/fixtures/``. Fixtures whose filename
+    starts with ``invalid`` live under ``tests/fixtures/schema_check/``
+    purely to exercise the validator's *rejection* path — they are
+    deliberately malformed, so the ``--all`` conformance gate skips
+    them (validating them would always "fail" by design and wedge CI).
+    """
+    fixtures = [
+        p
+        for p in (REPO_ROOT / "tests" / "fixtures").rglob("*.circuit.yml")
+        if not p.name.startswith("invalid")
+    ]
+    return sorted(list((REPO_ROOT / "data").glob("*.circuit.yml")) + fixtures)
 
 
 def validate_paths(paths: list[Path]) -> list[str]:

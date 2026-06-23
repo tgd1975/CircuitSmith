@@ -9,6 +9,7 @@ needs rebaseline, and assert the script's exit code + stderr.
 """
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 import sys
@@ -71,6 +72,41 @@ def test_clean_gallery_exits_zero(tmp_path: Path) -> None:
     result = _run(repo)
     assert result.returncode == 0, (
         f"unexpected exit: stdout={result.stdout!r} stderr={result.stderr!r}"
+    )
+    assert "ok docs/users/tutorial/01-minimal-circuit.circuit.yml" in result.stdout
+
+
+def test_erc_report_date_only_diff_is_normalised(tmp_path: Path) -> None:
+    """A report differing only by the auto-stamped header date must pass.
+
+    The renderer stamps `date.today()` into the ERC report header, so a
+    committed report drifts from a fresh render on any later day. The gate
+    normalises the date line (mirrors check_erc_reports.py) so a date-only
+    delta is not flagged as drift. Guards against the regression where the
+    gallery gate compared the report verbatim and went red every day after
+    the artefacts were committed.
+    """
+    repo = _seed_gallery(tmp_path)
+    report = repo / "docs" / "users" / "tutorial" / "01-minimal-circuit.erc-report.md"
+    text = report.read_text(encoding="utf-8")
+    # Rewrite the committed header date to a clearly different one; the
+    # fresh render stamps today's date, so only the date line should differ.
+    mutated = re.sub(
+        r"^(# ERC Report — .* — )\d{4}-\d{2}-\d{2}$",
+        r"\g<1>2000-01-01",
+        text,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    assert mutated != text, "sample report header did not match the expected date pattern"
+    # newline="\n": on Windows write_text would otherwise translate to CRLF,
+    # but git checks the committed report out as LF (.gitattributes) and the
+    # renderer emits LF — the gate byte-compares, so the fixture must be LF too.
+    report.write_text(mutated, encoding="utf-8", newline="\n")
+    result = _run(repo)
+    assert result.returncode == 0, (
+        f"date-only diff should be normalised, got exit {result.returncode}: "
+        f"stdout={result.stdout!r} stderr={result.stderr!r}"
     )
     assert "ok docs/users/tutorial/01-minimal-circuit.circuit.yml" in result.stdout
 

@@ -1730,7 +1730,7 @@ def _main(argv: list[str]) -> int:
 
     from ruamel.yaml import YAML
     yaml = YAML(typ="safe")
-    with open(args.circuit) as fh:
+    with open(args.circuit, encoding="utf-8") as fh:
         circuit = yaml.load(fh)
 
     schema_findings: list[Finding] = []

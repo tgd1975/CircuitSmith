@@ -1,0 +1,30 @@
+# Normalise line endings to LF in the working tree on every platform.
+#
+# Without this, a Windows checkout (core.autocrlf=true) rewrites text
+# files with CRLF, which changes their *raw bytes*. Two things in this
+# repo hash or byte-compare raw bytes and would then diverge from the
+# Linux baseline that the goldens were generated on:
+#
+#   * tests/test_netgraph_golden.py SHA-256s circuit.schema.json to
+#     derive `schema_version` — CRLF flips the digest and fails the
+#     golden on Windows only (the update script can't fix it: on Linux
+#     the hash already matches, so --bump-schema-version is refused).
+#   * scripts/check_gallery_regression.py byte-compares committed SVGs
+#     against freshly-rendered output, and the renderer always emits
+#     "\n".
+#
+# Forcing eol=lf keeps the bytes identical across Linux and Windows CI.
+* text=auto eol=lf
+
+# Generated schematics are byte-compared by the gallery regression gate;
+# pin them to LF explicitly so a Windows checkout matches renderer output.
+*.svg text eol=lf
+
+# Binary types git must never convert (belt-and-suspenders over the
+# text=auto auto-detection above).
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary
+*.ico  binary

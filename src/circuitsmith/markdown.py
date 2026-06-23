@@ -104,7 +104,7 @@ def render_block_to_svg(yaml_source: str, out_dir: Path, name: str) -> Path:
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     yml_path = out_dir / f"{name}.circuit.yml"
-    yml_path.write_text(yaml_source)
+    yml_path.write_text(yaml_source, encoding="utf-8")
     svg_path = out_dir / f"{name}.svg"
     layout_path = out_dir / f"{name}.layout.yml"
     meta_path = out_dir / f"{name}.meta.yml"
@@ -147,7 +147,7 @@ def rewrite_markdown(md_path: Path, *, check: bool = False) -> tuple[bool, list[
     Returns `(changed, messages)`. In `check` mode, no files are
     modified; `changed` reports whether a rewrite *would* happen.
     """
-    text = md_path.read_text()
+    text = md_path.read_text(encoding="utf-8")
     blocks = find_blocks(text)
     if not blocks:
         return False, []
@@ -185,7 +185,7 @@ def rewrite_markdown(md_path: Path, *, check: bool = False) -> tuple[bool, list[
 
     changed = new_text != text
     if changed and not check:
-        md_path.write_text(new_text)
+        md_path.write_text(new_text, encoding="utf-8")
         messages.append(f"rewrote {md_path}")
     return changed, messages
 
@@ -217,14 +217,29 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Do not modify files; exit non-zero if any rewrite is needed.",
     )
+    parser.add_argument(
+        "--exclude",
+        nargs="*",
+        type=Path,
+        default=[],
+        metavar="DIR",
+        help="Directory subtrees to skip (e.g. archived design docs whose "
+             "```circuit blocks are illustrative, not rendered artefacts).",
+    )
     args = parser.parse_args(argv)
 
+    excludes = [e.resolve() for e in args.exclude]
     targets: list[Path] = []
     for p in args.paths:
         if p.is_dir():
             targets.extend(walk(p))
         elif p.is_file() and p.suffix == ".md":
             targets.append(p)
+    if excludes:
+        targets = [
+            t for t in targets
+            if not any(t.resolve().is_relative_to(e) for e in excludes)
+        ]
 
     any_drift = False
     any_fail = False

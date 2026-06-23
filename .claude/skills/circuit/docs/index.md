@@ -46,7 +46,7 @@ agent-facing surface that *consumes* it.
    package and the skill prompt are versioned independently; pin
    both.
 
-2. **Editable / development install.** Clone the full CircuitSmith
+2. **Editable / development install.** Clone the full host
    repo and `pip install -e .` against its `pyproject.toml`; the
    skill folder is already at `.claude/skills/circuit/`. This is
    the in-repo development path the maintainers use.
@@ -212,8 +212,8 @@ Path("bom.md").write_text(bom_md)
 Path("bom.csv").write_text(bom_csv)
 ```
 
-The committed BOM artefacts at
-`docs/builders/wiring/<target>/{bom.md,bom.csv}` are guarded against
+The committed BOM artefacts
+(`bom.md`, `bom.csv`) for each target are guarded against
 drift by `scripts/check_exporters.py`, run in CI and in the
 pre-commit hook.
 
@@ -247,7 +247,7 @@ Path("main-circuit.net").write_text(net_text)
 
 Output is consumed by KiCad's "Tools → Update PCB from Netlist"
 workflow — the direct bridge to PCB layout. The committed netlist
-at `docs/builders/wiring/<target>/main-circuit.net` is guarded
+(`main-circuit.net`) for each target is guarded
 against drift by the same `check_exporters.py` script that guards
 the BOM artefacts.
 
@@ -317,7 +317,7 @@ picks one:
 - **CI workflow.** A GitHub Actions job calls
   `python -m circuitsmith.markdown <paths>` on push (rewrite blocks
   + commit the result) and `--check` on PRs (fail the job on drift).
-  The CircuitSmith repo ships an example at
+  The host repo ships an example at
   `.github/workflows/generate-circuits.yml`.
 - **In-process during site build.** When the consuming project uses
   MkDocs with `pymdownx.superfences`, a custom formatter calls
