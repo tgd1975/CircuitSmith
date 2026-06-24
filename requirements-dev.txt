@@ -8,3 +8,8 @@
 # and dev deps are declared in pyproject.toml — this file is a
 # one-liner so contributors don't have to remember the extras syntax.
 -e .[dev]
+
+# Property-based testing (TASK-135). Also declared in the pyproject
+# `dev` extra above (installed transitively via `-e .[dev]`); pinned
+# here too so the requirement is greppable from the requirements file.
+hypothesis>=6

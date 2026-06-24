@@ -120,9 +120,10 @@ cannot silently drift.
 | `tests/components/test_bjt_profiles.py` | schema, layout-kernel | unit | ✓ | | | profile + BJT kernel rule |
 | `tests/components/test_555_profile.py` | schema | unit | ✓ | | | |
 | `tests/components/test_opamp_profile.py` | schema | unit | ✓ | | | |
-| `tests/test_netgraph.py` | netgraph | unit | ✓ | | | form-equivalence property → TASK-135 |
+| `tests/test_netgraph.py` | netgraph | unit | ✓ | | | |
 | `tests/test_netgraph_golden.py` | netgraph | golden | ✓ | | | cross-release drift gate |
 | `tests/netgraph/test_sub_block_flattener.py` | netgraph | unit | ✓ | | | |
+| `tests/netgraph/test_form_equivalence_properties.py` | netgraph | property | ✓ | | | pins/path + bus/pins form-equivalence (TASK-135) |
 | `tests/test_kernel.py` | layout-kernel | unit, golden | ✓ | | | determinism + incremental diff |
 | `tests/test_rubric.py` | layout-kernel | unit | ✓ | | | v0.1 structural rubric |
 | `tests/test_rubric_v1.py` | layout-kernel | unit | ✓ | | | thresholds from a 2-circuit corpus |
@@ -135,7 +136,8 @@ cannot silently drift.
 | `tests/layout/test_bjt_load_degeneration_rules.py` | layout-kernel | unit, golden | ✓ | | | |
 | `tests/layout/test_pullup_ic_anchor.py` | layout-kernel | unit | ✓ | | | |
 | `tests/layout/test_page_propagation.py` | layout-kernel | unit, integration | ✓ | | | |
-| `tests/test_router.py` | router | unit | ✓ | | | property suite → TASK-135 |
+| `tests/test_router.py` | router | unit | ✓ | | | |
+| `tests/layout/test_router_properties.py` | router | property | ✓ | | | orthogonality + determinism + net-order invariance (TASK-135) |
 | `tests/test_renderer.py` | renderer | unit, integration | ✓ | | | |
 | `tests/test_full_pedal_fixture.py` | renderer | integration, e2e | ✓ | | | full-pipeline e2e |
 | `tests/render/test_multi_page_driver.py` | renderer | integration | ✓ | | | |

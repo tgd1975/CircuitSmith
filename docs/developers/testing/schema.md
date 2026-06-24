@@ -68,7 +68,10 @@ patterns validate; an unknown `schema` version is rejected.
 the worked RC-pair validates; a nested sub-block reference is rejected
 by the component-type regex `^[a-z][a-z0-9_]*/[a-z0-9_]+$`; `S7` fires
 on an undeclared sub-block reference and on an undeclared port; flat
-circuits and mixed flat+sub-block circuits still validate.
+circuits and mixed flat+sub-block circuits still validate. TASK-134
+adds `S6` cross-reference coverage
+(`test_S6_fires_on_slash_form_nested_sub_block`) — see *Known
+uncovered* for the schema-relaxation it relies on.
 
 **Pages** (`tests/schema/test_pages_schema.py`, TASK-124): layouts
 without `pages:` still validate; named pages + per-placement assignment
@@ -121,12 +124,17 @@ pinned because nothing has approached a concern.
 
 ## Known uncovered cases
 
-- **`S6` (slash-form sub-block name collision).** The nested-sub-block
-  test exercises the *structural* type-regex defence; `S6`, the
-  cross-reference defence for a sub-block deliberately named in the
-  `foo/bar` slash form, has no direct triggering fixture. Rationale: the
-  regex makes the collision hard to express, so `S6` is a belt-and-braces
-  check; worth a fixture but not a blocker — a candidate for TASK-090.
+- **`S6` (slash-form sub-block name collision) — now covered
+  (TASK-134).** `test_S6_fires_on_slash_form_nested_sub_block` triggers
+  the cross-reference defence directly. Note the latent inconsistency it
+  documents: the shipped `subBlocks` key pattern forbids `/`, so a
+  slash-form sub-block name is rejected at the JSON-Schema phase (which
+  returns early) and `S6` is **unreachable through `validate()` with the
+  stock schema**. The test points `SCHEMA_PATH` at a copy whose
+  `subBlocks` key pattern admits `/`, so the JSON-Schema phase passes and
+  the genuine `S6` cross-check in `validator.py` fires on the nested
+  slash-form type. This both covers the predicate and records the
+  schema/validator gap that keeps it dormant in production.
 - **`meta.schema.json` in isolation.** The meta sidecar schema is
   exercised transitively through the renderer's meta output, not by a
   dedicated schema unit test. Rationale: meta is renderer-authored, so

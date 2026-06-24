@@ -18,6 +18,7 @@ Test files covering this subsystem:
 tests/test_netgraph.py
 tests/test_netgraph_golden.py
 tests/netgraph/test_sub_block_flattener.py
+tests/netgraph/test_form_equivalence_properties.py
 ```
 
 ## Inputs and outputs
@@ -93,11 +94,38 @@ make real drift pass silently.
 
 ## Property / fuzz tests
 
-**None today.** Determinism is verified by *example*
-(`test_canonical_hash_is_stable_across_parses`,
-`test_canonical_hash_changes_with_topology`) and the three-form
-equivalence by fixed fixtures, not by property-based generation over
-randomised topologies. See *Known uncovered*.
+`tests/netgraph/test_form_equivalence_properties.py` (TASK-135) closes
+the form-equivalence-over-generated-topologies gap this chapter flagged.
+It generates a chain topology — a Hypothesis-varied number of series
+2-pin resistors between an MCU GPIO and the MCU ground pin — and expresses
+the **same** connectivity two ways:
+
+- the `pins` form (one connection per junction, each listing its two
+  pins), versus
+- the `path` form (a single `path:` listing the ordered chain).
+
+The headline assertion is that both induce the same **canonical net
+membership** — the set of pin-sets, independent of the net *names* the
+author chose, which is exactly the contract downstream consumers depend on
+(ADR-0003). A companion property covers `bus` vs `pins` over a generated
+single multi-drop net (the backbone/tap split is Hypothesis-varied and
+must not change membership). All run PR-time (`max_examples=40`,
+`deadline=None`).
+
+Two deliberate scoping decisions:
+
+- **Paths terminate at a real pin, not a bare net-name node.** A bare
+  net-name terminator emits an extra single-pin tail segment *and* a merge
+  into the named net, which the plain `pins` form has no counterpart for —
+  the two forms would then not be membership-equivalent by construction.
+  Terminating at `U1.GNDL` makes the path's segments exactly the chain's
+  junctions, one per `pins`-form net.
+- **`canonical_hash()` equality is asserted *within* each form, not
+  across forms.** The hash folds in the `PATH_SEGMENTS` table that the
+  `path` form populates and `pins` does not, so it is intentionally
+  unequal across forms even for identical connectivity. The cross-form
+  invariant is membership; the hash's own contract (stability across
+  parses, the TASK-053 golden guard) is asserted per form.
 
 ## Performance budget
 
@@ -107,11 +135,14 @@ is no pinned number because nothing has ever approached a concern.
 
 ## Known uncovered cases
 
-- **Property-based form equivalence.** The `pins`/`path`/`bus`
-  equivalence is asserted on hand-written fixtures, not generated
-  topologies. Rationale: the canonical-hash golden already catches
-  serialiser drift on real circuits, so randomised generation is
-  lower-value than it looks; filed as a candidate, not a blocker.
+- **Property-based form equivalence over *richer* topologies.**
+  `tests/netgraph/test_form_equivalence_properties.py` (TASK-135) now
+  covers `pins`-vs-`path` over a generated series chain and `bus`-vs-`pins`
+  over a generated multi-drop net. Generation over branching trees, mixed
+  forms in one circuit, or `path` tails that merge into named nets remains
+  a candidate; the merge-ordering interaction is deliberately excluded
+  (see the property file's scoping note) because it is a within-net-order
+  effect, not a form-equivalence one.
 - **Malformed-but-schema-valid input.** NetGraph assumes its input
   passed schema validation; it is not independently fuzzed with
   structurally-valid-but-semantically-broken dicts. Rationale: the
@@ -129,7 +160,10 @@ is no pinned number because nothing has ever approached a concern.
 | `tests/test_netgraph.py` | ✓ | | |
 | `tests/test_netgraph_golden.py` | ✓ | | |
 | `tests/netgraph/test_sub_block_flattener.py` | ✓ | | |
+| `tests/netgraph/test_form_equivalence_properties.py` | ✓ | | |
 
-All three run at PR-time via `pytest`. The golden test is *also* the
+All four run at PR-time via `pytest`. The golden test is *also* the
 kind of check a nightly job would host if the suite ever grows a
-nightly tier; today it is fast enough to stay at PR-time.
+nightly tier; the property suite's large-iteration variant is a second
+nightly candidate (IDEA-014); today both are fast enough to stay at
+PR-time.

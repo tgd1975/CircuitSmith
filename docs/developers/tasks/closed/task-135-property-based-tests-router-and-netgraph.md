@@ -1,9 +1,11 @@
 ---
 id: TASK-135
 title: Add property-based tests for the router and NetGraph form-equivalence
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-06-21
 effort: Medium (2-8h)
+effort_actual: Medium (2-8h)
 complexity: Senior
 human-in-loop: No
 ---
@@ -29,11 +31,11 @@ Add a property-based suite (e.g. Hypothesis) covering:
 
 ## Acceptance Criteria
 
-- [ ] A property-based test module exercises the router invariants over
+- [x] A property-based test module exercises the router invariants over
       generated layouts.
-- [ ] A property-based test asserts `pins` / `path` / `bus`
+- [x] A property-based test asserts `pins` / `path` / `bus`
       form-equivalence over generated topologies.
-- [ ] Any new dependency is added to the dev extra; PR-time runs use fast
+- [x] Any new dependency is added to the dev extra; PR-time runs use fast
       strategies, with large-iteration runs deferred to a nightly tier
       (IDEA-014).
 
