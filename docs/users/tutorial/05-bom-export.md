@@ -107,7 +107,7 @@ The `$CS_PARTSLEDGER_PATH` environment variable from
 [`.envrc.example`](../../../.envrc.example) holds the path to a
 sibling PartsLedger checkout, but no consumer in CircuitSmith reads
 from it yet — the inventory-as-input link is filed as
-[IDEA-005](../../developers/ideas/open/idea-005-partsledger-inventory-as-input.md).
+[IDEA-005](../../developers/ideas/archived/idea-005-partsledger-inventory-as-input.md).
 
 Until that idea lands, the manual procedure is:
 

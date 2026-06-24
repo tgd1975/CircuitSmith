@@ -3,6 +3,11 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-006 — the skill at
+> `.claude/skills/circuit/` (SKILL.md + docs) delegates to the installable
+> `circuitsmith` package, published to PyPI. 🔀 ADR-0012 superseded ADR-0007:
+> the library is the package under `src/circuitsmith/`, not the skill folder.
 
 ## Skill Packaging
 

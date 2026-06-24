@@ -1,5 +1,9 @@
 # ERC Checks — Reference
 
+> **New to CircuitSmith?** [Tutorial step 4](../../../../docs/users/tutorial/04-erc-fix.md)
+> walks through reading and fixing an ERC failure; this is the per-check
+> reference.
+
 When ERC fires on your PR, find the check code below for the trigger,
 meaning, severity, suppression, and a link to the catalog entry's
 "Why / Senior's tip / Source" block.

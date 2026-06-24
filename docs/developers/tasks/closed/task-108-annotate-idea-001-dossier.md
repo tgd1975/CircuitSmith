@@ -1,9 +1,11 @@
 ---
 id: TASK-108
 title: Annotate the archived IDEA-001 dossier with what shipped vs what didn't
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Small (<2h)
 complexity: Medium
 human-in-loop: Main
 epic: post-epic-006-doc-audit
@@ -48,13 +50,13 @@ contract and inaccuracies here would mislead future readers.
 
 ## Acceptance Criteria
 
-- [ ] Every section in `idea-001.md` and the eight companion files
+- [x] Every section in `idea-001.md` and the eight companion files
       has at least one audit annotation (or an explicit "no
       annotation needed: descriptive only" note).
-- [ ] Annotations use a uniform `> [Audit note YYYY-MM-DD]:` prefix.
-- [ ] Every "shipped in EPIC-NNN" claim resolves to an EPIC file
+- [x] Annotations use a uniform `> [Audit note YYYY-MM-DD]:` prefix.
+- [x] Every "shipped in EPIC-NNN" claim resolves to an EPIC file
       that exists.
-- [ ] Every "superseded by ADR-NNNN" claim resolves to an ADR file
+- [x] Every "superseded by ADR-NNNN" claim resolves to an ADR file
       that exists.
 
 ## Test Plan

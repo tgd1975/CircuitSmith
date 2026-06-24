@@ -1,9 +1,11 @@
 ---
 id: TASK-105
 title: Cross-reference audit — internal links, TASK/EPIC/IDEA refs, code-path mentions
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Small (<2h)
+effort_actual: Medium (2-8h)
 complexity: Medium
 human-in-loop: Clarification
 epic: post-epic-006-doc-audit
@@ -47,13 +49,13 @@ total) so it can run on every PR.
 
 ## Acceptance Criteria
 
-- [ ] `scripts/check_doc_references.py` exists (or is extended) and
+- [x] `scripts/check_doc_references.py` exists (or is extended) and
       catches all five reference classes.
-- [ ] Every reference in the repo currently resolves (the script
+- [x] Every reference in the repo currently resolves (the script
       exits 0 on the post-rewrite state).
-- [ ] Script runs in CI on every PR.
-- [ ] `.claude/settings.json` allow rule added.
-- [ ] `scripts/README.md` updated.
+- [x] Script runs in CI on every PR.
+- [x] `.claude/settings.json` allow rule added.
+- [x] `scripts/README.md` updated.
 
 ## Test Plan
 

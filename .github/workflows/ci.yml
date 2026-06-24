@@ -95,6 +95,15 @@ jobs:
         shell: bash
         run: python scripts/check_test_plan_staleness.py
 
+      - name: Doc cross-reference gate (TASK-105)
+        # Fails when a living narrative doc has a broken relative link.
+        # Frozen records (tasks/ideas/adr), vendored skills, code fences,
+        # and lifecycle-folder drift are out of scope; the ID / code-path /
+        # external-URL classes are opt-in flags, off in CI.
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: python scripts/check_doc_references.py
+
       - name: Catalog validation (offline)
         # Format + enforced_by + heuristic disclaimer + category-lint.
         # Online URL reachability runs nightly via the separate

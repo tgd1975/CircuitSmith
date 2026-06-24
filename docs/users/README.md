@@ -12,7 +12,3 @@ For developer / contributor documentation (architecture, ADRs, task
 system, ERC internals), see [`docs/developers/`](../developers/).
 For maker-facing wiring guides shipped alongside the schematic
 output, see [`docs/builders/`](../builders/).
-
-> This directory is the home introduced by EPIC-012. Until that epic
-> closes, expect the tutorial and gallery directories to fill in
-> incrementally.

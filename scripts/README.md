@@ -7,6 +7,7 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 | Script | Purpose | Usage |
 |--------|---------|-------|
 | [`check_circuit_schema.py`](check_circuit_schema.py) | Schema-validation gate for ``.circuit.yml`` files (TASK-052 / EPIC-008). | `python3 check_circuit_schema.py` |
+| [`check_doc_references.py`](check_doc_references.py) | Doc cross-reference gate (TASK-105, EPIC-013). | `python3 check_doc_references.py` |
 | [`check_erc_reports.py`](check_erc_reports.py) | ERC-report staleness + error-gate for CI (TASK-029). | `python3 check_erc_reports.py` |
 | [`check_exporters.py`](check_exporters.py) | Exporter staleness guard for CI (TASK-035). | `python3 check_exporters.py` |
 | [`check_gallery_regression.py`](check_gallery_regression.py) | Check tutorial + gallery rendered artefacts for drift (TASK-101). | `python3 check_gallery_regression.py` |
@@ -35,6 +36,12 @@ This folder contains utility scripts for development, CI/CD, and maintenance tas
 **Purpose**: Schema-validation gate for ``.circuit.yml`` files (TASK-052 / EPIC-008).
 
 **Usage**: `python3 check_circuit_schema.py`
+
+### check_doc_references.py
+
+**Purpose**: Doc cross-reference gate (TASK-105, EPIC-013).
+
+**Usage**: `python3 check_doc_references.py`
 
 ### check_erc_reports.py
 

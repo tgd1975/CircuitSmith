@@ -34,7 +34,7 @@ the package's **public Python API** — the names exposed via
 | Bump | When |
 |------|------|
 | `MAJOR` (X.0.0) | Backwards-incompatible removal or rename of a public symbol, CLI flag, or `.circuit.yml` schema field. |
-| `MINOR` (0.Y.0) | New public symbol, new CLI flag, additive `.circuit.yml` field, new ERC check (S/E IDs are stable per `docs/erc-checks.md`). |
+| `MINOR` (0.Y.0) | New public symbol, new CLI flag, additive `.circuit.yml` field, new ERC check (S/E IDs are stable per `.claude/skills/circuit/docs/erc-checks.md`). |
 | `PATCH` (0.0.Z) | Bug fix, internal refactor, documentation, layout-rubric tweak that doesn't change the public surface. |
 
 Until the first non-`dev` release, `0.x` versions are considered

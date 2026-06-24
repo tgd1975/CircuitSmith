@@ -3,6 +3,11 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. `data/config.json`, IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-001 as
+> `src/circuitsmith/schema/circuit.schema.json` + the post-schema validator.
+> 🔀 EPIC-014 added the sub-block grammar (instances / ports) and multi-page
+> `pages:` blocks (TASK-115, TASK-124).
 
 ## Format
 

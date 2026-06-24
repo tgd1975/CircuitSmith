@@ -3,6 +3,11 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-003 as
+> `src/circuitsmith/knowledge/rules.json` (authoritative per ADR-0006); the
+> human-facing reference is `.claude/skills/circuit/docs/erc-checks.md`. The
+> educational-rule backlog lives at `src/circuitsmith/knowledge/BACKLOG.md`.
 
 The ERC checks (S1–S5, E1–E10) are the **enforcement** layer — pass/fail predicates
 encoded in `erc_engine.py` that block CI on violations. The rule catalog is the

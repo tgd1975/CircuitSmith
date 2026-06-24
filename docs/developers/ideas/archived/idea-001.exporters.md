@@ -3,6 +3,12 @@
 > Sub-note of [IDEA-001](idea-001-circuit-skill.md). Predecessor references
 > (e.g. `scripts/generate-schematic.py`, IDEA-011/018/019/022) resolve via the
 > [Provenance anchor map](idea-001-circuit-skill.md#provenance).
+>
+> [Audit note 2026-06-21]: ✅ Shipped in EPIC-004 as
+> `src/circuitsmith/export/` (bom_exporter walks `components`;
+> netlist_exporter walks the NetGraph). The decoupling described here is the
+> enforced contract — ADR-0004, machine-checked by the boundary-import test
+> (TASK-050).
 
 Both exporters are downstream consumers. The BOM exporter walks `components` directly;
 the netlist exporter walks the shared `NetGraph` owned by

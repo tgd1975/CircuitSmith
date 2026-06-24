@@ -1,9 +1,11 @@
 ---
 id: TASK-104
 title: Voice unification — pick canonical voice and rewrite earlier docs forward
-status: open
+status: closed
+closed: 2026-06-21
 opened: 2026-05-13
 effort: Large (8-24h)
+effort_actual: Small (<2h)
 complexity: Senior
 human-in-loop: Main
 epic: post-epic-006-doc-audit
@@ -54,15 +56,15 @@ pass) is the right tempo.
 
 ## Acceptance Criteria
 
-- [ ] Canonical voice captured in a short style note in
+- [x] Canonical voice captured in a short style note in
       `docs/developers/CODING_STANDARDS.md` (or sibling).
-- [ ] Every pre-EPIC-001 and mid-epic doc identified in TASK-102's
+- [x] Every pre-EPIC-001 and mid-epic doc identified in TASK-102's
       inventory has been rewritten or explicitly skipped (with a
       one-line "skipped because…" in the inventory).
-- [ ] Drift items from TASK-103 that touched rewritten files are
+- [x] Drift items from TASK-103 that touched rewritten files are
       resolved (the drift doc gets the items struck through with
       the resolving commit reference).
-- [ ] No new content invented during rewriting — voice-pass only,
+- [x] No new content invented during rewriting — voice-pass only,
       not architecture revision.
 
 ## Test Plan

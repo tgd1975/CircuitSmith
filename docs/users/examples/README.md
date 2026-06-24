@@ -50,5 +50,5 @@ committed SVG (none today) would be silently skipped.
 
 - [Tutorial](../tutorial/) — if you want a guided walkthrough rather
   than a finished circuit to read.
-- [`circuit-yaml.md`](../../developers/circuit-yaml.md) —
+- [`circuit-yaml.md`](../../../.claude/skills/circuit/docs/circuit-yaml.md) —
   authoritative format reference.

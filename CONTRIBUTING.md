@@ -1,6 +1,7 @@
 # Contributing
 
-CircuitSmith is at concept stage. The work breakdown lives in
+CircuitSmith is a shipped Python package (`circuitsmith`). The work
+breakdown lives in
 [`docs/developers/tasks/EPICS.md`](docs/developers/tasks/EPICS.md);
 the design dossier lives in
 [`docs/developers/ideas/archived/idea-001-circuit-skill.md`](docs/developers/ideas/archived/idea-001-circuit-skill.md)

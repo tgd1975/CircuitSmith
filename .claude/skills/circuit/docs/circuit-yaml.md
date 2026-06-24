@@ -3,10 +3,13 @@
 > Audience: contributors authoring circuits. Companion design doc:
 > [`docs/developers/ideas/archived/idea-001.yaml-format.md`](../../../../docs/developers/ideas/archived/idea-001.yaml-format.md).
 > Layout engine consumer: [`layout.md`](layout.md).
+> **New to CircuitSmith?** The [tutorial](../../../../docs/users/tutorial/)
+> and [example gallery](../../../../docs/users/examples/) show `.circuit.yml`
+> end-to-end; this is the reference.
 
 A `.circuit.yml` describes a circuit declaratively in three top-level
 sections: `meta`, `components`, `connections`. The renderer
-([`renderer.py`](../renderer.py)) takes one file and produces an SVG,
+([`renderer.py`](../../../../src/circuitsmith/renderer.py)) takes one file and produces an SVG,
 an updated `layout.yml`, and a `meta.yml` sidecar.
 
 ## Top-level structure
@@ -55,7 +58,7 @@ components:
 
 Profile names follow the `<file_stem>/<dict_name>` convention
 documented in [`components.md`](components.md). Adding a new
-profile is a code change in `.claude/skills/circuit/components/*.py`,
+profile is a code change in `src/circuitsmith/components/*.py`,
 not a `.circuit.yml` change.
 
 ### `connections`
@@ -287,10 +290,10 @@ Two non-obvious constraints worth designing around:
 Every `.circuit.yml` runs through two-phase validation before the
 renderer touches it:
 
-1. **JSON Schema** ([`circuit.schema.json`](../schema/circuit.schema.json))
+1. **JSON Schema** ([`circuit.schema.json`](../../../../src/circuitsmith/schema/circuit.schema.json))
    — structural shape, identifier patterns, the `oneOf` connection-form
    rule.
-2. **Post-schema validator** ([`schema/validator.py`](../schema/validator.py))
+2. **Post-schema validator** ([`schema/validator.py`](../../../../src/circuitsmith/schema/validator.py))
    — pin reference resolution (S5) and component-type resolution (S4).
 
 The renderer halts with a non-zero exit code on any finding.
