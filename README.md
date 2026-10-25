@@ -1,5 +1,14 @@
 # CircuitSmith
 
+**Archived (2026-10-25).** CircuitSmith is no longer developed. Its ideas
+continue in [edakit](https://github.com/tgd1975/edakit): the rule catalog with
+a reason and a source for every rule, the designer role bound to the parts
+library, sub-blocks with ports, the checks for I2C pull-ups, strapping pins,
+input-only pins and the MCU's current budget, and a schematic drawn without an
+EDA tool – see
+[edakit handbook, chapter 14](https://github.com/tgd1975/edakit/blob/main/handbook/14-design.md).
+The text below is the state at the time of archiving.
+
 > *CircuitSmith forges schematics. [PartsLedger](https://github.com/tgd1975/PartsLedger) keeps the record CircuitSmith reads.*
 
 **⚠️ Concept stage.** Everything below describes the *target* state of the

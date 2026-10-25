@@ -9,6 +9,12 @@ first tag is cut.
 
 ## [Unreleased]
 
+### Changed
+
+- **Repository archived** (2026-10-25). Development stopped; the ideas
+  continue in [edakit](https://github.com/tgd1975/edakit) (handbook
+  chapter 14).
+
 ### Added
 
 - **EPIC-011 — test plan and coverage matrix** closed (9 tasks).
